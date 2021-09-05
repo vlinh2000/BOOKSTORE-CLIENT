@@ -14,13 +14,13 @@ const FormStyled = styled(Form)`
     `;
 
 const InputStyled = styled(Input)`
-    min-height:45px;
+    min-height:55px;
     margin-top:2rem;
     font-weight:500;
     `;
 
 const InputPassStyled = styled(Input)`
-    min-height:45px;
+    min-height:55px;
     font-weight:500;
 `;
 
@@ -40,7 +40,7 @@ const ButtonStyled = styled(Button)`
     display:block;
     width:100%;
     min-height:50px;
-    margin-bottom:0.75rem;
+    margin-bottom:0.5rem;
     font-size:13px;
     font-weight:500;
     color:#fff;
@@ -65,6 +65,19 @@ const LostPassButtonStyled = styled.a`
     &:hover{
         color:#9387d9;
     }
+    `;
+
+const SocialMediaStyled = styled.div`
+        color:#000;
+        display:block;
+        text-align:center;
+        font-weight:500;
+        font-size:10px;
+        cursor:pointer;
+
+        &:hover{
+            color:#9387d9;
+        }
 `;
 
 function LoginModal(props) {
@@ -81,8 +94,8 @@ function LoginModal(props) {
     return (
         <div>
             <Modal
-                visible={true}
-                width={510}
+                visible={false}
+                width={500}
                 footer={false}
             >
                 <FormStyled>
@@ -107,6 +120,7 @@ function LoginModal(props) {
                         <ButtonStyled bgcolor="#000" htmlType="submit">LOGIN</ButtonStyled>
                         <ButtonStyled bgcolor="#b9b9b9">CREATE ACCOUNT</ButtonStyled>
                     </Form.Item>
+                    <SocialMediaStyled>LOGIN WITH SOCIAL MEDIA</SocialMediaStyled>
                 </FormStyled>
             </Modal>
         </div>
