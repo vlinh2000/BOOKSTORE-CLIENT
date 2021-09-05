@@ -1,12 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, Col, Divider, Drawer, Form, Input, Modal, Row, Space, Tabs, Typography, Upload } from 'antd';
+import { Button, Col, Form, Input, Modal, Row, Typography } from 'antd';
 import styled from 'styled-components';
-import { HomeOutlined, KeyOutlined, MailOutlined, MehOutlined, PhoneOutlined, SmileOutlined, UploadOutlined, UserAddOutlined, UserOutlined, UserSwitchOutlined } from '@ant-design/icons';
-
-RegisterModal.propTypes = {
-
-};
+import { HomeOutlined, KeyOutlined, MailOutlined, PhoneOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
 
 const FormStyled = styled(Form)`
     padding: 0.5rem 2rem;
@@ -54,19 +49,6 @@ const ButtonStyled = styled(Button)`
     }
 
 `;
-
-const LostPassButtonStyled = styled.a`
-    color:#000;
-    display:block;
-    text-align:end;
-    font-weight:500;
-    font-size:12px;
-
-    &:hover{
-        color:#9387d9;
-    }
-    `;
-
 
 function RegisterModal(props) {
 

@@ -68,11 +68,21 @@ const InfoCartStyled = styled.div`
         font-weight: 500;
 
         .price {
-                color: #ccc;
+                color: #9387d9;
             }
     }
 
 
+`;
+
+const ButtonStyled = styled(Button)`
+    border-width:2px;
+
+    &:hover{
+        color:#FFF ;
+        border-color:#9387d9 ;
+        background:#9387d9;
+    }
 `;
 
 
@@ -115,7 +125,7 @@ function Header(props) {
                         <Row justify="space-around">
                             <Col span={10} >
                                 <InfoCartStyled>
-                                    <Button shape='circle' size='large' icon={<UserOutlined />}></Button>
+                                    <ButtonStyled shape='circle' size='large' icon={<UserOutlined />}></ButtonStyled>
                                     <div className='info'>
                                         <div> Sign in </div>
                                         <div> My account </div>
@@ -124,7 +134,7 @@ function Header(props) {
                             </Col>
                             <Col span={10} >
                                 <InfoCartStyled>
-                                    <Button shape='circle' size='large' icon={<ShoppingCartOutlined />}></Button>
+                                    <ButtonStyled shape='circle' size='large' icon={<ShoppingCartOutlined />}></ButtonStyled>
                                     <div className='info'>
                                         <div> My cart</div>
                                         <div className="price" > $ 00.00 </div>

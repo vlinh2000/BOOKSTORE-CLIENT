@@ -1,36 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Col, Divider, Modal, Row, Tooltip, Typography } from 'antd';
-import { Link } from 'react-router-dom';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Col, Divider, Modal, Row, Typography } from 'antd';
 import styled from 'styled-components';
+import ProductInCartModal from 'features/Cart/Components/ProductInCartModal';
+import NotProductInCartModal from 'features/Cart/Components/NotProductInCartModal';
 
 CartModal.propTypes = {
-
+    products: PropTypes.array,
+    totalPrice: PropTypes.number,
+};
+CartModal.defaultPropTypes = {
+    products: [],
+    totalPrice: 0
 };
 
-const ProductInCartStyled = styled.div`
-    margin-bottom:0.5rem;
-`;
 
-const LinkSyled = styled(Link)`
-    font-size:16px;
-    font-weight:500;
-    letter-spacing:0.5px;
-    color:#000;
-
-    &:hover{
-        color:#9387d9 ;
-    }
-`;
-
-const PriceWrapperStyled = styled.div`
-    color:#969696;
-    line-height:25px;
-    font-size:14px;
-    font-weight:bold;
-    letter-spacing:1px;
-`;
 
 const DividerStyled = styled(Divider)`
     height:10px;
@@ -75,45 +59,31 @@ const WrapperProduct = styled.div`
 
 
 
-function CartModal(props) {
+function CartModal({ products, totalPrice }) {
     return (
         <Modal
-            visible={true}
+            visible={false}
             width={500}
             footer={false}
             closable={false}
             style={{ transform: 'translate(80%,5%)' }}>
             {/* Product */}
-            <WrapperProduct>
-                <ProductInCartStyled>
-                    <Row gutter={[0, 5]}>
-                        <Col span={6}>
-                            <img width="80px" height="90px" src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-70.jpg" alt="product" />
-                        </Col>
-                        <Col span={17}>
-                            <LinkSyled to="#">A Tale of Two Cities</LinkSyled>
-                            <PriceWrapperStyled>
-                                <div> <span >Qty: </span><span>{2}</span> </div>
-                                <div>${45}</div>
-                            </PriceWrapperStyled>
-                        </Col>
-                        <Col span={1}>
-                            <Tooltip title="Remove this item"> <Button icon={<DeleteOutlined />}></Button></Tooltip>
-                        </Col>
-                    </Row>
-                </ProductInCartStyled>
-            </WrapperProduct>
-            {/* *** */}
-            <DividerStyled />
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography.Text strong={true}>Total:</Typography.Text>
-                <TotalPriceStyled>$ 12000</TotalPriceStyled>
+            {true ? <NotProductInCartModal /> : <div>
+                <WrapperProduct>
+                    <ProductInCartModal />
+                </WrapperProduct>
+                <DividerStyled />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Typography.Text strong={true}>Total:</Typography.Text>
+                    <TotalPriceStyled>$ {totalPrice}</TotalPriceStyled>
 
-            </div>
-            <Row justify="space-between" gutter={[10, 10]}>
-                <Col span={12}> <ButtonStyled bgcolor="#000">VIEW CART</ButtonStyled></Col>
-                <Col span={12}> <ButtonStyled bgcolor="#969696" >CHECK OUT</ButtonStyled></Col>
-            </Row>
+                </div>
+                <Row justify="space-between" gutter={[10, 10]}>
+                    <Col span={12}> <ButtonStyled bgcolor="#000">VIEW CART</ButtonStyled></Col>
+                    <Col span={12}> <ButtonStyled bgcolor="#969696" >CHECK OUT</ButtonStyled></Col>
+                </Row>
+            </div>}
+
             <NoteStyled>FREE SHIPPING ON ALL ORDERS OVER $75</NoteStyled>
         </Modal >
     );

@@ -1,11 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, Divider, Drawer, Form, Input, Modal, Space, Tabs, Typography } from 'antd';
+import { Button, Form, Input, Modal, Typography } from 'antd';
 import styled from 'styled-components';
-
-LoginModal.propTypes = {
-
-};
 
 const FormStyled = styled(Form)`
     padding: 0.5rem 2rem;
