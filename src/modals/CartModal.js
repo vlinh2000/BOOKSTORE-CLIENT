@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Col, Divider, Modal, Row, Typography } from 'antd';
+import { Button, Col, Divider, Modal, Popover, Row, Typography } from 'antd';
 import styled from 'styled-components';
 import ProductInCartModal from 'features/Cart/Components/ProductInCartModal';
 import NotProductInCartModal from 'features/Cart/Components/NotProductInCartModal';
@@ -61,14 +61,9 @@ const WrapperProduct = styled.div`
 
 function CartModal({ products, totalPrice }) {
     return (
-        <Modal
-            visible={false}
-            width={500}
-            footer={false}
-            closable={false}
-            style={{ transform: 'translate(80%,5%)' }}>
+        <div>
             {/* Product */}
-            {true ? <NotProductInCartModal /> : <div>
+            {false ? <NotProductInCartModal /> : <div>
                 <WrapperProduct>
                     <ProductInCartModal />
                 </WrapperProduct>
@@ -85,7 +80,7 @@ function CartModal({ products, totalPrice }) {
             </div>}
 
             <NoteStyled>FREE SHIPPING ON ALL ORDERS OVER $75</NoteStyled>
-        </Modal >
+        </div >
     );
 }
 

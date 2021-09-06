@@ -1,10 +1,11 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
 import { FacebookOutlined, InstagramOutlined, ShoppingCartOutlined, TwitterOutlined, UserOutlined, YoutubeOutlined } from '@ant-design/icons'
-import { Button, Col, Row } from 'antd';
+import { Button, Col, Popover, Row } from 'antd';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import FormSearch from 'components/FormSearch';
+import CartModal from 'modals/CartModal';
 
 // Header.propTypes = {
 
@@ -134,7 +135,13 @@ function Header(props) {
                             </Col>
                             <Col span={10} >
                                 <InfoCartStyled>
-                                    <ButtonStyled shape='circle' size='large' icon={<ShoppingCartOutlined />}></ButtonStyled>
+                                    <Popover
+                                        trigger='click'
+                                        visible={false}
+                                        content={<CartModal />}
+                                    >
+                                        <ButtonStyled shape='circle' size='large' icon={<ShoppingCartOutlined />}></ButtonStyled>
+                                    </Popover>
                                     <div className='info'>
                                         <div> My cart</div>
                                         <div className="price" > $ 00.00 </div>

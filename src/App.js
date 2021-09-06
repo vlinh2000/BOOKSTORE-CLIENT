@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Header from 'components/Header';
 import React, { Suspense } from 'react';
 import { Spin } from 'antd';
@@ -11,7 +11,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import Notification from 'components/Notification';
 import Footer from 'components/Footer';
 
-const MainPage = React.lazy(() => import("features/Product"))
+const Product = React.lazy(() => import("features/Product"))
 
 
 function App() {
@@ -23,7 +23,8 @@ function App() {
           <Header />
           <Notification />
           <Switch>
-            <Route exact path='/' component={MainPage}></Route>
+            <Redirect exact from='/' to='/product' />
+            <Route path='/product' component={Product}></Route>
             <Route component={NotFound}></Route>
           </Switch>
           <Footer />

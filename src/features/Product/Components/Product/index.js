@@ -96,6 +96,16 @@ const ProductStyled = styled.div`
 }
 `;
 
+const ButtonStyled = styled(Button)`
+    border-width:2px;
+
+    &:hover{
+        color:#FFF ;
+        border-color:#9387d9 ;
+        background:#9387d9;
+    }
+`;
+
 
 const LinkStyled = styled(Link)`
     &:hover {
@@ -133,9 +143,9 @@ function Product({ book }) {
                 <span className="discount">-{book.discount}</span>
                 <HoverImageStyled >
                     <div className="tip-box">
-                        <Link to={`/${book.id}`}> <Button size='large' icon={<ArrowRightOutlined />} /></Link>
-                        <Button style={{ margin: '10px 0' }} size='large' icon={<HeartOutlined />} />
-                        <Button size='large' icon={<SearchOutlined />} />
+                        <Link to={`/${book.id}`}> <ButtonStyled size='large' icon={<ArrowRightOutlined />} /></Link>
+                        <ButtonStyled style={{ margin: '10px 0' }} size='large' icon={<HeartOutlined />} />
+                        <ButtonStyled size='large' icon={<SearchOutlined />} />
                     </div>
                 </HoverImageStyled>
 

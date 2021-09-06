@@ -53,7 +53,7 @@ function ProductInCartModal({ book }) {
         <ProductInCartStyled>
             <Row gutter={[0, 5]}>
                 <Col span={6}>
-                    <img width="80px" height="90px" src={book.image} alt="product" />
+                    <img width="50px" height="75px" src={book.image} alt="product" />
                 </Col>
                 <Col span={17}>
                     <LinkSyled to="#">{book.name}</LinkSyled>
