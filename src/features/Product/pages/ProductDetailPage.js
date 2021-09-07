@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { Breadcrumb, Button, Col, Divider, Row, Typography } from 'antd';
 import { BookOutlined, HeartOutlined, HomeOutlined, MinusOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
 import ProductRelated from '../Components/ProductRelated';
+import ProductComment from '../Components/ProductComment';
+import ProductEvaluateForm from '../Components/ProductEvaluateForm';
 
 ProductDetailPage.propTypes = {
 
@@ -93,6 +95,7 @@ const ButtonSmallStyled = styled(Button)`
 
 const GroupImage = styled.div`
     margin:2rem;
+    
     & img{
         margin-right:1rem;
     }
@@ -105,11 +108,27 @@ function ProductDetailPage(props) {
         <Wrapper>
             <Row justify="center" >
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }}>
-                    <img height="550px" width="450px" src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-29.jpg" alt="mainPhoto" />
+                    <img
+                        height="550px"
+                        width="450px"
+                        src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-29.jpg"
+                        alt="mainPhoto" />
                     <GroupImage>
-                        <img width="100px" height="120px" src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-29.jpg" alt="mainPhoto" />
-                        <img width="100px" height="120px" src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-31.jpg" alt="mainPhoto" />
-                        <img width="100px" height="120px" src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-32.jpg" alt="mainPhoto" />
+                        <img
+                            width="100px"
+                            height="120px"
+                            src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-29.jpg"
+                            alt="mainPhoto" />
+                        <img
+                            width="100px"
+                            height="120px"
+                            src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-31.jpg"
+                            alt="mainPhoto" />
+                        <img
+                            width="100px"
+                            height="120px"
+                            src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-32.jpg"
+                            alt="mainPhoto" />
                     </GroupImage>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 9 }}>
@@ -127,29 +146,59 @@ function ProductDetailPage(props) {
                     <Divider />
                     <DecriptionStyled>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</DecriptionStyled>
                     <NumberInStockStyled>30 in stock</NumberInStockStyled>
-                    <Row justify="center" gutter={10} align="middle">
+                    <Row
+                        justify="center"
+                        gutter={10}
+                        align="middle">
                         <Col span={5}>
                             <ButtonGroupStyled>
-                                <ButtonSmallStyled color="#9387d9" type='text' size='small' icon={<PlusOutlined />} />
+                                <ButtonSmallStyled
+                                    color="#9387d9"
+                                    type='text'
+                                    size='small'
+                                    icon={<PlusOutlined />} />
                                 <span>1</span>
-                                <ButtonSmallStyled color="#9387d9" type='text' size='small' icon={<MinusOutlined />} />
+                                <ButtonSmallStyled
+                                    color="#9387d9"
+                                    type='text'
+                                    size='small'
+                                    icon={<MinusOutlined />} />
                             </ButtonGroupStyled>
                         </Col>
                         <Col span={16}>
                             <ButtonStyled>ADD TO CART</ButtonStyled>
                         </Col>
                         <Col span={3}>
-                            <ButtonSmallStyled size="large" borderColor="#9387d9" bgcolor="#9387d9" size='large' shape="circle" icon={<HeartOutlined />}></ButtonSmallStyled>
+                            <ButtonSmallStyled
+                                size="large"
+                                borderColor="#9387d9"
+                                bgcolor="#9387d9"
+                                size='large'
+                                shape="circle"
+                                icon={<HeartOutlined />}>
+                            </ButtonSmallStyled>
                         </Col>
                     </Row>
-                    <ButtonStyled bgcolor="#9387d9">BUY NOW</ButtonStyled>
+                    <ButtonStyled
+                        bgcolor="#9387d9"
+                    >BUY NOW</ButtonStyled>
                     <Divider />
                     <InfoStyled>
-                        <div><span>Category:</span><span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>Hornor</span></div>
-                        <div><span>Author:</span><span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>Adam Strass</span></div>
+                        <div>
+                            <span>Category:</span>
+                            <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>Hornor</span>
+                        </div>
+                        <div>
+                            <span>Author:</span>
+                            <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>Adam Strass</span>
+                        </div>
                     </InfoStyled>
                 </Col>
             </Row>
+            <Divider />
+            <ProductComment />
+            <ProductEvaluateForm />
+            <ProductRelated />
         </Wrapper>
     );
 }

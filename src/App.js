@@ -10,6 +10,7 @@ import NotFound from 'components/NotFound';
 import { toast, ToastContainer } from 'react-toastify';
 import Notification from 'components/Notification';
 import Footer from 'components/Footer';
+import Cart from 'features/Cart';
 
 const Product = React.lazy(() => import("features/Product"))
 
@@ -25,6 +26,7 @@ function App() {
           <Switch>
             <Redirect exact from='/' to='/product' />
             <Route path='/product' component={Product}></Route>
+            <Route path='/cart' component={Cart}></Route>
             <Route component={NotFound}></Route>
           </Switch>
           <Footer />

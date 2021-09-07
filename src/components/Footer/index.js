@@ -1,4 +1,5 @@
 import { Col, Row, Typography } from 'antd';
+import { Paymet } from 'constants/Global';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -89,7 +90,7 @@ const Footer = () => {
                     </WrapperList>
                 </Col>
                 <Col sm={{ span: 8 }} md={{ span: 4 }}>
-                    <img src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/06/paymet-2.png" alt='footerImg' />
+                    <img src={Paymet} alt='footerImg' />
                 </Col>
             </Row>
             <FooterStyled>© 2021 TIKIE, MADE BY VIET LINH</FooterStyled>

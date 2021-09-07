@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 import FormSearch from 'components/FormSearch';
 import CartModal from 'modals/CartModal';
+import { Logo } from 'constants/Global';
 
 // Header.propTypes = {
 
@@ -115,7 +116,7 @@ function Header(props) {
                                 className="logo"
                                 exact
                                 to='/'>
-                                <img src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2021/05/logo.png" alt="logo" />
+                                <img src={Logo} alt="logo" />
                             </NavLink>
                         </Row>
                     </Col>

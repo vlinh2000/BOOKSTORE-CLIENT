@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Col, Form, Input, Modal, Row, Typography } from 'antd';
 import styled from 'styled-components';
 import { HomeOutlined, KeyOutlined, MailOutlined, PhoneOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
+import InputField from 'custom-fields/InputFields';
 
 const FormStyled = styled(Form)`
     padding: 0.5rem 2rem;
@@ -9,15 +10,6 @@ const FormStyled = styled(Form)`
     margin-top:2rem;
     `;
 
-const InputStyled = styled(Input)`
-    min-height:55px;
-    font-weight:500;
-    `;
-
-const InputPassStyled = styled(Input)`
-    min-height:55px;
-    font-weight:500;
-`;
 
 const TitleStyled = styled(Typography.Text)`
     font-size:16px;
@@ -52,7 +44,6 @@ const ButtonStyled = styled(Button)`
 
 function RegisterModal(props) {
 
-
     const onFinish = (values) => {
         console.log(values);
     }
@@ -73,65 +64,63 @@ function RegisterModal(props) {
                     <WrapperStyled>
                         <TitleStyled>REGISTER</TitleStyled>
                     </WrapperStyled>
-                    <Row gutter={[20, 1]} justify='space-around' align="middle" style={{ marginTop: '2rem' }} >
+                    <Row
+                        gutter={[20, 1]}
+                        justify='space-around'
+                        align="middle"
+                        style={{ marginTop: '2rem' }} >
                         <Col span={8}>
-                            <Form.Item
-                                name="name" >
-                                <InputStyled
-                                    prefix={<SmileOutlined />}
-                                    placeholder="Họ tên"
-                                />
-                            </Form.Item>
+                            <InputField
+                                name="name"
+                                placeholder="Họ tên"
+                                prefix={<SmileOutlined />}
+                            />
                         </Col>
                         <Col span={8}>
-                            <Form.Item
-                                name="phoneNumber">
-                                <InputStyled
-                                    prefix={<PhoneOutlined />}
-                                    type='number'
-                                    placeholder="Số điện thoại" />
-                            </Form.Item>
+                            <InputField
+                                name="phoneNumber"
+                                prefix={<PhoneOutlined />}
+                                type='number'
+                                placeholder="Số điện thoại"
+                            />
                         </Col>
                         <Col span={8}>
-                            <Form.Item
-                                name="email">
-                                <InputStyled
-                                    prefix={<MailOutlined />}
-                                    type="email"
-                                    placeholder="Email" />
-                            </Form.Item>
+                            <InputField
+                                name="email"
+                                prefix={<MailOutlined />}
+                                type="email"
+                                placeholder="Email"
+                            />
                         </Col>
                         <Col span={8}>
-                            <Form.Item
-                                name="userName">
-                                <InputStyled
-                                    prefix={<UserOutlined />}
-                                    placeholder="User Name" />
-                            </Form.Item>
+                            <InputField
+                                name="userName"
+                                prefix={<UserOutlined />}
+                                placeholder="User Name"
+                            />
                         </Col>
                         <Col span={8}>
-                            <Form.Item
-                                name="passWord">
-                                <InputPassStyled
-                                    prefix={<KeyOutlined />}
-                                    placeholder="Pass word" />
-                            </Form.Item>
+                            <InputField
+                                name="passWord"
+                                type='password'
+                                prefix={<KeyOutlined />}
+                                placeholder="Pass word"
+                            />
                         </Col>
                         <Col span={8}>
-                            <Form.Item
-                                name="tryPassWord">
-                                <InputPassStyled
-                                    prefix={<KeyOutlined />}
-                                    placeholder="Try pass word" />
-                            </Form.Item>
+                            <InputField
+                                name="tryPassWord"
+                                type="password"
+                                prefix={<KeyOutlined />}
+                                placeholder="Try pass word"
+                            />
                         </Col>
                         <Col span={24}>
-                            <Form.Item
-                                name="address">
-                                <InputStyled
-                                    prefix={<HomeOutlined />}
-                                    placeholder="Địa chỉ" />
-                            </Form.Item>
+                            <InputField
+                                name="address"
+                                prefix={<HomeOutlined />}
+                                placeholder="Địa chỉ"
+                            />
                         </Col>
                     </Row>
                     <Form.Item>
