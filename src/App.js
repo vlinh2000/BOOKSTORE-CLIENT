@@ -10,16 +10,17 @@ import NotFound from 'components/NotFound';
 import { toast, ToastContainer } from 'react-toastify';
 import Notification from 'components/Notification';
 import Footer from 'components/Footer';
-import Cart from 'features/Cart';
+import Loading from 'components/Loading';
 
 const Product = React.lazy(() => import("features/Product"))
+const Cart = React.lazy(() => import("features/Cart"))
 
 
 function App() {
 
   return (
     <div className="book-store">
-      <Suspense fallback={<Spin />}>
+      <Suspense fallback={<Loading />}>
         <BrowserRouter>
           <Header />
           <Notification />

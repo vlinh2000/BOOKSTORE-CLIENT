@@ -10,9 +10,7 @@ Cart.propTypes = {
 };
 
 const Wrapper = styled.div`
-
     margin:2rem 0;
-
 `;
 
 
@@ -23,8 +21,8 @@ const TabsStyled = styled(Tabs)`
     letter-spacing:0.5px;
 
     .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn{
-        color:#000;
-        border:none;
+        color:#9387d9;
+        font-weight:bold;
     }
 
     `;
@@ -33,7 +31,7 @@ const TabsStyled = styled(Tabs)`
 function Cart(props) {
     return (
         <Wrapper>
-            <TabsStyled defaultActiveKey={0} centered={true}>
+            <TabsStyled type="card" defaultActiveKey={0} centered={true}>
                 <Tabs.TabPane
                     tab={`SHOPPING CART(${2})`}
                     key={0}>
