@@ -3,10 +3,14 @@ import React from 'react';
 import { FacebookOutlined, InstagramOutlined, ShoppingCartOutlined, TwitterOutlined, UserOutlined, YoutubeOutlined } from '@ant-design/icons'
 import { Button, Col, Popover, Row } from 'antd';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
 import FormSearch from 'components/FormSearch';
 import CartModal from 'modals/CartModal';
 import { Logo } from 'constants/Global';
+import { useDispatch, useSelector } from 'react-redux';
+import { switchLoginModal } from 'app/modalSlice';
+import LoginModal from 'modals/LoginModal';
+import RegisterModal from 'modals/RegisterModal';
 
 // Header.propTypes = {
 
@@ -89,6 +93,28 @@ const ButtonStyled = styled(Button)`
 
 
 function Header(props) {
+
+    const dispatch = useDispatch();
+    const { isAuth } = useSelector((state) => state.user);
+    const history = useHistory();
+
+    const handleSwitchLoginModal = () => {
+        //isAuth
+        if (isAuth) {
+            history.push('/cart');
+            return;
+        }
+
+        const action = switchLoginModal(true);
+        dispatch(action);
+    }
+
+    // const handleSwitchCartModal = ()=>{
+    //     const action = switchLoginModal(true);
+    //     dispatch(action);
+    // }
+
+
     return (
         <HeaderStyled>
             <TopnavStyled>
@@ -127,7 +153,7 @@ function Header(props) {
                         <Row justify="space-around">
                             <Col span={10} >
                                 <InfoCartStyled>
-                                    <ButtonStyled shape='circle' size='large' icon={<UserOutlined />}></ButtonStyled>
+                                    <ButtonStyled onClick={handleSwitchLoginModal} shape='circle' size='large' icon={<UserOutlined />}></ButtonStyled>
                                     <div className='info'>
                                         <div> Sign in </div>
                                         <div> My account </div>
@@ -153,6 +179,8 @@ function Header(props) {
                     </Col>
                 </Row>
             </HeaderMainStyled>
+            <LoginModal />
+            <RegisterModal />
         </HeaderStyled>
     );
 }

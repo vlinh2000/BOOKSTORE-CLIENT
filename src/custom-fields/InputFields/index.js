@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form, Input } from 'antd'
+import { Controller } from 'react-hook-form';
+import { SmileOutlined } from '@ant-design/icons';
+import { ErrorMessage } from '@hookform/error-message';
 
 InputField.propTypes = {
     //form  , field if using formik
@@ -27,22 +30,30 @@ const InputStyled = styled(Input)`
 
 function InputField(props) {
 
-    const { name, prefix, placeholder, type, disabled } = props;
-
-
+    const { name, prefix, placeholder, type, disabled, control } = props;
 
     return (
-        <Form.Item
-            name={name} >
+        <Controller
+            name={name}
+            placeholder={placeholder}
+            prefix={prefix}
+            control={control}
+            render={({ field, formState: { errors } }) => {
 
-            <InputStyled
-                type={type}
-                prefix={prefix}
-                placeholder={placeholder}
-                disabled={disabled}
-            />
+                return (<Form.Item
+                    validateStatus={errors[field.name] && 'error'}
+                    help={errors[field.name]?.message}
+                    name={field.name} >
+                    <InputStyled
+                        {...field}
+                        type={type}
+                        prefix={prefix}
+                        placeholder={placeholder}
+                        disabled={disabled}
+                    />
+                </Form.Item>)
+            }} />
 
-        </Form.Item>
     );
 }
 
