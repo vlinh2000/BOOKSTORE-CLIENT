@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
-import { Breadcrumb, Button, Col, Divider, Row, Typography } from 'antd';
+import { Breadcrumb, Button, Col, Divider, Row, Spin, Typography } from 'antd';
 import { BookOutlined, HeartOutlined, HomeOutlined, MinusOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
 import ProductRelated from '../Components/ProductRelated';
 import ProductComment from '../Components/ProductComment';
 import ProductEvaluateForm from '../Components/ProductEvaluateForm';
+import { productApi } from 'api/ProductApi';
+import { feedBackApi } from 'api/feedBackApi';
 
 ProductDetailPage.propTypes = {
 
@@ -104,101 +106,136 @@ const GroupImage = styled.div`
 function ProductDetailPage(props) {
     const { bookId } = useParams();
 
+    const [book, setBook] = React.useState({});
+
+    const [category, setCategory] = React.useState({});
+
+    const [comments, setComments] = React.useState([]);
+
+    const [isLoading, setIsLoading] = React.useState(false);
+
+
+    React.useEffect(() => {
+        //handle fetch book with book id
+        const fetchBook = async () => {
+            try {
+                const data = await productApi.get(bookId);
+                setIsLoading(false);
+                setBook(data.book);
+                setCategory(data.category);
+            } catch (error) {
+                setIsLoading(false);
+            }
+        }
+        fetchBook();
+    }, [bookId])
+
+    React.useEffect(() => {
+        //handle get Feedback for this book
+        try {
+            const fetchFeedBack = async () => {
+                const { feedBack } = await feedBackApi.get(bookId);
+
+                feedBack && setComments(feedBack.comments);
+
+            }
+            setIsLoading(true);
+            fetchFeedBack();
+        } catch (error) {
+            setIsLoading(false);
+        }
+
+    }, [bookId])
+
+
     return (
         <Wrapper>
-            <Row justify="center" >
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }}>
-                    <img
-                        height="550px"
-                        width="450px"
-                        src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-29.jpg"
-                        alt="mainPhoto" />
-                    <GroupImage>
+            {isLoading ? <Spin /> : <>
+                <Row justify="center" >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }}>
                         <img
-                            width="100px"
-                            height="120px"
-                            src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-29.jpg"
+                            height="550px"
+                            width="450px"
+                            src={book.image && book.image[0]}
                             alt="mainPhoto" />
-                        <img
-                            width="100px"
-                            height="120px"
-                            src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-31.jpg"
-                            alt="mainPhoto" />
-                        <img
-                            width="100px"
-                            height="120px"
-                            src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-32.jpg"
-                            alt="mainPhoto" />
-                    </GroupImage>
-                </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 9 }}>
-                    <Breadcrumb separator=">">
-                        <Breadcrumb.Item href="/product">
-                            <HomeOutlined />
-                        </Breadcrumb.Item>
-                        <Breadcrumb.Item href="">
-                            <BookOutlined />
-                            <span>Fiends In the Forest</span>
-                        </Breadcrumb.Item>
-                    </Breadcrumb>
-                    <TitleStyled>Fiends In the Forest</TitleStyled>
-                    <PriceStyled>$115.00</PriceStyled>
-                    <Divider />
-                    <DecriptionStyled>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</DecriptionStyled>
-                    <NumberInStockStyled>30 in stock</NumberInStockStyled>
-                    <Row
-                        justify="center"
-                        gutter={10}
-                        align="middle">
-                        <Col span={5}>
-                            <ButtonGroupStyled>
+                        <GroupImage>
+                            {book.image?.map((img, index) => (<img
+                                key={index}
+                                width="100px"
+                                height="120px"
+                                src={img}
+                                alt={index} />))}
+                        </GroupImage>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 9 }}>
+                        <Breadcrumb separator=">">
+                            <Breadcrumb.Item href="/product">
+                                <HomeOutlined />
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item >
+                                <BookOutlined />
+                                <span>{book.name}</span>
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
+                        <TitleStyled>{book.name}</TitleStyled>
+                        <PriceStyled>${book.price}</PriceStyled>
+                        <Divider />
+                        <DecriptionStyled>{book.decription}</DecriptionStyled>
+                        <NumberInStockStyled>30 in stock</NumberInStockStyled>
+                        <Row
+                            justify="center"
+                            gutter={10}
+                            align="middle">
+                            <Col span={5}>
+                                <ButtonGroupStyled>
+                                    <ButtonSmallStyled
+                                        color="#9387d9"
+                                        type='text'
+                                        size='small'
+                                        icon={<PlusOutlined />} />
+                                    <span>1</span>
+                                    <ButtonSmallStyled
+                                        color="#9387d9"
+                                        type='text'
+                                        size='small'
+                                        icon={<MinusOutlined />} />
+                                </ButtonGroupStyled>
+                            </Col>
+                            <Col span={16}>
+                                <ButtonStyled>ADD TO CART</ButtonStyled>
+                            </Col>
+                            <Col span={3}>
                                 <ButtonSmallStyled
-                                    color="#9387d9"
-                                    type='text'
-                                    size='small'
-                                    icon={<PlusOutlined />} />
-                                <span>1</span>
-                                <ButtonSmallStyled
-                                    color="#9387d9"
-                                    type='text'
-                                    size='small'
-                                    icon={<MinusOutlined />} />
-                            </ButtonGroupStyled>
-                        </Col>
-                        <Col span={16}>
-                            <ButtonStyled>ADD TO CART</ButtonStyled>
-                        </Col>
-                        <Col span={3}>
-                            <ButtonSmallStyled
-                                size="large"
-                                borderColor="#9387d9"
-                                bgcolor="#9387d9"
-                                size='large'
-                                shape="circle"
-                                icon={<HeartOutlined />}>
-                            </ButtonSmallStyled>
-                        </Col>
-                    </Row>
-                    <ButtonStyled
-                        bgcolor="#9387d9"
-                    >BUY NOW</ButtonStyled>
-                    <Divider />
-                    <InfoStyled>
-                        <div>
-                            <span>Category:</span>
-                            <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>Hornor</span>
-                        </div>
-                        <div>
-                            <span>Author:</span>
-                            <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>Adam Strass</span>
-                        </div>
-                    </InfoStyled>
-                </Col>
-            </Row>
-            <Divider />
-            <ProductComment />
-            <ProductEvaluateForm />
-            <ProductRelated />
+                                    size="large"
+                                    borderColor="#9387d9"
+                                    bgcolor="#9387d9"
+                                    size='large'
+                                    shape="circle"
+                                    icon={<HeartOutlined />}>
+                                </ButtonSmallStyled>
+                            </Col>
+                        </Row>
+                        <ButtonStyled
+                            bgcolor="#9387d9"
+                        >BUY NOW</ButtonStyled>
+                        <Divider />
+                        <InfoStyled>
+                            <div>
+                                <span>Category:</span>
+                                <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>{category.name}</span>
+                            </div>
+                            <div>
+                                <span>Author:</span>
+                                <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>{book.author}</span>
+                            </div>
+                        </InfoStyled>
+                    </Col>
+                </Row>
+                <Divider />
+                <ProductComment feedBack={comments} />
+                <ProductEvaluateForm />
+                <ProductRelated />
+            </>}
         </Wrapper>
     );
 }

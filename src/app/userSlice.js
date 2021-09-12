@@ -38,11 +38,12 @@ const initialState = {
             token: null,
             refreshToken: null,
         },
-        user: {}
+        user: {},
+        isAuth: false
     },
     loading: false,
-    error: '',
-    isAuth: false
+    error: ''
+
 }
 
 
@@ -58,7 +59,7 @@ const user = createSlice({
         [getMe.fulfilled]: (state, action) => {
 
             state.loading = false;
-            state.isAuth = true;
+            state.currentUser.isAuth = true;
             state.currentUser.user = action.payload;
         },
         [getMe.rejected]: (state, action) => {

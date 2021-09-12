@@ -6,6 +6,7 @@ import storage from 'redux-persist/lib/storage'
 
 import modalReducer from 'app/modalSlice';
 import userReducer from 'app/userSlice';
+import pageInfoReducer from 'features/Product/productSlice';
 
 
 
@@ -17,7 +18,8 @@ const authPersistConfig = {
 
 const rootReducers = combineReducers({
     modals: modalReducer,
-    user: persistReducer(authPersistConfig, userReducer)
+    user: persistReducer(authPersistConfig, userReducer),
+    pageInfo: pageInfoReducer
 });
 
 //config persist without modals , if you wanna choose 1 slice then use whitelist

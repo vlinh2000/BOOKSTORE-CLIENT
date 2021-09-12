@@ -6,26 +6,25 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 Product.propTypes = {
-    book: PropTypes.object
+    product: PropTypes.object
 };
 
 Product.defaultProps = {
-    book: {
-        image: ['https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-33.jpg'],
-        discount: '40%',
-        name: "Bat man",
-        author: "v.Linh",
-        price: 400,
-        oldPrice: 500
-
-
-
+    product: {
+        id: '',
+        name: '',
+        author: '',
+        price: 0,
+        oldPrice: 0,
+        image: [],
+        evaluate: []
     }
+
 };
 
 const HoverImageStyled = styled.div`
 
-    background-image:url('https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2019/04/Image-2.jpg');
+    background-image:url(${props => props.bgImage});
     background-position:center;
     background-repeat:none;
     background-size:cover;
@@ -57,14 +56,11 @@ const TitleStyled = styled(Typography.Text)`
     font-weight: 500;
     color:#000;
 `;
-const ProductStyled = styled.div`
+const ProductStyled = styled(Link)`
+
 
     .book-image{
         position:relative;
-
-        & img{
-            transition: all 0.45s ease 0s;
-        }
 
         &:hover{
             ${HoverImageStyled} {
@@ -135,15 +131,32 @@ const RaitingStyled = styled.div`
     justify-content:space-between;
 `;
 
-function Product({ book }) {
+function Product({ product }) {
+
+    const { _id, name, author, price, oldPrice, image, feedBack } = product;
+
+
+    //hanlde get voted star highest 
+    const getVotedHighest = () => {
+        //feedBack : {
+        // _id
+        // bookId
+        // comments:[]  }
+        let cloneFeedBack = [...feedBack?.comments];
+        cloneFeedBack = cloneFeedBack.sort((a, b) => b.voted - a.voted);
+        return cloneFeedBack[0].voted;
+
+    }
+
     return (
-        <ProductStyled to="/sadsa">
+        <ProductStyled to={`/product/${_id}`}>
             <div className='book-image'>
-                <img width="250px" height='350px' src={book.image[0]} alt='book' />
-                <span className="discount">-{book.discount}</span>
-                <HoverImageStyled >
+                <img width="250px" height='350px' src={image[0]} alt='book' />
+                {oldPrice && <span className="discount">- {(((oldPrice - price) / oldPrice) * 100).toFixed(0)} %</span>}
+
+                <HoverImageStyled bgImage={image[1]}>
                     <div className="tip-box">
-                        <Link to={`/${book.id}`}> <ButtonStyled size='large' icon={<ArrowRightOutlined />} /></Link>
+                        <Link to={`/product/${_id}`}> <ButtonStyled size='large' icon={<ArrowRightOutlined />} /></Link>
                         <ButtonStyled style={{ margin: '10px 0' }} size='large' icon={<HeartOutlined />} />
                         <ButtonStyled size='large' icon={<SearchOutlined />} />
                     </div>
@@ -151,17 +164,17 @@ function Product({ book }) {
 
             </div>
             <LinkStyled>
-                <TitleStyled >{book.name}</TitleStyled>
+                <TitleStyled >{name}</TitleStyled>
             </LinkStyled>
-            <ByAuthorStyled><span className="by">By: </span> <span className="author">{book.author}</span>  </ByAuthorStyled>
+            <ByAuthorStyled><span className="by">By: </span> <span className="author">{author}</span>  </ByAuthorStyled>
             <RaitingStyled>
                 <div>
-                    {book.oldPrice && <Typography.Text style={{ color: "#969696", fontWeight: 500, textDecoration: "line-through" }}>${book.oldPrice}</Typography.Text>}
-                    <Typography.Text style={{ color: "#ff4545", fontWeight: 500, marginLeft: 5 }}>${book.price}</Typography.Text>
+                    {product.oldPrice && <Typography.Text style={{ color: "#969696", fontWeight: 500, textDecoration: "line-through" }}>${product.oldPrice}</Typography.Text>}
+                    <Typography.Text style={{ color: "#ff4545", fontWeight: 500, marginLeft: 5 }}>${product.price}</Typography.Text>
                 </div>
                 <span>
-                    <Rate disabled defaultValue={2} value={5} style={{ fontSize: 12 }} />
-                    <span style={{ marginLeft: 5 }}>({0})</span>
+                    <Rate disabled defaultValue={2} value={feedBack ? getVotedHighest() : 0} style={{ fontSize: 12 }} />
+                    <span style={{ marginLeft: 5 }}>({feedBack?.comments?.length || 0})</span>
                 </span>
             </RaitingStyled>
         </ProductStyled>

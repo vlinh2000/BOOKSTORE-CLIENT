@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Avatar, Comment, Empty, Tabs, Tooltip, } from 'antd';
+import { Avatar, Comment, Empty, Rate, Tabs, Tooltip, } from 'antd';
 import moment from 'moment';
 
 const { TabPane } = Tabs;
@@ -39,48 +39,48 @@ const ConmentStyled = styled(Comment)`
 
 `;
 
-function ProductComment(props) {
+function ProductComment({ feedBack }) {
+
+    const voted5 = feedBack?.filter(eva => eva.voted === 5);
+    const voted4 = feedBack?.filter(eva => eva.voted === 4);
+    const voted3 = feedBack?.filter(eva => eva.voted === 3);
+    const voted2 = feedBack?.filter(eva => eva.voted === 2);
+    const voted1 = feedBack?.filter(eva => eva.voted === 1);
+
+    const listFeedBack = [voted5, voted4, voted3, voted2, voted1];
+
+    console.log(listFeedBack);
+
 
     return (
         <Wrapper>
             <TitleStyled>Reviews</TitleStyled>
             <div>
                 <Tabs defaultActiveKey="1" >
-                    <TabPane tab="5 Sao (2)" key="1">
-                        <ConmentStyled
-                            author={<a>Han Solo</a>}
-                            avatar={
-                                <Avatar
-                                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                                    alt="Han Solo"
-                                />
+                    {
+                        listFeedBack?.map((feedBack, index) => (<TabPane tab={` ${5 - index} Sao (${feedBack?.length || 0})`} key={index + 1}>
+                            {
+
+                                feedBack?.map(eva => (<ConmentStyled
+                                    author={<span>{eva.name}</span>}
+                                    avatar={
+                                        <Avatar alt={eva.name} src={eva?.avatar || ''}>{eva.avatar ? '' : eva.name?.chatAt(0)?.toUpperCase()}</Avatar>
+                                    }
+                                    content={<div><p>{eva.feedBackMessage}</p><Rate style={{ fontSize: 12 }} disabled defaultValue={5 - index} value={5 - index} /></div>}
+                                // datetime={
+                                //     <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
+                                //         <span>{moment().fromNow()}</span>
+                                //     </Tooltip>
+                                // }
+                                >
+
+                                </ConmentStyled>))
                             }
-                            content={
-                                <p>
-                                    We supply a series of design principles, practical patterns and high quality design
-                                    resources (Sketch and Axure).
-                                </p>
-                            }
-                            datetime={
-                                <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                                    <span>{moment().fromNow()}</span>
-                                </Tooltip>
-                            }
-                        >
-                        </ConmentStyled>
-                    </TabPane>
-                    <TabPane tab="4 Sao (0)" key="2">
-                        <Empty />
-                    </TabPane>
-                    <TabPane tab="3 Sao (0)" key="3">
-                        <Empty />
-                    </TabPane>
-                    <TabPane tab="2 Sao (0)" key="4">
-                        <Empty />
-                    </TabPane>
-                    <TabPane tab="1 Sao (0)" key="5">
-                        <Empty />
-                    </TabPane>
+                            {feedBack.length < 1 && <Empty />}
+                        </TabPane>))
+
+                    }
+
                 </Tabs>
             </div>
         </Wrapper>

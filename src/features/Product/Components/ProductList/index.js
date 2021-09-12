@@ -8,13 +8,17 @@ ProductList.propTypes = {
 
 };
 
-function ProductList(props) {
+function ProductList({ products }) {
+
     return (
         <div>
             <Row gutter={[48, 48]}>
-                <Col span={6}>
-                    <Product />
-                </Col>
+                {products.map(product =>
+                    <Col key={product.id} span={6}>
+                        <Product product={product} />
+                    </Col>
+
+                )}
             </Row >
         </div>
     );

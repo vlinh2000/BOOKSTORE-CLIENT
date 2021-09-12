@@ -1,7 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { ToastContainer, toast } from 'react-toastify';
-import { useSelector } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 
 
 function Notification(props) {
@@ -10,7 +8,7 @@ function Notification(props) {
         <div>
             <ToastContainer
                 position="top-right"
-                autoClose={5000}
+                autoClose={3000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick

@@ -95,7 +95,7 @@ const ButtonStyled = styled(Button)`
 function Header(props) {
 
     const dispatch = useDispatch();
-    const { isAuth } = useSelector((state) => state.user);
+    const { isAuth, user: { name } } = useSelector((state) => state.user.currentUser);
     const history = useHistory();
 
     const handleSwitchLoginModal = () => {
@@ -155,7 +155,7 @@ function Header(props) {
                                 <InfoCartStyled>
                                     <ButtonStyled onClick={handleSwitchLoginModal} shape='circle' size='large' icon={<UserOutlined />}></ButtonStyled>
                                     <div className='info'>
-                                        <div> Sign in </div>
+                                        <div> {isAuth ? name : 'Sign in'} </div>
                                         <div> My account </div>
                                     </div>
                                 </InfoCartStyled>
