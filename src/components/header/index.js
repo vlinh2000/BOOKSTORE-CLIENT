@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { switchLoginModal } from 'app/modalSlice';
 import LoginModal from 'modals/LoginModal';
 import RegisterModal from 'modals/RegisterModal';
+import { fetchCategory } from 'features/Product/productSlice';
 
 // Header.propTypes = {
 
@@ -115,6 +116,11 @@ function Header(props) {
     // }
 
 
+    //Handle fetch categories
+    React.useEffect(() => {
+        dispatch(fetchCategory());
+    }, [dispatch]);
+
     return (
         <HeaderStyled>
             <TopnavStyled>
@@ -165,8 +171,8 @@ function Header(props) {
                                     <Popover
                                         trigger='click'
                                         visible={false}
-                                        content={<CartModal />}
-                                    >
+                                        content={<CartModal />} >
+
                                         <ButtonStyled shape='circle' size='large' icon={<ShoppingCartOutlined />}></ButtonStyled>
                                     </Popover>
                                     <div className='info'>

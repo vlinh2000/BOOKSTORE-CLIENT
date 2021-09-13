@@ -4,6 +4,7 @@ import Product from '../Product';
 import ProductList from '../ProductList';
 import styled from 'styled-components';
 import { Col, Divider, Row } from 'antd';
+import { productApi } from 'api/ProductApi';
 
 ProductRelated.propTypes = {
 
@@ -34,24 +35,15 @@ const TitleStyled = styled.div`
 
 `;
 
-function ProductRelated(props) {
+function ProductRelated({ products }) {
     return (
         <Wrapper>
             <Divider />
             <TitleStyled>Related Products</TitleStyled>
             <Row gutter={[20, 10]}>
-                <Col span={6}>
-                    <Product />
-                </Col>
-                <Col span={6}>
-                    <Product />
-                </Col>
-                <Col span={6}>
-                    <Product />
-                </Col>
-                <Col span={6}>
-                    <Product />
-                </Col>
+                {products?.map(product => (<Col key={product.id} span={6}>
+                    <Product product={product} />
+                </Col>))}
             </Row >
             <Divider />
         </Wrapper>

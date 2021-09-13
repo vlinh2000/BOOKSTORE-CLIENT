@@ -28,16 +28,6 @@ const ListCategoryStyled = styled.ul`
      &:hover{
          color:#000;
      }
-
-     & .totalCategory{
-         width:25px;
-         height:25px;
-         border-radius:50%;
-         background:#f1f1f1;
-         text-align:center;
-         font-size:12px;
-         line-height:25px;
-     }
     };
 
 `;
@@ -47,18 +37,17 @@ const CategoryStyled = styled.div`
 `;
 
 
-function Category({ category }) {
-    return (
-        <CategoryStyled>
-            <DeliverTitle title={category.name} />
+function Category({ categories }) {
+    return <CategoryStyled>
+        <DeliverTitle title='Category' />
+        {categories?.map(category =>
             <ListCategoryStyled>
                 <li className="item">
-                    <span>{category.name}</span>
-                    <span className='totalCategory'>{category.total}</span>
+                    <span>{category.categoryName}</span>
                 </li>
             </ListCategoryStyled>
-        </CategoryStyled>
-    );
+        )}
+    </CategoryStyled>
 }
 
 export default Category;

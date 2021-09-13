@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Avatar, Comment, Empty, Rate, Tabs, Tooltip, } from 'antd';
+import { Avatar, Comment, Empty, Rate, Skeleton, Tabs, Tooltip, } from 'antd';
 import moment from 'moment';
+import { useSelector } from 'react-redux';
 
 const { TabPane } = Tabs;
 
@@ -48,30 +49,29 @@ function ProductComment({ feedBack }) {
     const voted1 = feedBack?.filter(eva => eva.voted === 1);
 
     const listFeedBack = [voted5, voted4, voted3, voted2, voted1];
-
-    console.log(listFeedBack);
-
+    const { starVoted } = useSelector(state => state.pageInfo);
 
     return (
         <Wrapper>
             <TitleStyled>Reviews</TitleStyled>
             <div>
-                <Tabs defaultActiveKey="1" >
+                <Tabs defaultActiveKey={`${starVoted}`} >
                     {
-                        listFeedBack?.map((feedBack, index) => (<TabPane tab={` ${5 - index} Sao (${feedBack?.length || 0})`} key={index + 1}>
+                        listFeedBack?.map((feedBack, index) => (<TabPane tab={` ${5 - index} Sao (${feedBack?.length || 0})`} key={`${5 - index}`}>
                             {
 
                                 feedBack?.map(eva => (<ConmentStyled
+                                    key={eva.uid}
                                     author={<span>{eva.name}</span>}
                                     avatar={
-                                        <Avatar alt={eva.name} src={eva?.avatar || ''}>{eva.avatar ? '' : eva.name?.chatAt(0)?.toUpperCase()}</Avatar>
+                                        <Avatar alt={eva.name} src={eva?.avatar || ''}>{eva.avatar ? '' : eva.name?.charAt(0)?.toUpperCase() || ''}</Avatar>
                                     }
                                     content={<div><p>{eva.feedBackMessage}</p><Rate style={{ fontSize: 12 }} disabled defaultValue={5 - index} value={5 - index} /></div>}
-                                // datetime={
-                                //     <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
-                                //         <span>{moment().fromNow()}</span>
-                                //     </Tooltip>
-                                // }
+                                    datetime={
+                                        <Tooltip title={moment().format('YYYY-MM-DD HH:mm:ss')}>
+                                            <span>{eva.createAt}</span>
+                                        </Tooltip>
+                                    }
                                 >
 
                                 </ConmentStyled>))
