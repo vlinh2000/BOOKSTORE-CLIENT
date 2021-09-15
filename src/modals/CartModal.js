@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Col, Divider, Modal, Popover, Row, Typography } from 'antd';
+import { Button, Col, Divider, Row, Typography } from 'antd';
 import styled from 'styled-components';
 import ProductInCartModal from 'features/Cart/Components/ProductInCartModal';
 import NotProductInCartModal from 'features/Cart/Components/NotProductInCartModal';
+import { Link } from 'react-router-dom';
 
 CartModal.propTypes = {
     products: PropTypes.array,
@@ -60,6 +61,7 @@ const WrapperProduct = styled.div`
 
 
 function CartModal({ products, totalPrice }) {
+
     return (
         <div>
             {/* Product */}
@@ -71,11 +73,24 @@ function CartModal({ products, totalPrice }) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography.Text strong={true}>Total:</Typography.Text>
                     <TotalPriceStyled>$ {totalPrice}</TotalPriceStyled>
-
                 </div>
                 <Row justify="space-between" gutter={[10, 10]}>
-                    <Col span={12}> <ButtonStyled bgcolor="#000">VIEW CART</ButtonStyled></Col>
-                    <Col span={12}> <ButtonStyled bgcolor="#969696" >CHECK OUT</ButtonStyled></Col>
+                    <Col span={12}>
+                        <Link to="/cart">
+                            <ButtonStyled
+                                bgcolor="#000">
+                                VIEW CART
+                            </ButtonStyled>
+                        </Link>
+                    </Col>
+                    <Col span={12}>
+                        <Link to="/cart/checkout">
+                            <ButtonStyled
+                                bgcolor="#969696" >
+                                CHECK OUT
+                            </ButtonStyled>
+                        </Link>
+                    </Col>
                 </Row>
             </div>}
 

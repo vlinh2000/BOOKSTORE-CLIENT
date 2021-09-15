@@ -1,85 +1,72 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Col, Pagination, Row, Spin } from 'antd';
+import { Col, Row, Spin } from 'antd';
 import SideBar from '../Components/SideBar';
 import TopControl from '../Components/TopControl';
 import ProductList from '../Components/ProductList';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { changePage, fetchPageInfo } from '../productSlice';
+import { fetchCategory, fetchPageInfo } from '../productSlice';
 
-
-
-MainPage.propTypes = {
-
-};
 
 const MainPageStyled = styled.div`
     width:90%;
     margin:3rem auto;
 `;
 
-const PaginationStyled = styled.div`
-    text-align:center;
-    margin-top:3rem;
-
-`;
 
 function MainPage(props) {
 
-    const { search, products, loading } = useSelector(state => state.pageInfo);
+    const { filterPattern, rangeStep, products, loading } = useSelector(state => state.pageInfo);
 
     const [books, setBooks] = React.useState([]);
 
-    React.useEffect(() => {
-        //defaul products
-        const filterOrSearch = async () => {
-            await setBooks(products);
-            //handle form search 
-            const { category, value } = search;
-
-            let newBook = products.filter(book => {
-
-                let cateId = category === '-1' ? book.categoryId : category;
-                return book.categoryId === cateId && book.name.toLowerCase().includes(value.toLowerCase())
-
-            });
-
-            setBooks(newBook);
-        }
-        filterOrSearch();
-
-        //handle check category
-
-        //handle range price
-
-        //handle sort 
-
-
-    }, [search, products]);
-
-
-
-
-
-
-
     const dispatch = useDispatch();
 
-    // const handleChangePage = (page) => {
-    //     //handle when user change page
-    //     dispatch(changePage(page));
-    // }
-
-    // [  ]
-
-    //handle fetch all products
+    //handle fetch all products , category
     React.useEffect(() => {
+
         dispatch(fetchPageInfo());
-        // const params = {
-        //     _page, _limit
-        // }
+        dispatch(fetchCategory());
+
     }, [dispatch])
+
+
+    //handle search , filter category , range Price ,sort 
+    React.useEffect(() => {
+
+        //handle form search 
+        const { categoryFilter, searchValue, sort, rangePrice } = filterPattern;
+        let newBooks = products.filter(book => book.name.toLowerCase().includes(searchValue?.toLowerCase()));
+
+        //handle category filter 
+        newBooks = newBooks.filter(book => {
+            //check if category fiter = []
+            if (categoryFilter.length < 1) return book;
+            //find book in list category filter 
+            return categoryFilter.find(con => con === book.categoryId) && book;
+        })
+
+        // handle range price
+        if (rangePrice.length > 0) {
+            const [min, max] = rangePrice;
+            newBooks = newBooks.filter(book => book.price >= (min * rangeStep) && book.price <= (max * rangeStep));
+        }
+
+        //hanlde sort 
+        newBooks = handleSort(newBooks, sort);
+        setBooks(newBooks);
+
+    }, [filterPattern, products, rangeStep]);
+
+    //handle sort 
+    const handleSort = (products, values) => {
+        switch (values) {
+            case 'min-to-max': return products.sort((book1, book2) => book1.price - book2.price);
+            case 'max-to-min': return products.sort((book1, book2) => book2.price - book1.price);
+            default: return products;
+        }
+
+    }
 
     return (
         <MainPageStyled>
@@ -88,15 +75,11 @@ function MainPage(props) {
                     <SideBar />
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 19 }}>
-                    <TopControl totalProduct={books?.length} />
+                    <TopControl totalProduct={books?.length} handleSort={handleSort} />
                     {loading
                         ? <Spin />
                         : <ProductList products={books} />
                     }
-
-                    {/* <PaginationStyled>
-                                <Pagination onChange={handleChangePage} defaultCurrent={_page} total={_totalPage} pageSize={1} />
-                            </PaginationStyled>  */}
                 </Col>
             </Row>
         </MainPageStyled>

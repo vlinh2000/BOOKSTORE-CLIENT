@@ -1,29 +1,47 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import DeliverTitle from './DeliverTitle';
 import styled from 'styled-components';
-import { Slider, Typography } from 'antd';
-PriceChoosen.propTypes = {
+import { Divider, Slider, Typography } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { filterBy } from 'features/Product/productSlice';
+import { DollarCircleOutlined, SwapOutlined } from '@ant-design/icons';
 
-};
 
 const PriceChoosenStyled = styled.div`
-margin-bottom : 2.5rem;
+    margin-bottom :2.5rem;
 `;
 
 
-function PriceChoosen(props) {
-    const [priceFilter, setPriceFilter] = React.useState([0, 100]);
+function PriceChoosen() {
+    const { rangeStep } = useSelector(state => state.pageInfo);
 
-    const handleChange = (e) => {
-        setPriceFilter([...e]);
+    const [rangeValue, setRangeValue] = React.useState([1, 100]);
+
+    const dispatch = useDispatch();
+
+    const handleChange = (values) => {
+        setRangeValue(values);
+        dispatch(filterBy({ rangePrice: values }));
     }
 
     return (
         <PriceChoosenStyled>
             <DeliverTitle title="price" />
-            <Slider tooltipVisible={false} defaultValue={[10, 2000]} min={10} max={2000} range onChange={handleChange} />
-            <Typography.Text><span style={{ color: '#969696', fontWeight: 400 }}>Range :</span> {`${priceFilter[0]} $  - ${priceFilter[1]} $`} </Typography.Text>
+            <Slider
+                tooltipVisible={false}
+                range
+                defaultValue={[1, 100]}
+                min={1}
+                max={100}
+                onChange={handleChange} />
+            <Typography.Text>
+                <span style={{ color: '#969696', fontWeight: 500, marginRight: 15 }}>Range :</span>
+                <span><DollarCircleOutlined /> {`${Math.floor(rangeValue[0] * rangeStep)} `}</span>
+                <Divider type='vertical' />
+                <SwapOutlined />
+                <Divider type='vertical' />
+                <span><DollarCircleOutlined /> {`${Math.ceil(rangeValue[1] * rangeStep)}`}</span>
+            </Typography.Text>
         </PriceChoosenStyled>
     );
 }

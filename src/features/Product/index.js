@@ -1,13 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { BrowserRouter, Switch, Route, useRouteMatch } from 'react-router-dom';
 import MainPage from './pages/MainPage';
 import NotFound from 'components/NotFound';
 import ProductDetailPage from './pages/ProductDetailPage';
 
-ProductFeature.propTypes = {
-
-};
 
 function ProductFeature(props) {
     const match = useRouteMatch();

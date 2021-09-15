@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Form, Input, Modal, Row, Typography } from 'antd';
+import { Button, Col, Form, Modal, Row, Typography } from 'antd';
 import styled from 'styled-components';
 import { HomeOutlined, KeyOutlined, MailOutlined, PhoneOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
 import InputField from 'custom-fields/InputFields';

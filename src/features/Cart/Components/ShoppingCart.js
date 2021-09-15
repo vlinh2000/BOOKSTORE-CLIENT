@@ -1,14 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { columnShoppingCartTab } from 'constants/Global';
-import { Col, Row, Table, Radio, Form, Button } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import InputField from 'custom-fields/InputFields';
 
-ShoppingCart.propTypes = {
+import { Col, Row, Table, Radio, Button } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 
-};
+import { columnShoppingCartTab } from 'constants/Global';
 
 
 const Wrapper = styled.div`

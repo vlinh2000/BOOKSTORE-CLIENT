@@ -1,16 +1,17 @@
 import React from 'react';
-import { Button, Form, Input, Modal, Typography } from 'antd';
-import styled from 'styled-components';
 
+import { Button, Form, Modal, Typography } from 'antd';
 import { useForm } from 'react-hook-form';
-
 import { yupResolver } from "@hookform/resolvers/yup"
+
+import styled from 'styled-components';
 import loginSchema from 'yup/loginSchema';
 import InputField from 'custom-fields/InputFields';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { switchLoginModal, switchRegisterModal } from 'app/modalSlice';
 import { getMe, login } from 'app/userSlice';
-import { unwrapResult } from '@reduxjs/toolkit';
+
 import { toast } from 'react-toastify';
 
 const FormStyled = styled.form`
@@ -19,16 +20,6 @@ const FormStyled = styled.form`
     margin-top:2rem;
     `;
 
-const InputStyled = styled(Input)`
-    min-height:55px;
-    margin-top:2rem;
-    font-weight:500;
-    `;
-
-const InputPassStyled = styled(Input)`
-    min-height:55px;
-    font-weight:500;
-`;
 
 const TitleStyled = styled(Typography.Text)`
     font-size:16px;

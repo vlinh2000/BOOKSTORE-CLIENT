@@ -1,19 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
+import { useSelector } from 'react-redux';
+
 import styled from 'styled-components';
-import { Breadcrumb, Button, Col, Divider, Row, Skeleton, Spin, Typography } from 'antd';
-import { BookOutlined, HeartOutlined, HomeOutlined, MinusOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
+
+import { Breadcrumb, Button, Col, Divider, Row, Skeleton, Spin } from 'antd';
+import { BookOutlined, HeartOutlined, HomeOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+
 import ProductRelated from '../Components/ProductRelated';
 import ProductComment from '../Components/ProductComment';
 import ProductEvaluateForm from '../Components/ProductEvaluateForm';
+
 import { productApi } from 'api/ProductApi';
 import { feedBackApi } from 'api/feedBackApi';
-import { useSelector } from 'react-redux';
-
-ProductDetailPage.propTypes = {
-
-};
 
 const Wrapper = styled.div`
     line-height:55px;
@@ -130,8 +129,6 @@ function ProductDetailPage(props) {
     const { isNewFeed } = useSelector(state => state.pageInfo)
 
     const [quantity, setQuantity] = React.useState(1);
-
-    console.log(isFeedBackLoading)
 
     React.useEffect(() => {
         //handle fetch book with book id
@@ -299,7 +296,6 @@ function ProductDetailPage(props) {
                                         size="large"
                                         borderColor="#9387d9"
                                         bgcolor="#9387d9"
-                                        size='large'
                                         shape="circle"
                                         icon={<HeartOutlined />}>
                                     </ButtonSmallStyled>

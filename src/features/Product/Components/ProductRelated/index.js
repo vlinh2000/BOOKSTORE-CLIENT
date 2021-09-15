@@ -1,13 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Product from '../Product';
-import ProductList from '../ProductList';
+
 import styled from 'styled-components';
 import { Col, Divider, Row } from 'antd';
-import { productApi } from 'api/ProductApi';
+
+import Product from '../Product';
 
 ProductRelated.propTypes = {
+    products: PropTypes.array
+};
 
+ProductRelated.defaultProps = {
+    products: []
 };
 
 const Wrapper = styled.div`

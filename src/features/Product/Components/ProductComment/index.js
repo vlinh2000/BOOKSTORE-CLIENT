@@ -1,14 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Avatar, Comment, Empty, Rate, Skeleton, Tabs, Tooltip, } from 'antd';
-import moment from 'moment';
 import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
+
+import styled from 'styled-components';
+
+import { Avatar, Comment, Empty, Rate, Tabs, Tooltip, } from 'antd';
+
+import moment from 'moment';
 
 const { TabPane } = Tabs;
 
 ProductComment.propTypes = {
+    feedBack: PropTypes.array
+};
 
+ProductComment.defaultProps = {
+    feedBack: []
 };
 
 const Wrapper = styled.div`

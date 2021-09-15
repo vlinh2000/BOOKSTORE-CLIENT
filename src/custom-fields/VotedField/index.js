@@ -1,10 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Alert, Form, Input, Rate } from 'antd'
 import { Controller } from 'react-hook-form';
-import { SmileOutlined } from '@ant-design/icons';
-import { ErrorMessage } from '@hookform/error-message';
+import PropTypes from 'prop-types';
+
+import styled from 'styled-components';
+
+import { Alert, Form, Rate } from 'antd'
 
 VotedField.propTypes = {
     //form  , field if using formik
@@ -23,10 +23,6 @@ VotedField.defaultProps = {
     disabled: false
 };
 
-// const VotedStyled = styled(Input)`
-//     min-height:55px;
-//     font-weight:500;
-//     `;
 const RaitingStyled = styled.div`
     color:#969696;
     font-size:15px;
@@ -59,10 +55,17 @@ function VotedField(props) {
                 return (<Form.Item
                     name={field.name} >
                     <RaitingStyled>
-                        <span style={{ marginRight: 10 }}>{label}:</span>
-                        <Rate onChange={handleVotedChange} />
+                        <span
+                            style={{ marginRight: 10 }}>{label}:</span>
+                        <Rate
+                            onChange={handleVotedChange} />
                     </RaitingStyled>
-                    {errors[field.name]?.message && <Alert style={{ width: '50%' }} message={errors[field.name]?.message} type="warning" showIcon />}
+                    {errors[field.name]?.message
+                        && <Alert
+                            style={{ width: '50%' }}
+                            message={errors[field.name]?.message}
+                            type="warning"
+                            showIcon />}
 
                 </Form.Item>)
             }} />

@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form, Input } from 'antd'
 import { Controller } from 'react-hook-form';
-import { SmileOutlined } from '@ant-design/icons';
-import { ErrorMessage } from '@hookform/error-message';
 
 InputField.propTypes = {
     //form  , field if using formik

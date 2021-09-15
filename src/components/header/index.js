@@ -1,21 +1,23 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import { FacebookOutlined, InstagramOutlined, ShoppingCartOutlined, TwitterOutlined, UserOutlined, YoutubeOutlined } from '@ant-design/icons'
-import { Button, Col, Popover, Row } from 'antd';
-import styled from 'styled-components';
 import { NavLink, useHistory } from 'react-router-dom';
-import FormSearch from 'components/FormSearch';
-import CartModal from 'modals/CartModal';
-import { Logo } from 'constants/Global';
 import { useDispatch, useSelector } from 'react-redux';
-import { switchLoginModal } from 'app/modalSlice';
+
+import {
+    FacebookOutlined, InstagramOutlined, ShoppingCartOutlined,
+    TwitterOutlined, UserOutlined, YoutubeOutlined
+} from '@ant-design/icons'
+import { Button, Col, Popover, Row } from 'antd';
+
+import styled from 'styled-components';
+import FormSearch from 'components/FormSearch';
+import { Logo } from 'constants/Global';
+
+import CartModal from 'modals/CartModal';
 import LoginModal from 'modals/LoginModal';
 import RegisterModal from 'modals/RegisterModal';
-import { fetchCategory } from 'features/Product/productSlice';
 
-// Header.propTypes = {
+import { switchLoginModal } from 'app/modalSlice';
 
-// };
 
 const HeaderStyled = styled.div`
     height: 150px;
@@ -23,6 +25,7 @@ const HeaderStyled = styled.div`
 `;
 
 const TopnavStyled = styled.div`
+    
     padding: 0 4rem;
     background: #f5f5f5;
     color: #969696;
@@ -30,6 +33,7 @@ const TopnavStyled = styled.div`
     font-weight: 500;    
     line-height: 40px;
     letter-spacing: 3px;
+
     .hotline{
         font-size:11px;
         text-transform: uppercase;
@@ -69,6 +73,7 @@ const InfoCartStyled = styled.div`
     display: flex;
     align-items: center;
     height:110px;
+
     .info{
         margin-left: 0.3rem;
         font-size: 12px;
@@ -83,6 +88,7 @@ const InfoCartStyled = styled.div`
 `;
 
 const ButtonStyled = styled(Button)`
+
     border-width:2px;
 
     &:hover{
@@ -98,9 +104,11 @@ function Header(props) {
     const dispatch = useDispatch();
     const { isAuth, user: { name } } = useSelector((state) => state.user.currentUser);
     const history = useHistory();
+    const [isVisibleCartModal, setIsvisibleCartModal] = React.useState(false);
 
+
+    //handle switch (on,off) login modal 
     const handleSwitchLoginModal = () => {
-        //isAuth
         if (isAuth) {
             history.push('/cart');
             return;
@@ -110,56 +118,110 @@ function Header(props) {
         dispatch(action);
     }
 
-    // const handleSwitchCartModal = ()=>{
-    //     const action = switchLoginModal(true);
-    //     dispatch(action);
-    // }
+
+    //handle switch (on,off) cart modal 
+    const handleSwitchCartModal = () => {
+        setIsvisibleCartModal(prev => !prev);
+    }
 
 
-    //Handle fetch categories
-    React.useEffect(() => {
-        dispatch(fetchCategory());
-    }, [dispatch]);
 
     return (
         <HeaderStyled>
             <TopnavStyled>
-                <Row justify="space-between" align="middle" style={{ height: '100%' }}>
-                    <Col xs={{ span: 0 }} sm={{ span: 12 }}  >
+                <Row
+                    justify="space-between"
+                    align="middle"
+                    style={{ height: '100%' }}>
+                    <Col
+                        xs={{ span: 0 }}
+                        sm={{ span: 12 }}  >
                         <div className="hotline" >
                             hotline: +84-( 38 )-774-6557
                         </div>
                     </Col>
-                    <Col xs={{ span: 0 }} sm={{ span: 4 }} push={1}>
-                        <div className="social-media">
-                            <li><a href="https://twitter.com" target='_blank' rel="noopener noreferrer"><TwitterOutlined /></a></li>
-                            <li><a href="https://instagram.com" target='_blank' rel="noopener noreferrer"><InstagramOutlined /></a></li>
-                            <li><a href="https://facebook.com" target='_blank' rel="noopener noreferrer"><FacebookOutlined /></a></li>
-                            <li><a href="https://youtube.com" target='_blank' rel="noopener noreferrer"><YoutubeOutlined /></a></li>
+                    <Col
+                        xs={{ span: 0 }}
+                        sm={{ span: 4 }}
+                        push={1}>
+                        <div
+                            className="social-media">
+                            <li>
+                                <a
+                                    href="https://twitter.com"
+                                    target='_blank'
+                                    rel="noopener noreferrer">
+                                    <TwitterOutlined />
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://instagram.com"
+                                    target='_blank'
+                                    rel="noopener noreferrer">
+                                    <InstagramOutlined />
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://facebook.com"
+                                    target='_blank'
+                                    rel="noopener noreferrer">
+                                    <FacebookOutlined />
+                                </a>
+                            </li>
+                            <li>
+                                <a
+                                    href="https://youtube.com"
+                                    target='_blank'
+                                    rel="noopener noreferrer">
+                                    <YoutubeOutlined />
+                                </a>
+                            </li>
                         </div>
                     </Col>
                 </Row>
             </TopnavStyled>
             <HeaderMainStyled>
-                <Row justify="space-between" align="middle" >
-                    <Col xs={{ span: 24 }} sm={{ span: 4 }} >
-                        <Row align='middle' justify='center'>
+                <Row
+                    justify="space-between"
+                    align="middle" >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 4 }} >
+                        <Row
+                            align='middle'
+                            justify='center'>
                             <NavLink
                                 className="logo"
                                 exact
                                 to='/'>
-                                <img src={Logo} alt="logo" />
+                                <img
+                                    src={Logo}
+                                    alt="logo" />
                             </NavLink>
                         </Row>
                     </Col>
-                    <Col xs={{ span: 0 }} sm={{ span: 6 }} md={{ span: 10 }}>
+
+                    <Col
+                        xs={{ span: 0 }}
+                        sm={{ span: 6 }}
+                        md={{ span: 10 }}>
                         <FormSearch />
                     </Col>
-                    <Col xs={{ span: 0 }} sm={{ span: 10 }} md={{ span: 6 }}>
+
+                    <Col
+                        xs={{ span: 0 }}
+                        sm={{ span: 10 }}
+                        md={{ span: 6 }}>
                         <Row justify="space-around">
                             <Col span={10} >
                                 <InfoCartStyled>
-                                    <ButtonStyled onClick={handleSwitchLoginModal} shape='circle' size='large' icon={<UserOutlined />}></ButtonStyled>
+                                    <ButtonStyled
+                                        onClick={handleSwitchLoginModal}
+                                        shape='circle' size='large'
+                                        icon={<UserOutlined />}>
+                                    </ButtonStyled>
                                     <div className='info'>
                                         <div> {isAuth ? name : 'Sign in'} </div>
                                         <div> My account </div>
@@ -170,10 +232,17 @@ function Header(props) {
                                 <InfoCartStyled>
                                     <Popover
                                         trigger='click'
-                                        visible={false}
+                                        visible={isVisibleCartModal}
                                         content={<CartModal />} >
 
-                                        <ButtonStyled shape='circle' size='large' icon={<ShoppingCartOutlined />}></ButtonStyled>
+
+                                        <ButtonStyled
+                                            shape='circle'
+                                            size='large'
+                                            icon={<ShoppingCartOutlined />}
+                                            onClick={handleSwitchCartModal}
+                                        // onBlur={handleSwitchCartModal}
+                                        />
                                     </Popover>
                                     <div className='info'>
                                         <div> My cart</div>
@@ -183,6 +252,7 @@ function Header(props) {
                             </Col>
                         </Row>
                     </Col>
+
                 </Row>
             </HeaderMainStyled>
             <LoginModal />

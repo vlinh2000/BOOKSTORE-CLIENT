@@ -19,7 +19,7 @@ const WrapperList = styled.div`
     margin-top:0.5rem;
     font-weight:500;
     
-    a{
+    a,span{
         color:#969696;
         display:block;
 
@@ -51,42 +51,42 @@ const Footer = () => {
                 <Col sm={{ span: 12 }} md={{ span: 7 }} >
                     <TitleStyled>CONTACT US</TitleStyled>
                     <WrapperList>
-                        <a>199 Amsterdam 72, Wall street, Nox 20110 NY</a>
-                        <a>(+123) 456 789</a>
-                        <a>tikieshopbook@domain.com</a>
-                        <a>Branch: New York, Paris, France, California, Madrid, Spain</a>
-                        <a>Open hours: 8.00 – 20.00 Mon – Fri</a>
+                        <span>199 Amsterdam 72, Wall street, Nox 20110 NY</span>
+                        <span>(+123) 456 789</span>
+                        <span>tikieshopbook@domain.com</span>
+                        <span>Branch: New York, Paris, France, California, Madrid, Spain</span>
+                        <span>Open hours: 8.00 – 20.00 Mon – Fri</span>
                     </WrapperList>
                 </Col>
                 <Col sm={{ span: 12 }} md={{ span: 4 }}>
                     <TitleStyled>PRINT RESTORATION</TitleStyled>
                     <WrapperList>
-                        <a>Bestsellers</a>
-                        <a>Interviews</a>
-                        <a>Authors Story</a>
-                        <a>Book Fairs</a>
-                        <a>Privacy & Terms</a>
+                        <a href="/#">Bestsellers</a>
+                        <a href="/#">Interviews</a>
+                        <a href="/#">Authors Story</a>
+                        <a href="/#">Book Fairs</a>
+                        <a href="/#">Privacy & Terms</a>
                     </WrapperList>
                 </Col>
                 <Col sm={{ span: 8 }} md={{ span: 4 }}>
                     <TitleStyled>SOCIAL MEDIA</TitleStyled>
                     <WrapperList>
-                        <a>Twitter</a>
-                        <a>Instagram</a>
-                        <a>Authors Story</a>
-                        <a>Facebook</a>
-                        <a>Dribbble</a>
-                        <a>Behance</a>
+                        <a href="/#">Twitter</a>
+                        <a href="/#">Instagram</a>
+                        <a href="/#">Authors Story</a>
+                        <a href="/#">Facebook</a>
+                        <a href="/#">Dribbble</a>
+                        <a href="/#">Behance</a>
                     </WrapperList>
                 </Col>
                 <Col sm={{ span: 8 }} md={{ span: 4 }}>
                     <TitleStyled>ABOUT US</TitleStyled>
                     <WrapperList>
-                        <a>About Us</a>
-                        <a>Story</a>
-                        <a>Institute</a>
-                        <a>Blog</a>
-                        <a>Gift cards</a>
+                        <a href="/#">About Us</a>
+                        <a href="/#">Story</a>
+                        <a href="/#">Institute</a>
+                        <a href="/#">Blog</a>
+                        <a href="/#" target="_blank">Gift cards</a>
                     </WrapperList>
                 </Col>
                 <Col sm={{ span: 8 }} md={{ span: 4 }}>

@@ -1,4 +1,3 @@
-import { continueStatement } from '@babel/types';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { categoryApi } from 'api/CategoryApi';
 import { feedBackApi } from 'api/feedBackApi';
@@ -6,7 +5,7 @@ import { productApi } from 'api/ProductApi';
 
 
 
-export const fetchPageInfo = createAsyncThunk('pageInfo/fetchPageInfo', async (params, { fulfillWithValue, rejectWithValue }) => {
+export const fetchPageInfo = createAsyncThunk('pageInfo/fetchPageInfo', async (params, { fulfillWithValue, rejectWithValue, dispatch }) => {
 
     try {
         const pageInfo = await productApi.getAll(params);
@@ -19,12 +18,14 @@ export const fetchPageInfo = createAsyncThunk('pageInfo/fetchPageInfo', async (p
             return { ...book, feedBack: feedBackOfThisBook };
         })
 
+        //handle range 
+        dispatch(getRangePrice(getRange(products)))
 
         return {
             products: products,
-            _page: pageInfo._page,
-            _limit: pageInfo._limit,
-            _totalPage: pageInfo._totalPage
+            // _page: pageInfo._page,
+            // _limit: pageInfo._limit,
+            // _totalPage: pageInfo._totalPage
         };
 
     } catch (error) {
@@ -39,7 +40,6 @@ export const sendFeedBack = createAsyncThunk('pageInfo/sendFeedBack', async (dat
     try {
         //check data
         const { message } = await feedBackApi.post(data);
-        console.log(message);
         return message;
     } catch (error) {
         return rejectWithValue(error);
@@ -60,19 +60,28 @@ export const fetchCategory = createAsyncThunk('pageInfo/fetchCategory', async (p
 
 });
 
+
+const getRange = (books) => {
+    let rangeBook = books.sort((a, b) => b.price - a.price).map(book => book.price);
+    return rangeBook[0] / 100;
+}
+
 const initialState = {
     products: [],
     categories: [],
-    // _page: 1,
-    // _limit: 8,
-    // _totalPage: 2,
     loading: false,
     isLoadingFeedBack: false,
     isLoadingCategory: false,
     error: '',
     isNewFeed: false,
     starVoted: 5,
-    search: { category: '-1', value: '' },
+    rangeStep: 0,
+    filterPattern: {
+        searchValue: '',
+        categoryFilter: [],
+        rangePrice: [],
+        sort: ''
+    },
 
 }
 
@@ -87,8 +96,12 @@ const pageInfo = createSlice({
         hasNewFeedBack: (state, action) => {
             state.isNewFeed = !state.isNewFeed;
         },
-        searchValue: (state, action) => {
-            state.search = action.payload;
+        filterBy: (state, action) => {
+            state.filterPattern = { ...state.filterPattern, ...action.payload };
+        },
+        getRangePrice: (state, action) => {
+            state.rangeStep = action.payload;
+
         }
 
 
@@ -140,6 +153,6 @@ const pageInfo = createSlice({
 })
 
 const { actions, reducer } = pageInfo;
-export const { changePage, hasNewFeedBack, searchValue } = actions;
+export const { changePage, hasNewFeedBack, filterBy, getRangePrice } = actions;
 
 export default reducer;

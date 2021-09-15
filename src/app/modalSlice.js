@@ -11,7 +11,7 @@ const modal = createSlice({
         switchLoginModal: (state, action) => {
 
             const status = action.payload;
-            status == true && (state.registerModal = false);
+            status === true && (state.registerModal = false);
 
             state.loginModal = status;
 
@@ -19,7 +19,7 @@ const modal = createSlice({
         switchRegisterModal: (state, action) => {
 
             const status = action.payload;
-            status == true && (state.loginModal = false);
+            status === true && (state.loginModal = false);
 
             state.registerModal = status;
 

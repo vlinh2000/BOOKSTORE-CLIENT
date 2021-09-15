@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import InputField from 'custom-fields/InputFields';
-import { Col, Row, Form, Typography, Divider, Button } from 'antd';
+import { Col, Row, Form, Divider, Button } from 'antd';
+import { useForm } from 'react-hook-form';
+import { SaveOutlined } from '@ant-design/icons';
 
 Checkout.propTypes = {
 
@@ -61,26 +63,41 @@ const PlaceOrderStyled = styled.div`
 
 
 function Checkout(props) {
+
+    const { control, handleSubmit } = useForm();
+
+    const onSubmit = values => {
+        console.log(values)
+    }
+
     return (
         <Wrapper>
             <Row justify="center" gutter={[100, 0]} >
                 <Col span={8}>
                     <PlaceOrderStyled>
                         <p>THÔNG TIN KHÁCH HÀNG</p>
-                        <Form>
+                        <form onSubmit={handleSubmit(onSubmit)}>
                             <InputField
                                 name="name"
-                                placeholder="Họ tên" />
+                                placeholder="Họ tên"
+                                control={control} />
                             <InputField
                                 name="phoneNumber"
-                                placeholder="Số điện thoại" />
+                                placeholder="Số điện thoại"
+                                control={control} />
+
                             <InputField
                                 name="email"
-                                placeholder="Email" />
+                                placeholder="Email"
+                                control={control} />
                             <InputField
                                 name="address"
-                                placeholder="Địa chỉ nhận hàng" />
-                        </Form>
+                                placeholder="Địa chỉ nhận hàng"
+                                control={control} />
+                            <Form.Item>
+                                <Button icon={<SaveOutlined />}>Save</Button>
+                            </Form.Item>
+                        </form>
                     </PlaceOrderStyled>
                 </Col>
                 <Col span={8}>

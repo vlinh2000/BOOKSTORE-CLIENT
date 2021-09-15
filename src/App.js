@@ -1,12 +1,12 @@
 import './App.css';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import Header from 'components/Header';
 import React, { Suspense } from 'react';
+
+import Header from 'components/Header';
 import NotFound from 'components/NotFound';
 import Notification from 'components/Notification';
 import Footer from 'components/Footer';
 import Loading from 'components/Loading';
-import LoginModal from 'modals/LoginModal';
 
 const Product = React.lazy(() => import("features/Product"))
 const Cart = React.lazy(() => import("features/Cart"))

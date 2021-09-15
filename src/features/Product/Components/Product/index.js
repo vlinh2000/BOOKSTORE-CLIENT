@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Col, Rate, Row, Typography } from 'antd';
-import { ArrowRightOutlined, HeartOutlined, SearchOutlined, ShoppingCartOutlined, StarOutlined } from '@ant-design/icons';
+import { Button, Rate, Typography } from 'antd';
+import { HeartOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
@@ -55,6 +55,10 @@ const TitleStyled = styled(Typography.Text)`
     margin: 10px 0 0 0;
     font-weight: 500;
     color:#000;
+
+    &:hover {
+        color:#9387d9;
+    }
 `;
 const ProductStyled = styled(Link)`
 
@@ -103,13 +107,6 @@ const ButtonStyled = styled(Button)`
 `;
 
 
-const LinkStyled = styled(Link)`
-    &:hover {
-        ${TitleStyled} {
-            color:#9387d9;
-        }
-    }
-`;
 
 const ByAuthorStyled = styled.div`
     margin-bottom:5px;
@@ -149,32 +146,58 @@ function Product({ product }) {
     }
 
     return (
-        <ProductStyled to={`/product/${_id}`}>
-            <div className='book-image'>
-                <img width="250px" height='350px' src={image[0]} alt='book' />
+        <ProductStyled
+            to={`/product/${_id}`}>
+            <div
+                className='book-image'>
+                <img
+                    width="250px"
+                    height='350px'
+                    src={image[0]}
+                    alt='book' />
                 {oldPrice && <span className="discount">- {(((oldPrice - price) / oldPrice) * 100).toFixed(0)} %</span>}
 
-                <HoverImageStyled bgImage={image[1]}>
-                    <div className="tip-box">
-                        <Link to={`/product/${_id}`}> <ButtonStyled size='large' icon={<ArrowRightOutlined />} /></Link>
-                        <ButtonStyled style={{ margin: '10px 0' }} size='large' icon={<HeartOutlined />} />
-                        <ButtonStyled size='large' icon={<SearchOutlined />} />
+                <HoverImageStyled
+                    bgImage={image[1]}>
+                    <div
+                        className="tip-box">
+                        <ButtonStyled
+                            size='large'
+                            icon={<ShoppingCartOutlined />} />
+                        <ButtonStyled
+                            style={{ margin: '10px 0' }}
+                            size='large'
+                            icon={<HeartOutlined />} />
+                        <Link
+                            to={`/product/${_id}`}>
+                            <ButtonStyled
+                                size='large'
+                                icon={<SearchOutlined />} /></Link>
                     </div>
                 </HoverImageStyled>
 
             </div>
-            <LinkStyled>
-                <TitleStyled >{name}</TitleStyled>
-            </LinkStyled>
-            <ByAuthorStyled><span className="by">By: </span> <span className="author">{author}</span>  </ByAuthorStyled>
+            <TitleStyled >{name}</TitleStyled>
+            <ByAuthorStyled>
+                <span
+                    className="by">By: </span>
+                <span
+                    className="author">{author}</span>
+            </ByAuthorStyled>
             <RaitingStyled>
                 <div>
                     {product.oldPrice && <Typography.Text style={{ color: "#969696", fontWeight: 500, textDecoration: "line-through" }}>${product.oldPrice}</Typography.Text>}
-                    <Typography.Text style={{ color: "#ff4545", fontWeight: 500, marginLeft: 5 }}>${product.price}</Typography.Text>
+                    <Typography.Text
+                        style={{ color: "#ff4545", fontWeight: 500, marginLeft: 5 }}>${product.price}</Typography.Text>
                 </div>
                 <span>
-                    <Rate disabled defaultValue={2} value={feedBack ? getVotedHighest() : 0} style={{ fontSize: 12 }} />
-                    <span style={{ marginLeft: 5 }}>({feedBack?.comments?.length || 0})</span>
+                    <Rate
+                        disabled
+                        defaultValue={2}
+                        value={feedBack ? getVotedHighest() : 0}
+                        style={{ fontSize: 12 }} />
+                    <span
+                        style={{ marginLeft: 5 }}>({feedBack?.comments?.length || 0})</span>
                 </span>
             </RaitingStyled>
         </ProductStyled>

@@ -10,7 +10,4 @@ export const categoryApi = {
         const url = `/categories/${categoryId}`;
         return axiosClient.get(url);
     }
-
-
-
 }

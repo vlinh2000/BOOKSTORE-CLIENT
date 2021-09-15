@@ -5,7 +5,11 @@ import { Col, Row } from 'antd';
 
 
 ProductList.propTypes = {
+    products: PropTypes.array
+};
 
+ProductList.defaultProps = {
+    products: []
 };
 
 function ProductList({ products }) {
@@ -13,7 +17,7 @@ function ProductList({ products }) {
     return (
         <div>
             <Row gutter={[48, 48]}>
-                {products.map(product =>
+                {products?.map(product =>
                     <Col key={product.id} span={6}>
                         <Product product={product} />
                     </Col>

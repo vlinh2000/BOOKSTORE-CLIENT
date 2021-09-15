@@ -1,13 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Tabs } from 'antd';
+import { message, Tabs } from 'antd';
 import ShoppingCart from './Components/ShoppingCart';
 import Checkout from './Components/Checkout';
 import styled from 'styled-components';
+import { useSelector } from 'react-redux';
 
-Cart.propTypes = {
-
-};
 
 const Wrapper = styled.div`
     margin:2rem 0;
@@ -29,19 +26,25 @@ const TabsStyled = styled(Tabs)`
 
 
 function Cart(props) {
+    const { isAuth } = useSelector(state => state.user.currentUser);
+
     return (
         <Wrapper>
-            <TabsStyled type="card" defaultActiveKey={0} centered={true}>
+            <TabsStyled
+                type="card"
+                defaultActiveKey={0}
+                centered={true}>
                 <Tabs.TabPane
                     tab={`SHOPPING CART(${2})`}
                     key={0}>
                     <ShoppingCart />
                 </Tabs.TabPane>
-                <Tabs.TabPane
+                {isAuth && <Tabs.TabPane
                     tab="CHECKOUT"
                     key={1}>
                     <Checkout />
-                </Tabs.TabPane>
+                </Tabs.TabPane>}
+
             </TabsStyled>
         </Wrapper>
     );
