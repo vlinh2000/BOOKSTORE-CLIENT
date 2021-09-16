@@ -1,6 +1,8 @@
 import './App.css';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Router, Redirect } from 'react-router-dom';
 import React, { Suspense } from 'react';
+
+import { createBrowserHistory } from 'history'
 
 import Header from 'components/Header';
 import NotFound from 'components/NotFound';
@@ -11,13 +13,14 @@ import Loading from 'components/Loading';
 const Product = React.lazy(() => import("features/Product"))
 const Cart = React.lazy(() => import("features/Cart"))
 
+export const history = createBrowserHistory();
 
 function App() {
 
   return (
     <div className="book-store">
       <Suspense fallback={<Loading />}>
-        <BrowserRouter>
+        <Router history={history} >
           <Header />
           <Notification />
           <Switch>
@@ -27,7 +30,7 @@ function App() {
             <Route component={NotFound}></Route>
           </Switch>
           <Footer />
-        </BrowserRouter>
+        </Router>
       </Suspense>
     </div>
   );

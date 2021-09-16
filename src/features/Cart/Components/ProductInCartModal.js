@@ -2,18 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button, Col, Row, Tooltip } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, DollarOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 
 ProductInCartModal.propTypes = {
-    book: PropTypes.object
+    product: PropTypes.object
 };
 ProductInCartModal.defaultProps = {
-    book: {
-        image: 'https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-70.jpg',
-        name: 'A Tale of Two Cities',
-        num: 2,
-        price: 45
+    product: {
+        image: '',
+        name: '',
+        quantity: 0,
+        price: 0
     }
 };
 
@@ -21,8 +21,8 @@ const ProductInCartStyled = styled.div`
     margin-bottom:0.5rem;
 `;
 
-const LinkSyled = styled(Link)`
-    font-size:16px;
+const TitleSyled = styled.div`
+    font-size:12px;
     font-weight:500;
     letter-spacing:0.5px;
     color:#000;
@@ -34,15 +34,15 @@ const LinkSyled = styled(Link)`
 
 const PriceWrapperStyled = styled.div`
     color:#969696;
-    line-height:25px;
-    font-size:14px;
+    line-height:20px;
+    font-size:11px;
     font-weight:bold;
     letter-spacing:1px;
 `;
 
 
 
-function ProductInCartModal({ book }) {
+function ProductInCartModal({ product }) {
 
     const handleRemove = (id) => {
         console.log(id);
@@ -53,17 +53,22 @@ function ProductInCartModal({ book }) {
         <ProductInCartStyled>
             <Row gutter={[0, 5]}>
                 <Col span={6}>
-                    <img width="50px" height="75px" src={book.image} alt="product" />
+                    <img width="50px" height="60px" src={product.image} alt="product" />
                 </Col>
                 <Col span={17}>
-                    <LinkSyled to="#">{book.name}</LinkSyled>
+                    <TitleSyled >{product.name}</TitleSyled>
                     <PriceWrapperStyled>
-                        <div> <span >Qty: </span><span>{book.num}</span> </div>
-                        <div>${book.price}</div>
+                        <div> <span >Qty: </span><span>{product.quantity}</span> </div>
+                        <div><DollarOutlined /> {product.price} /1</div>
                     </PriceWrapperStyled>
                 </Col>
                 <Col span={1}>
-                    <Tooltip title="Remove this item"> <Button onClick={() => handleRemove(book.id)} icon={<DeleteOutlined />}></Button></Tooltip>
+                    <Tooltip
+                        title="Remove this item">
+                        <Button
+                            onClick={() => handleRemove(product._id)}
+                            icon={<DeleteOutlined />} />
+                    </Tooltip>
                 </Col>
             </Row>
         </ProductInCartStyled>

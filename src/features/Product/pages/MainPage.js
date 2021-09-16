@@ -28,7 +28,7 @@ function MainPage(props) {
         dispatch(fetchPageInfo());
         dispatch(fetchCategory());
 
-    }, [dispatch])
+    }, [])
 
 
     //handle search , filter category , range Price ,sort 

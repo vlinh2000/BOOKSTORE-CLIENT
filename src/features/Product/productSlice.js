@@ -103,8 +103,6 @@ const pageInfo = createSlice({
             state.rangeStep = action.payload;
 
         }
-
-
     },
     extraReducers: {
         //handle get page infomation 

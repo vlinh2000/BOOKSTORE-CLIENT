@@ -4,6 +4,7 @@ import ShoppingCart from './Components/ShoppingCart';
 import Checkout from './Components/Checkout';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 
 
 const Wrapper = styled.div`
@@ -28,20 +29,23 @@ const TabsStyled = styled(Tabs)`
 function Cart(props) {
     const { isAuth } = useSelector(state => state.user.currentUser);
 
+    const { screenDefault } = useSelector(state => state.cart);
+
+
     return (
         <Wrapper>
             <TabsStyled
                 type="card"
-                defaultActiveKey={0}
+                defaultActiveKey={!screenDefault ? 'cartScreen' : 'checkoutScreen'}
                 centered={true}>
                 <Tabs.TabPane
                     tab={`SHOPPING CART(${2})`}
-                    key={0}>
+                    key='cartScreen'>
                     <ShoppingCart />
                 </Tabs.TabPane>
                 {isAuth && <Tabs.TabPane
                     tab="CHECKOUT"
-                    key={1}>
+                    key='checkoutScreen'>
                     <Checkout />
                 </Tabs.TabPane>}
 

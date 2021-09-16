@@ -5,7 +5,8 @@ const modal = createSlice({
     name: 'modal',
     initialState: {
         loginModal: false,
-        registerModal: false
+        registerModal: false,
+        isVisibleCartModal: false
     },
     reducers: {
         switchLoginModal: (state, action) => {
@@ -24,12 +25,18 @@ const modal = createSlice({
             state.registerModal = status;
 
         },
+        switchCartModal: (state, action) => {
+
+            const status = action.payload;
+            state.isVisibleCartModal = status;
+
+        },
     }
 })
 
 const { actions, reducer } = modal;
 
-export const { switchLoginModal, switchRegisterModal } = actions;
+export const { switchLoginModal, switchRegisterModal, switchCartModal } = actions;
 
 export default reducer;
 

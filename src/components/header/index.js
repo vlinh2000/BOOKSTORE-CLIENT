@@ -1,8 +1,9 @@
 import React from 'react';
-import { NavLink, useHistory } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
+    DollarCircleOutlined,
     FacebookOutlined, InstagramOutlined, ShoppingCartOutlined,
     TwitterOutlined, UserOutlined, YoutubeOutlined
 } from '@ant-design/icons'
@@ -16,7 +17,8 @@ import CartModal from 'modals/CartModal';
 import LoginModal from 'modals/LoginModal';
 import RegisterModal from 'modals/RegisterModal';
 
-import { switchLoginModal } from 'app/modalSlice';
+import { switchCartModal, switchLoginModal } from 'app/modalSlice';
+import { history } from 'App';
 
 
 const HeaderStyled = styled.div`
@@ -103,9 +105,10 @@ function Header(props) {
 
     const dispatch = useDispatch();
     const { isAuth, user: { name } } = useSelector((state) => state.user.currentUser);
-    const history = useHistory();
-    const [isVisibleCartModal, setIsvisibleCartModal] = React.useState(false);
 
+    const { isVisibleCartModal } = useSelector(state => state.modals);
+
+    const { totalPrice, cartItem } = useSelector(state => state.cart);
 
     //handle switch (on,off) login modal 
     const handleSwitchLoginModal = () => {
@@ -121,7 +124,8 @@ function Header(props) {
 
     //handle switch (on,off) cart modal 
     const handleSwitchCartModal = () => {
-        setIsvisibleCartModal(prev => !prev);
+        const action = switchCartModal(!isVisibleCartModal);
+        dispatch(action);
     }
 
 
@@ -223,7 +227,7 @@ function Header(props) {
                                         icon={<UserOutlined />}>
                                     </ButtonStyled>
                                     <div className='info'>
-                                        <div> {isAuth ? name : 'Sign in'} </div>
+                                        <div> {isAuth ? <span style={{ color: '#9387d9', fontWeight: 'bold' }} >{name.toUpperCase()}</span> : 'Sign in'} </div>
                                         <div> My account </div>
                                     </div>
                                 </InfoCartStyled>
@@ -233,7 +237,7 @@ function Header(props) {
                                     <Popover
                                         trigger='click'
                                         visible={isVisibleCartModal}
-                                        content={<CartModal />} >
+                                        content={<CartModal isAuth={isAuth} cartItem={cartItem} totalPrice={totalPrice} />} >
 
 
                                         <ButtonStyled
@@ -241,12 +245,12 @@ function Header(props) {
                                             size='large'
                                             icon={<ShoppingCartOutlined />}
                                             onClick={handleSwitchCartModal}
-                                        // onBlur={handleSwitchCartModal}
+
                                         />
                                     </Popover>
                                     <div className='info'>
                                         <div> My cart</div>
-                                        <div className="price" > $ 00.00 </div>
+                                        <div className="price" > <DollarCircleOutlined /> {totalPrice} </div>
                                     </div>
                                 </InfoCartStyled>
                             </Col>

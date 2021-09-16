@@ -1,17 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Col, Divider, Row, Typography } from 'antd';
+import { Button, Col, Divider, message, Row, Typography } from 'antd';
 import styled from 'styled-components';
 import ProductInCartModal from 'features/Cart/Components/ProductInCartModal';
 import NotProductInCartModal from 'features/Cart/Components/NotProductInCartModal';
-import { Link } from 'react-router-dom';
+import { DollarOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { switchCartModal, switchLoginModal } from 'app/modalSlice';
+import { history } from 'App';
+import { checkOut } from 'features/Cart/cartSlice';
+import { useLocation } from 'react-router';
 
 CartModal.propTypes = {
-    products: PropTypes.array,
+    cartItem: PropTypes.array,
     totalPrice: PropTypes.number,
 };
 CartModal.defaultPropTypes = {
-    products: [],
+    cartItem: [],
     totalPrice: 0
 };
 
@@ -52,44 +57,70 @@ const TotalPriceStyled = styled.div`
 
 const WrapperProduct = styled.div`
     margin-top:2rem;
-    max-height:300px;
+    max-height:250px;
     overflow:auto;
-    padding:0 1.5rem;
-
+    padding:0 2rem;
+    min-width:320px;
 `;
 
 
 
-function CartModal({ products, totalPrice }) {
+function CartModal({ cartItem, totalPrice, isAuth }) {
+
+    const dispatch = useDispatch();
+
+    const location = useLocation();
+
+    const handleViewCart = () => {
+        const action = switchCartModal(false);
+        dispatch(action);
+        dispatch(checkOut(false));
+        history.push('/cart');
+    }
+
+    const handleCheckOut = () => {
+        dispatch(switchCartModal(false));
+        if (!isAuth) {
+            dispatch(switchLoginModal(true));
+            message.warning("Please login to check out");
+            return;
+        }
+        dispatch(checkOut(true));
+        history.push('/cart');
+    }
+
 
     return (
         <div>
             {/* Product */}
             {false ? <NotProductInCartModal /> : <div>
                 <WrapperProduct>
-                    <ProductInCartModal />
+                    {
+                        cartItem?.map(item => <ProductInCartModal product={item} key={item._id} />)
+                    }
+
                 </WrapperProduct>
                 <DividerStyled />
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography.Text strong={true}>Total:</Typography.Text>
-                    <TotalPriceStyled>$ {totalPrice}</TotalPriceStyled>
+                    <TotalPriceStyled><DollarOutlined /> {totalPrice}</TotalPriceStyled>
                 </div>
                 <Row justify="space-between" gutter={[10, 10]}>
                     <Col span={12}>
-                        <Link to="/cart">
-                            <ButtonStyled
-                                bgcolor="#000">
-                                VIEW CART
-                            </ButtonStyled>
-                        </Link>
+                        <ButtonStyled
+                            onClick={handleViewCart}
+                            disabled={location.pathname === '/cart' && true}
+                            bgcolor="#000">
+                            VIEW CART
+                        </ButtonStyled>
                     </Col>
                     <Col span={12}>
-                        <Link to="/cart/checkout">
-                            <ButtonStyled
-                                bgcolor="#969696" >
-                                CHECK OUT
-                            </ButtonStyled>
-                        </Link>
+                        <ButtonStyled
+                            disabled={location.pathname === '/cart' && true}
+                            onClick={handleCheckOut}
+                            bgcolor="#969696" >
+                            CHECK OUT
+                        </ButtonStyled>
                     </Col>
                 </Row>
             </div>}

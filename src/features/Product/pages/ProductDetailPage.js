@@ -1,10 +1,10 @@
 import React from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 import styled from 'styled-components';
 
-import { Breadcrumb, Button, Col, Divider, Row, Skeleton, Spin } from 'antd';
+import { Breadcrumb, Button, Col, Divider, message, Row, Skeleton, Spin } from 'antd';
 import { BookOutlined, HeartOutlined, HomeOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 
 import ProductRelated from '../Components/ProductRelated';
@@ -13,6 +13,9 @@ import ProductEvaluateForm from '../Components/ProductEvaluateForm';
 
 import { productApi } from 'api/ProductApi';
 import { feedBackApi } from 'api/feedBackApi';
+import { useDispatch } from 'react-redux';
+import { addToCart, checkOut } from 'features/Cart/cartSlice';
+import { history } from 'App';
 
 const Wrapper = styled.div`
     line-height:55px;
@@ -56,7 +59,7 @@ const ButtonStyled = styled(Button)`
     background:${props => props.bgcolor};
     min-height:45px;
 
-    &:hover{
+    &:hover ,&:focus{
         background:#7060cd;
         border-color:#7060cd;
         color:#FFF;
@@ -118,17 +121,23 @@ function ProductDetailPage(props) {
 
     const [comments, setComments] = React.useState([]);
 
+    const [relatedBook, setRelatedBook] = React.useState([]);
+
     const [isBookLoading, setIsBookLoading] = React.useState(false);
 
     const [isFeedBackLoading, setIsFeedBackLoading] = React.useState(false);
 
     const [isRelatedLoading, setIsRelatedLoading] = React.useState(false);
 
-    const [relatedBook, setRelatedBook] = React.useState([]);
+    const [quantity, setQuantity] = React.useState(1);
 
     const { isNewFeed } = useSelector(state => state.pageInfo)
 
-    const [quantity, setQuantity] = React.useState(1);
+    const [isAdding, setIsAdding] = React.useState(false);
+
+    const [isAddingCheckOut, setIsAddingCheckOut] = React.useState(false);
+
+    const dispatch = useDispatch();
 
     React.useEffect(() => {
         //handle fetch book with book id
@@ -157,6 +166,28 @@ function ProductDetailPage(props) {
     //Handle increase quantity
     const handleDecrease = () => {
         setQuantity(prev => prev > 1 ? prev - 1 : prev)
+    }
+    //Handle buy now
+    const handleBuyNow = () => {
+        const { name, image, price, _id } = book;
+        const product = {
+            _id,
+            name,
+            image: image[0],
+            price,
+            quantity,
+            subTotal: (quantity * price)
+        };
+        //handle dispatch
+        setIsAddingCheckOut(true);
+        const intervalId = setInterval(async () => {
+            await dispatch(addToCart(product));
+            await dispatch(checkOut(true));
+            setIsAddingCheckOut(false);
+            clearInterval(intervalId);
+            message.success(`${name} has been added to cart successfully`);
+            history.push('/cart')
+        }, 1000)
 
     }
 
@@ -174,8 +205,18 @@ function ProductDetailPage(props) {
             subTotal: (quantity * price)
         };
 
+
         //handle dispatch
-        console.log(product)
+        setIsAdding(true);
+        const intervalId = setInterval(async () => {
+
+            await dispatch(addToCart(product));
+            setIsAdding(false);
+            clearInterval(intervalId);
+            message.success(`${name} has been added to cart successfully`);
+            history.push('/cart')
+        }, 1000)
+
     }
 
 
@@ -208,7 +249,6 @@ function ProductDetailPage(props) {
                 }
                 const { books } = await productApi.getAll(params);
                 //handle get feedback 
-                console.log(books);
                 const { feedBack } = await feedBackApi.getAll(); //{ message: {...} , feedBack:{...} }
                 //map into products to easy to render
                 const products = books.map(book => {
@@ -289,7 +329,9 @@ function ProductDetailPage(props) {
                                     </ButtonGroupStyled>
                                 </Col>
                                 <Col span={16}>
-                                    <ButtonStyled onClick={handleAddToCart}>ADD TO CART</ButtonStyled>
+                                    <ButtonStyled
+                                        onClick={handleAddToCart}
+                                        loading={isAdding}>ADD TO CART</ButtonStyled>
                                 </Col>
                                 <Col span={3}>
                                     <ButtonSmallStyled
@@ -302,6 +344,8 @@ function ProductDetailPage(props) {
                                 </Col>
                             </Row>
                             <ButtonStyled
+                                loading={isAddingCheckOut}
+                                onClick={handleBuyNow}
                                 bgcolor="#9387d9">
                                 BUY NOW
                             </ButtonStyled>
@@ -309,7 +353,7 @@ function ProductDetailPage(props) {
                             <InfoStyled>
                                 <div>
                                     <span>Category:</span>
-                                    <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>{category.name}</span>
+                                    <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>{category.categoryName}</span>
                                 </div>
                                 <div>
                                     <span>Author:</span>

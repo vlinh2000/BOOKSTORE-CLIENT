@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Rate, Typography } from 'antd';
-import { HeartOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Button, message, Rate, Spin, Typography } from 'antd';
+import { CheckOutlined, HeartOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { addToCart } from 'features/Cart/cartSlice';
+import { useDispatch } from 'react-redux';
 
 Product.propTypes = {
     product: PropTypes.object
@@ -17,7 +19,7 @@ Product.defaultProps = {
         price: 0,
         oldPrice: 0,
         image: [],
-        evaluate: []
+        isAddToCart: false
     }
 
 };
@@ -33,7 +35,6 @@ const HoverImageStyled = styled.div`
     position:absolute;
     top:0;
     display:none;
-    cursor:pointer;
     transition: all 0.45s ease 0s;
 
     .tip-box{
@@ -49,7 +50,7 @@ const HoverImageStyled = styled.div`
 
 `;
 
-const TitleStyled = styled(Typography.Text)`
+const TitleStyled = styled(Link)`
     font-size:16px;
     display: block;
     margin: 10px 0 0 0;
@@ -60,7 +61,7 @@ const TitleStyled = styled(Typography.Text)`
         color:#9387d9;
     }
 `;
-const ProductStyled = styled(Link)`
+const ProductStyled = styled.div`
 
 
     .book-image{
@@ -130,8 +131,11 @@ const RaitingStyled = styled.div`
 
 function Product({ product }) {
 
-    const { _id, name, author, price, oldPrice, image, feedBack } = product;
+    const { _id, name, author, price, oldPrice, image, feedBack, isAddToCart } = product;
 
+    const [isAdding, setIsAdding] = React.useState(false);
+
+    const dispatch = useDispatch()
 
     //hanlde get voted star highest 
     const getVotedHighest = () => {
@@ -145,9 +149,25 @@ function Product({ product }) {
 
     }
 
+    //handle add to cart
+    const handleAddToCart = () => {
+
+        setIsAdding(true);
+        const intervalId = setInterval(async () => {
+
+            const action = addToCart({ _id, name, image: image[0], price, quantity: 1, subTotal: price });
+
+            await dispatch(action);
+            setIsAdding(false);
+            clearInterval(intervalId);
+            message.success(`${name.toUpperCase()} has been added to cart succesfully`);
+        }, 1000)
+
+    }
+
+
     return (
-        <ProductStyled
-            to={`/product/${_id}`}>
+        <ProductStyled>
             <div
                 className='book-image'>
                 <img
@@ -161,9 +181,17 @@ function Product({ product }) {
                     bgImage={image[1]}>
                     <div
                         className="tip-box">
-                        <ButtonStyled
-                            size='large'
-                            icon={<ShoppingCartOutlined />} />
+
+                        {isAdding ?
+                            <ButtonStyled
+                                size='large'
+                                icon={<Spin />} />
+                            :
+                            <ButtonStyled
+                                size='large'
+                                icon={<ShoppingCartOutlined />}
+                                onClick={handleAddToCart} />
+                        }
                         <ButtonStyled
                             style={{ margin: '10px 0' }}
                             size='large'
@@ -177,7 +205,9 @@ function Product({ product }) {
                 </HoverImageStyled>
 
             </div>
-            <TitleStyled >{name}</TitleStyled>
+            <TitleStyled
+                to={`/product/${_id}`}>
+                {name}</TitleStyled>
             <ByAuthorStyled>
                 <span
                     className="by">By: </span>
