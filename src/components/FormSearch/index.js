@@ -6,6 +6,8 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Button, Input, Form } from 'antd';
 
 import { filterBy } from 'features/Product/productSlice';
+import { useLocation } from 'react-router';
+import { history } from 'App';
 
 
 const FormSearchStyled = styled(Form)`
@@ -26,6 +28,10 @@ function FormSearch(props) {
 
     const [value, setValue] = React.useState('');
 
+    const location = useLocation()
+
+    console.log(location);
+
     const dispatch = useDispatch();
 
     //handle onchange input
@@ -35,6 +41,10 @@ function FormSearch(props) {
 
     //handle dispatch action to filter product
     const onSubmit = () => {
+
+        if (location.pathname !== '/product') {
+            history.push('/');
+        }
         dispatch(filterBy({ searchValue: value }));
         setValue('');
     }

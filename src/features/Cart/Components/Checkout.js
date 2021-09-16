@@ -5,6 +5,7 @@ import InputField from 'custom-fields/InputFields';
 import { Col, Row, Form, Divider, Button } from 'antd';
 import { useForm } from 'react-hook-form';
 import { SaveOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
 Checkout.propTypes = {
 
@@ -66,9 +67,13 @@ function Checkout(props) {
 
     const { control, handleSubmit } = useForm();
 
+    const { user: { name, address, phoneNumber } } = useSelector(state => state.user.currentUser);
+
     const onSubmit = values => {
         console.log(values)
     }
+
+    console.log({ name, address, phoneNumber })
 
     return (
         <Wrapper>
@@ -80,10 +85,12 @@ function Checkout(props) {
                             <InputField
                                 name="name"
                                 placeholder="Họ tên"
+                                value={name}
                                 control={control} />
                             <InputField
                                 name="phoneNumber"
                                 placeholder="Số điện thoại"
+                                value={phoneNumber}
                                 control={control} />
 
                             <InputField
@@ -93,6 +100,7 @@ function Checkout(props) {
                             <InputField
                                 name="address"
                                 placeholder="Địa chỉ nhận hàng"
+                                value={address}
                                 control={control} />
                             <Form.Item>
                                 <Button icon={<SaveOutlined />}>Save</Button>

@@ -74,26 +74,26 @@ function CartModal({ cartItem, totalPrice, isAuth }) {
     const handleViewCart = () => {
         const action = switchCartModal(false);
         dispatch(action);
-        dispatch(checkOut(false));
         history.push('/cart');
     }
 
     const handleCheckOut = () => {
         dispatch(switchCartModal(false));
+
         if (!isAuth) {
             dispatch(switchLoginModal(true));
             message.warning("Please login to check out");
             return;
         }
-        dispatch(checkOut(true));
-        history.push('/cart');
+
+        history.push('/cart/checkout');
     }
 
 
     return (
         <div>
             {/* Product */}
-            {false ? <NotProductInCartModal /> : <div>
+            {cartItem.length < 1 ? <NotProductInCartModal /> : <div>
                 <WrapperProduct>
                     {
                         cartItem?.map(item => <ProductInCartModal product={item} key={item._id} />)
@@ -109,14 +109,12 @@ function CartModal({ cartItem, totalPrice, isAuth }) {
                     <Col span={12}>
                         <ButtonStyled
                             onClick={handleViewCart}
-                            disabled={location.pathname === '/cart' && true}
                             bgcolor="#000">
                             VIEW CART
                         </ButtonStyled>
                     </Col>
                     <Col span={12}>
                         <ButtonStyled
-                            disabled={location.pathname === '/cart' && true}
                             onClick={handleCheckOut}
                             bgcolor="#969696" >
                             CHECK OUT

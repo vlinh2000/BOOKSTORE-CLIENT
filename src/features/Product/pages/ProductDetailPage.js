@@ -226,7 +226,6 @@ function ProductDetailPage(props) {
             const fetchFeedBack = async () => {
                 setIsFeedBackLoading(true);
                 const data = await feedBackApi.get(bookId);
-                console.log(data);
                 setIsFeedBackLoading(false);
                 data.feedBack ? setComments(data.feedBack.comments) : setComments([]);
 

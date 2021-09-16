@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Button, Col, Row, Tooltip } from 'antd';
+import { Button, Col, message, Row, Tooltip } from 'antd';
 import { DeleteOutlined, DollarOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { removeItemInCart } from '../cartSlice';
+import { useDispatch } from 'react-redux';
 
 ProductInCartModal.propTypes = {
     product: PropTypes.object
@@ -44,8 +46,12 @@ const PriceWrapperStyled = styled.div`
 
 function ProductInCartModal({ product }) {
 
-    const handleRemove = (id) => {
-        console.log(id);
+    const dispatch = useDispatch()
+
+    const handleRemove = async (id) => {
+        const action = removeItemInCart({ id });
+        await dispatch(action);
+        message.success("Remove item successfully");
     }
 
     return (

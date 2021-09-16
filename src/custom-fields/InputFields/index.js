@@ -10,7 +10,8 @@ InputField.propTypes = {
     name: PropTypes.string,
     placeholder: PropTypes.string,
     type: PropTypes.string,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
+    value: PropTypes.string
 };
 
 InputField.defaultProps = {
@@ -18,7 +19,8 @@ InputField.defaultProps = {
     name: '',
     placeholder: '',
     type: 'text',
-    disabled: false
+    disabled: false,
+    value: ''
 };
 
 const InputStyled = styled(Input)`
@@ -28,13 +30,11 @@ const InputStyled = styled(Input)`
 
 function InputField(props) {
 
-    const { name, prefix, placeholder, type, disabled, control } = props;
+    const { name, prefix, placeholder, type, disabled, control, value } = props;
 
     return (
         <Controller
             name={name}
-            placeholder={placeholder}
-            prefix={prefix}
             control={control}
             render={({ field, formState: { errors } }) => {
 
@@ -44,6 +44,7 @@ function InputField(props) {
                     name={field.name} >
                     <InputStyled
                         {...field}
+                        defaultValue={value}
                         type={type}
                         prefix={prefix}
                         placeholder={placeholder}

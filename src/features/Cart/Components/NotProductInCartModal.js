@@ -1,6 +1,9 @@
 import { ArrowRightOutlined, ShoppingOutlined } from '@ant-design/icons';
 import { Button } from 'antd';
+import { history } from 'App';
+import { switchCartModal } from 'app/modalSlice';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 const Wrapper = styled.div`
     display:flex;
@@ -35,11 +38,18 @@ const ButtonStyled = styled(Button)`
 
 
 const NotProductInCartModal = () => {
+
+    const dispatch = useDispatch();
+
+    const handleShopping = () => {
+        dispatch(switchCartModal(false));
+        history.push('/product');
+    }
     return (
         <Wrapper>
             <IconStyled />
             <TitleStyled>No product in the cart</TitleStyled>
-            <ButtonStyled>GO TO SHOP <ArrowRightOutlined /> </ButtonStyled>
+            <ButtonStyled onClick={handleShopping} >GO TO SHOP <ArrowRightOutlined /> </ButtonStyled>
 
         </Wrapper>
     );

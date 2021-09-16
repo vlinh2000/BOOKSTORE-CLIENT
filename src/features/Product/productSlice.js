@@ -14,6 +14,7 @@ export const fetchPageInfo = createAsyncThunk('pageInfo/fetchPageInfo', async (p
         //map into products to easy to render
         const products = pageInfo.books.map(book => {
             //find --  does book have feedBack?    
+
             const feedBackOfThisBook = feedBack.find(item => item.bookId === book._id);
             return { ...book, feedBack: feedBackOfThisBook };
         })
