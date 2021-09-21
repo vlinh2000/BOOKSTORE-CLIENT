@@ -20,4 +20,14 @@ const registerSchema = yup.object().shape({
 });
 
 
+export const defaultValues = {
+    name: '',
+    phoneNumber: '',
+    email: '',
+    userName: '',
+    passWord: '',
+    tryPassWord: '',
+    address: ''
+}
+
 export default registerSchema;

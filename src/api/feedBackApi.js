@@ -7,17 +7,16 @@ export const feedBackApi = {
     },
     get: (bookId) => {
         return new Promise((resolve, reject) => {
-            try {
-                const url = `/feedBack/${bookId}`;
-
-                setTimeout(async () => {
+            setTimeout(async () => {
+                try {
+                    const url = `/feedBack/${bookId}`;
                     const data = await axiosClient.get(url);
                     resolve(data);
-                }, 500);
 
-            } catch (error) {
-                reject(error);
-            }
+                } catch (error) {
+                    reject(error);
+                }
+            }, 500);
 
         })
     },
@@ -27,8 +26,8 @@ export const feedBackApi = {
                 const url = `/feedBack/`;
 
                 setTimeout(() => {
-                    axiosClient.post(url, data);
-                    resolve(true);
+                    const dataRes = axiosClient.post(url, data);
+                    resolve(dataRes);
                 }, 500);
 
             } catch (error) {

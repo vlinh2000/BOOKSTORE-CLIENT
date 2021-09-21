@@ -11,15 +11,26 @@ import Column from 'rc-table/lib/sugar/Column';
 import { Link } from 'react-router-dom';
 import { switchLoginModal } from 'app/modalSlice';
 import { history } from 'App';
+import Banner from 'components/Banner';
 
 
 const Wrapper = styled.div`
-    margin:2rem auto;
+`;
+
+const WrapperMain = styled.div`
+
+    padding:3rem 2rem;
+    width:90%;
+    margin:0 auto;
+    box-shadow:1px 1px 2px 0.5px #9387d9;    
+
+
 `;
 
 const CartTotalStyled = styled.div`
     padding-bottom:2rem;
     background: #f6f6f6; 
+    box-shadow:1px 1px 1px 1px #000;
 `;
 
 const TitleStyled = styled.div`
@@ -75,7 +86,6 @@ const RowTitleStyled = styled(Typography)`
 const ProductInCartStyled = styled.div`
 
     display:flex;
-    justify-content:space-around;
     align-items:center;
     max-width:70%;
 
@@ -91,7 +101,14 @@ const ButtonRemoveStyled = styled(Button)`
 
 `;
 
-function ShoppingCart(props) {
+const TableWrapper = styled.div`
+
+    // border:1px solid #000;
+    box-shadow:1px 1px 1px 1px #000;
+`;
+
+
+function CartPage(props) {
 
     const { cartItem, totalPrice } = useSelector(state => state.cart);
 
@@ -144,49 +161,53 @@ function ShoppingCart(props) {
 
     return (
         <Wrapper>
+            <Banner title="Cart" />
             {cartItem.length < 1 ? <Empty /> :
-                <>
+                <WrapperMain>
                     <Row justify='space-around'  >
                         <Col span={14}>
-                            <Table
-                                // columns={columnShoppingCartTab}
-                                dataSource={cartItemSource}
-                                pagination={false} >
-                                <Column title={() => <RowTitleStyled>Product</RowTitleStyled>} dataIndex="product" key="product" render={book =>
-                                    <ProductInCartStyled>
-                                        <img width="70px" height="90px" src={book.bookImage} alt="bookImage" />
-                                        <span>{book.bookName}</span>
-                                    </ProductInCartStyled>} />
-                                <Column title={() => <RowTitleStyled>price</RowTitleStyled>} dataIndex="price" key="price" />
-                                <Column title={() => <RowTitleStyled>quantity</RowTitleStyled>} dataIndex="quantity" key="quantity" render={(num, { key }) => <div>
-                                    <ButtonRemoveStyled
-                                        onClick={() => handleDecrease(key)}
-                                        disabled={num === 1}
-                                        size="small"
-                                        icon={<MinusOutlined />} />
-                                    {num}
-                                    <ButtonRemoveStyled
-                                        onClick={() => handleIncrease(key)}
-                                        size="small"
-                                        icon={<PlusOutlined />} />
-                                </div>
+                            <TableWrapper>
 
-                                } />
-                                <Column title={() => <RowTitleStyled>subtotal</RowTitleStyled>} dataIndex="subtotal" key="subtotal" />
-                                <Column
-                                    title=''
-                                    dataIndex="action"
-                                    key="action"
-                                    render={(value, { key }) => <Popconfirm onConfirm={() => handleRemove(key)} title="Are you sure to remove this item?" okText="Yes" cancelText="No"> <Tooltip
-                                        title="Remove this item">
+                                <Table
+                                    // columns={columnShoppingCartTab}
+                                    dataSource={cartItemSource}
+                                    pagination={false} >
+                                    <Column title={() => <RowTitleStyled>Product</RowTitleStyled>} dataIndex="product" key="product" render={book =>
+                                        <ProductInCartStyled>
+                                            <img width="70px" height="90px" src={book.bookImage} alt="bookImage" />
+                                            <span style={{ marginLeft: '1rem' }}>{book.bookName}</span>
+                                        </ProductInCartStyled>} />
+                                    <Column title={() => <RowTitleStyled>price</RowTitleStyled>} dataIndex="price" key="price" />
+                                    <Column title={() => <RowTitleStyled>quantity</RowTitleStyled>} dataIndex="quantity" key="quantity" render={(num, { key }) => <div>
                                         <ButtonRemoveStyled
-                                            shape="circle"
-                                            type='text'
+                                            onClick={() => handleDecrease(key)}
+                                            disabled={num === 1}
                                             size="small"
-                                            icon={<DeleteOutlined />} />
-                                    </Tooltip></Popconfirm>} />
+                                            icon={<MinusOutlined />} />
+                                        {num}
+                                        <ButtonRemoveStyled
+                                            onClick={() => handleIncrease(key)}
+                                            size="small"
+                                            icon={<PlusOutlined />} />
+                                    </div>
 
-                            </Table>
+                                    } />
+                                    <Column title={() => <RowTitleStyled>subtotal</RowTitleStyled>} dataIndex="subtotal" key="subtotal" />
+                                    <Column
+                                        title=''
+                                        dataIndex="action"
+                                        key="action"
+                                        render={(value, { key }) => <Popconfirm onConfirm={() => handleRemove(key)} title="Are you sure to remove this item?" okText="Yes" cancelText="No"> <Tooltip
+                                            title="Remove this item">
+                                            <ButtonRemoveStyled
+                                                shape="circle"
+                                                type='text'
+                                                size="small"
+                                                icon={<DeleteOutlined />} />
+                                        </Tooltip></Popconfirm>} />
+
+                                </Table>
+                            </TableWrapper>
                         </Col>
                         <Col span={6}>
                             <CartTotalStyled>
@@ -230,11 +251,11 @@ function ShoppingCart(props) {
                         </Col>
 
                     </Row>
-                </>
+                </WrapperMain>
             }
 
         </Wrapper >
     );
 }
 
-export default ShoppingCart;
+export default CartPage;

@@ -7,7 +7,7 @@ import InputField from 'custom-fields/InputFields';
 import { useForm } from 'react-hook-form';
 
 import { yupResolver } from "@hookform/resolvers/yup"
-import registerSchema from 'yup/registerSchema';
+import registerSchema, { defaultValues } from 'yup/registerSchema';
 import { useDispatch, useSelector } from 'react-redux';
 import { switchLoginModal, switchRegisterModal } from 'app/modalSlice';
 import { register } from 'app/userSlice';
@@ -54,7 +54,9 @@ const ButtonStyled = styled(Button)`
 
 function RegisterModal(props) {
 
-    const { handleSubmit, control } = useForm({ resolver: yupResolver(registerSchema) });
+
+
+    const { handleSubmit, control, reset } = useForm({ resolver: yupResolver(registerSchema), defaultValues });
 
     const { loading } = useSelector(state => state.user);
 
@@ -65,6 +67,7 @@ function RegisterModal(props) {
     const onSubmit = async (values) => {
 
         const { error, payload: { message } } = await dispatch(register(values));
+
         if (error) {
             toast.error(message);
             return;
@@ -72,7 +75,6 @@ function RegisterModal(props) {
 
         //when success register
         toast.success(message);
-
     }
 
     //Open login modal

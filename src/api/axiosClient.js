@@ -31,7 +31,7 @@ axiosClient.interceptors.response.use(response => {
     }
     return response;
 }, (err) => {
-    return err;
+    throw err;
 })
 
 

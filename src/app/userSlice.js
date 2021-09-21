@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { UserApi } from 'api/UserApi';
 
 
-export const getMe = createAsyncThunk('user/getMe', async () => {
+export const getMe = createAsyncThunk('user/getMe', async (data) => {
 
     const currentUser = await UserApi.getMe();
     return currentUser;
@@ -50,7 +50,13 @@ const initialState = {
 const user = createSlice({
     name: 'user',
     initialState: initialState,
-    reducers: {},
+    reducers: {
+        setCurrentUser: (state, action) => {
+            state.currentUser.auth = action.payload.auth;
+            state.currentUser.user = action.payload.user;
+            state.currentUser.isAuth = true;
+        }
+    },
     extraReducers: {
         //handle get my info
         [getMe.pending]: (state) => {
@@ -94,6 +100,8 @@ const user = createSlice({
     }
 })
 
-const { reducer } = user;
+const { reducer, actions } = user;
+
+export const { setCurrentUser } = actions
 
 export default reducer;

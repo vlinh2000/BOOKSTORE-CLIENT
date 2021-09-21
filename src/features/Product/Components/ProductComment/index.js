@@ -71,7 +71,7 @@ function ProductComment({ feedBack }) {
                                     key={eva.uid}
                                     author={<span>{eva.name}</span>}
                                     avatar={
-                                        <Avatar alt={eva.name} src={eva?.avatar || ''}>{eva.avatar ? '' : eva.name?.charAt(0)?.toUpperCase() || ''}</Avatar>
+                                        <Avatar style={{ backgroundColor: '#f56a00' }} alt={eva.name} src={eva?.avatar || ''}>{eva.avatar ? '' : eva.name?.charAt(0)?.toUpperCase() || ''}</Avatar>
                                     }
                                     content={<div><p>{eva.feedBackMessage}</p><Rate style={{ fontSize: 12 }} disabled defaultValue={5 - index} value={5 - index} /></div>}
                                     datetime={

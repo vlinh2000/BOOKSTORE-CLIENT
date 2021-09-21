@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, message, Rate, Spin, Typography } from 'antd';
-import { CheckOutlined, HeartOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { CheckOutlined, DollarCircleOutlined, HeartOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { addToCart } from 'features/Cart/cartSlice';
@@ -216,9 +216,9 @@ function Product({ product }) {
             </ByAuthorStyled>
             <RaitingStyled>
                 <div>
-                    {product.oldPrice && <Typography.Text style={{ color: "#969696", fontWeight: 500, textDecoration: "line-through" }}>${product.oldPrice}</Typography.Text>}
+                    {product.oldPrice && <Typography.Text style={{ color: "#969696", fontWeight: 500, textDecoration: "line-through" }}><DollarCircleOutlined /> {product.oldPrice}</Typography.Text>}
                     <Typography.Text
-                        style={{ color: "#ff4545", fontWeight: 500, marginLeft: 5 }}>${product.price}</Typography.Text>
+                        style={{ color: "#ff4545", fontWeight: 500, marginLeft: 5 }}><DollarCircleOutlined /> {product.price}</Typography.Text>
                 </div>
                 <span>
                     <Rate

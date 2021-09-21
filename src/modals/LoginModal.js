@@ -10,9 +10,14 @@ import InputField from 'custom-fields/InputFields';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { switchLoginModal, switchRegisterModal } from 'app/modalSlice';
-import { getMe, login } from 'app/userSlice';
+import { getMe, login, setCurrentUser } from 'app/userSlice';
 
 import { toast } from 'react-toastify';
+import firebase, { auth } from 'firebase/config';
+import { GoogleCircleFilled } from '@ant-design/icons';
+
+
+
 
 const FormStyled = styled.form`
     padding: 0.5rem 2rem;
@@ -32,6 +37,7 @@ const WrapperStyled = styled.div`
     display:flex;
     justify-content:center;
     margin-bottom:1rem;
+
 `;
 
 const ButtonStyled = styled(Button)`
@@ -66,17 +72,29 @@ const LostPassButtonStyled = styled.a`
     `;
 
 const SocialMediaStyled = styled.div`
-        color:#000;
-        display:block;
-        text-align:center;
-        font-weight:500;
-        font-size:10px;
-        cursor:pointer;
-
-        &:hover{
-            color:#9387d9;
-        }
+        text-align:center; 
 `;
+
+const ButtonSiginGgStyled = styled(Button)`
+
+    width:50%;
+    background-color:#FFF;
+    font-weight:500;
+    border:none;
+    box-shadow:1px 1px 1px 0.5px #969696;
+    height:35px;
+
+    &:hover{
+        color:#777;
+    }
+
+`;
+
+const GroupSigninSocial = styled.div`
+    text-align:center;
+`;
+
+const ggProvider = new firebase.auth.GoogleAuthProvider();
 
 function LoginModal(props) {
 
@@ -86,23 +104,25 @@ function LoginModal(props) {
 
     const dispatch = useDispatch();
 
+    const { loading } = useSelector(state => state.user);
+
     //handle login
     const onSubmit = async (values) => {
 
         const { error, payload: { message } } = await dispatch(login(values));
-        // console.log(payload);
-        //login failed 
+
         if (error) {
             toast.error(message);
             return;
         }
 
-        //login success
         await dispatch(getMe());
         //close modal
         dispatch(switchLoginModal(false));
         toast.success("Welcome back!")
+
     }
+
 
     // Open register modal
     const handleToRegisterModal = () => {
@@ -115,6 +135,41 @@ function LoginModal(props) {
         const action = switchLoginModal(false);
         dispatch(action);
     }
+
+
+    //
+
+
+
+    const handleLoginGg = async () => {
+        const { user } = await auth.signInWithPopup(ggProvider);
+        if (!user) return;
+
+        const {
+            displayName,
+            photoURL,
+            email,
+            phoneNumber, refreshToken } = user;
+
+        const token = await user.getIdToken();
+
+        await dispatch(setCurrentUser({
+            auth: {
+                token,
+                refreshToken
+            },
+            user: {
+                name: displayName,
+                avatar: photoURL,
+                email,
+                phoneNumber
+            }
+        }));
+        dispatch(switchLoginModal(false));
+        toast.success("Welcome back!")
+    }
+
+
 
     return (
         <div>
@@ -141,11 +196,23 @@ function LoginModal(props) {
                     />
                     <LostPassButtonStyled href="#" target="_blank">Forgot password?</LostPassButtonStyled>
                     <Form.Item>
-                        <ButtonStyled bgcolor="#000" htmlType="submit">LOGIN</ButtonStyled>
-                        <ButtonStyled onClick={handleToRegisterModal} bgcolor="#b9b9b9">CREATE ACCOUNT</ButtonStyled>
+                        <ButtonStyled
+                            loading={loading}
+                            bgcolor="#000"
+                            htmlType="submit">LOGIN</ButtonStyled>
+                        <ButtonStyled
+                            onClick={handleToRegisterModal}
+                            bgcolor="#b9b9b9">CREATE ACCOUNT</ButtonStyled>
                     </Form.Item>
-                    <SocialMediaStyled>LOGIN WITH SOCIAL MEDIA</SocialMediaStyled>
                 </FormStyled>
+                <GroupSigninSocial>
+                    <SocialMediaStyled>Or</SocialMediaStyled>
+                    <ButtonSiginGgStyled
+                        onClick={handleLoginGg}
+                        style={{ marginTop: 10 }}
+                        icon={<GoogleCircleFilled twoToneColor="#eb2f96" />}
+                    > Sign in with Google </ButtonSiginGgStyled>
+                </GroupSigninSocial>
             </Modal>
         </div>
     );

@@ -40,18 +40,20 @@ const TitleStyled = styled.div`
 `;
 
 function ProductRelated({ products }) {
-    return (
+    return (<>{
+        products.length > 0 &&
         <Wrapper>
             <Divider />
             <TitleStyled>Related Products</TitleStyled>
-            <Row gutter={[20, 10]}>
-                {products?.map(product => (<Col key={product.id} span={6}>
+            <Row gutter={[48, 10]}>
+                {products?.map(product => (<Col key={product.id} >
                     <Product product={product} />
                 </Col>))}
             </Row >
             <Divider />
         </Wrapper>
-    );
+    }
+    </>);
 }
 
 export default ProductRelated;

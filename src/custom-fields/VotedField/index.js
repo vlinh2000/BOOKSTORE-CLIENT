@@ -58,6 +58,7 @@ function VotedField(props) {
                         <span
                             style={{ marginRight: 10 }}>{label}:</span>
                         <Rate
+                            value={field.value}
                             onChange={handleVotedChange} />
                     </RaitingStyled>
                     {errors[field.name]?.message

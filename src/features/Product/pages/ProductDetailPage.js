@@ -14,7 +14,7 @@ import ProductEvaluateForm from '../Components/ProductEvaluateForm';
 import { productApi } from 'api/ProductApi';
 import { feedBackApi } from 'api/feedBackApi';
 import { useDispatch } from 'react-redux';
-import { addToCart, checkOut } from 'features/Cart/cartSlice';
+import { addToCart } from 'features/Cart/cartSlice';
 import { history } from 'App';
 
 const Wrapper = styled.div`
@@ -99,11 +99,17 @@ const ButtonSmallStyled = styled(Button)`
 `;
 
 const GroupImage = styled.div`
-    margin:2rem;
+    margin:2rem 0;
     
     & img{
         margin-right:1rem;
+        cursor:pointer;
     }
+
+    & .active{
+        border:5px solid #9387d9;
+    }
+
 `;
 
 const SkeletonStyled = styled(Skeleton)`
@@ -136,6 +142,9 @@ function ProductDetailPage(props) {
     const [isAdding, setIsAdding] = React.useState(false);
 
     const [isAddingCheckOut, setIsAddingCheckOut] = React.useState(false);
+
+    const [currentImageIndex, setCurrenImageIndex] = React.useState(0);
+
 
     const dispatch = useDispatch();
 
@@ -182,7 +191,6 @@ function ProductDetailPage(props) {
         setIsAddingCheckOut(true);
         const intervalId = setInterval(async () => {
             await dispatch(addToCart(product));
-            await dispatch(checkOut(true));
             setIsAddingCheckOut(false);
             clearInterval(intervalId);
             message.success(`${name} has been added to cart successfully`);
@@ -222,47 +230,39 @@ function ProductDetailPage(props) {
 
     React.useEffect(() => {
         //handle get Feedback for this book
-        try {
-            const fetchFeedBack = async () => {
-                setIsFeedBackLoading(true);
-                const data = await feedBackApi.get(bookId);
-                setIsFeedBackLoading(false);
-                data.feedBack ? setComments(data.feedBack.comments) : setComments([]);
-
-            }
-            fetchFeedBack();
-        } catch (error) {
+        const fetchFeedBack = async () => {
+            setIsFeedBackLoading(true);
+            const data = await feedBackApi.get(bookId);
+            data.feedBack ? setComments(data.feedBack.comments) : setComments([]);
             setIsFeedBackLoading(false);
         }
+        fetchFeedBack();
+
 
     }, [bookId, isNewFeed])
 
+    //handle get related book
     React.useEffect(() => {
-        //handle get related book
-        try {
-            const fetchRelatedProduct = async () => {
-                const params = {
-                    _limit: 4,
-                    bookId,
-                    categoryId: book.categoryId
-                }
-                const { books } = await productApi.getAll(params);
-                //handle get feedback 
-                const { feedBack } = await feedBackApi.getAll(); //{ message: {...} , feedBack:{...} }
-                //map into products to easy to render
-                const products = books.map(book => {
-                    //find --  does book have feedBack?    
-                    const feedBackOfThisBook = feedBack.find(item => item.bookId === book._id);
-                    return { ...book, feedBack: feedBackOfThisBook };
-                })
-                setRelatedBook(products);
-                setIsRelatedLoading(false);
+        const fetchRelatedProduct = async () => {
+            const params = {
+                _limit: 4,
+                bookId,
+                categoryId: book.categoryId
             }
-            setIsRelatedLoading(true);
-            fetchRelatedProduct();
-        } catch (error) {
+            const { books } = await productApi.getAll(params);
+            //handle get feedback 
+            const { feedBack } = await feedBackApi.getAll(); //{ message: {...} , feedBack:{...} }
+            //map into products to easy to render
+            const products = books.map(book => {
+                //find --  does book have feedBack?    
+                const feedBackOfThisBook = feedBack.find(item => item.bookId === book._id);
+                return { ...book, feedBack: feedBackOfThisBook };
+            })
+            setRelatedBook(products);
             setIsRelatedLoading(false);
         }
+        setIsRelatedLoading(true);
+        fetchRelatedProduct();
 
     }, [bookId, book.categoryId])
 
@@ -278,11 +278,13 @@ function ProductDetailPage(props) {
                             <img
                                 height="550px"
                                 width="450px"
-                                src={book.image && book.image[0]}
+                                src={book.image && book.image[currentImageIndex]}
                                 alt="mainPhoto" />
                             <GroupImage>
                                 {book.image?.map((img, index) => (<img
+                                    className={index === currentImageIndex && "active"}
                                     key={index}
+                                    onClick={() => setCurrenImageIndex(index)}
                                     width="100px"
                                     height="120px"
                                     src={img}

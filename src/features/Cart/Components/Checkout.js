@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import InputField from 'custom-fields/InputFields';
-import { Col, Row, Form, Divider, Button } from 'antd';
+import { Col, Row, Form, Divider, Button, Steps } from 'antd';
 import { useForm } from 'react-hook-form';
-import { SaveOutlined } from '@ant-design/icons';
+import { DollarCircleOutlined, DollarCircleTwoTone, DollarOutlined, SaveOutlined, UserOutlined } from '@ant-design/icons';
 import { useSelector } from 'react-redux';
 
 Checkout.propTypes = {
@@ -13,7 +13,8 @@ Checkout.propTypes = {
 
 const Wrapper = styled.div`
     margin:2rem auto;
-    
+    border:1px solid #ccc;
+    width:60%;
     `;
 
 const ButtonStyled = styled(Button)`
@@ -35,14 +36,12 @@ const ButtonStyled = styled(Button)`
     `;
 
 const ProductStyled = styled.div`
-
     display:flex;
     justify-content:space-between;
-
+    font-size:12px;
 `;
 
 const DivStyled = styled.div`
-
     display:flex;
     justify-content:space-between;
     color:#969696;
@@ -57,17 +56,24 @@ const DivStyled = styled.div`
 const PlaceOrderStyled = styled.div`
 
     padding:2rem 2rem;
-    border:1px solid #ccc;
     height:100%;
 
 `;
 
+
+const ListProduct = styled.div`
+    max-height:200px;
+    overflow-y:auto;
+    padding:0 1rem;
+`;
 
 function Checkout(props) {
 
     const { control, handleSubmit } = useForm();
 
     const { user: { name, address, phoneNumber } } = useSelector(state => state.user.currentUser);
+
+    const { cartItem, totalPrice } = useSelector(state => state.cart);
 
     const onSubmit = values => {
         console.log(values)
@@ -76,55 +82,50 @@ function Checkout(props) {
     console.log({ name, address, phoneNumber })
 
     return (
-        <Wrapper>
-            <Row justify="center" gutter={[100, 0]} >
-                <Col span={8}>
-                    <PlaceOrderStyled>
-                        <p>THÔNG TIN KHÁCH HÀNG</p>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <InputField
-                                name="name"
-                                placeholder="Họ tên"
-                                value={name}
-                                control={control} />
-                            <InputField
-                                name="phoneNumber"
-                                placeholder="Số điện thoại"
-                                value={phoneNumber}
-                                control={control} />
+        <div>
 
-                            <InputField
-                                name="email"
-                                placeholder="Email"
-                                control={control} />
-                            <InputField
-                                name="address"
-                                placeholder="Địa chỉ nhận hàng"
-                                value={address}
-                                control={control} />
-                            <Form.Item>
-                                <Button icon={<SaveOutlined />}>Save</Button>
-                            </Form.Item>
-                        </form>
-                    </PlaceOrderStyled>
+            <Steps>
+                <Steps.Step
+                    status="process"
+                    title="Login" />
+
+                <Steps.Step status="wait" title="Check infomation" icon={<UserOutlined />} />
+                <Steps.Step status="wait" title="Pay" icon={<UserOutlined />} />
+            </Steps>
+            <Wrapper>
+                <Row justify="space-around" >
+                <Col span={12}>
+                   
                 </Col>
-                <Col span={8}>
+                <Col span={12}>
                     <PlaceOrderStyled>
-                        <p>SẢN PHẨM</p>
-                        <ProductStyled>
-                            <div style={{ display: 'flex' }}>
-                                <img width="50px" height="80px" src="https://wpbingosite.com/wordpress/tikie/wp-content/uploads/2020/12/Image-11.jpg" alt="bookImage" ></img>
-                                <div style={{ marginLeft: '1rem' }}>
-                                    <div>A PROMISED LAND</div>
-                                    <span>Qty:</span> <span>1</span>
-                                </div>
-                            </div>
-                            <span>$90</span>
-                        </ProductStyled>
+                        <p>PRODUCT</p>
+                        <ListProduct>
+                            {
+                                cartItem.map(item => (<ProductStyled key={item._id}>
+                                    <div style={{ display: 'flex' }}>
+                                        <img
+                                            width="50px"
+                                            height="60px"
+                                            src={item.image}
+                                            alt="bookImage" />
+                                        <div style={{ marginLeft: '1rem' }}>
+                                            <div>{item.name}</div>
+                                            <span>Qty:</span> <span>{item.quantity}</span>
+                                            <div><span>Price:</span> {item.price}</div>
+                                        </div>
+                                    </div>
+                                    <span><DollarCircleOutlined />{item.subTotal}</span>
+                                </ProductStyled>))
+
+                            }
+
+                        </ListProduct>
+
                         <Divider />
                         <DivStyled>
                             <span>Subtotal</span>
-                            <div>$390</div>
+                            <div><DollarOutlined /> {totalPrice}</div>
                         </DivStyled>
                         <Divider />
                         <DivStyled>
@@ -134,14 +135,15 @@ function Checkout(props) {
                         <Divider />
                         <DivStyled>
                             <span>Total</span>
-                            <span style={{ fontSize: 25, fontWeight: 'bold', color: "#000" }}>$390</span>
+                            <span style={{ fontSize: 25, fontWeight: 'bold', color: "#000" }}><DollarOutlined /> {totalPrice}</span>
                         </DivStyled>
                         <div><ButtonStyled block={true}>PLACE ORDER</ButtonStyled></div>
                     </PlaceOrderStyled>
 
                 </Col>
             </Row>
-        </Wrapper>
+            </Wrapper>
+        </div>
     );
 }
 

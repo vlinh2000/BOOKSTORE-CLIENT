@@ -30,7 +30,7 @@ const InputStyled = styled(Input)`
 
 function InputField(props) {
 
-    const { name, prefix, placeholder, type, disabled, control, value } = props;
+    const { name, prefix, placeholder, type, disabled, control, label } = props;
 
     return (
         <Controller
@@ -41,10 +41,11 @@ function InputField(props) {
                 return (<Form.Item
                     validateStatus={errors[field.name] && 'error'}
                     help={errors[field.name]?.message}
-                    name={field.name} >
+                    name={field.name}
+                    initialValue={field.value}
+                    label={label} >
                     <InputStyled
                         {...field}
-                        defaultValue={value}
                         type={type}
                         prefix={prefix}
                         placeholder={placeholder}

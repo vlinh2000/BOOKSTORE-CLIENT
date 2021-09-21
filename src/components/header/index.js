@@ -227,7 +227,7 @@ function Header(props) {
                                         icon={<UserOutlined />}>
                                     </ButtonStyled>
                                     <div className='info'>
-                                        <div> {isAuth ? <span style={{ color: '#9387d9', fontWeight: 'bold' }} >{name.toUpperCase()}</span> : 'Sign in'} </div>
+                                        <div> {isAuth ? <span style={{ color: '#9387d9', fontWeight: 500, fontSize: 10 }} >{name.toUpperCase()}</span> : 'Sign in'} </div>
                                         <div> My account </div>
                                     </div>
                                 </InfoCartStyled>

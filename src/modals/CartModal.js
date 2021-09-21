@@ -91,7 +91,7 @@ function CartModal({ cartItem, totalPrice, isAuth }) {
 
 
     return (
-        <div>
+        <div >
             {/* Product */}
             {cartItem.length < 1 ? <NotProductInCartModal /> : <div>
                 <WrapperProduct>

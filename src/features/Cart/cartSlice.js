@@ -1,15 +1,33 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { billApi } from 'api/BillApi';
 
+
+
+
+export const Checkout = createAsyncThunk("cart/Checkout", async (data, { rejectWithValue }) => {
+
+    try {
+        const resData = await billApi.post(data);
+        return resData;
+
+    } catch (error) {
+        return rejectWithValue(error.respone.data)
+    }
+
+})
+
+
+
+
+const getTotalPrice = (cartItem) => {
+    return cartItem.reduce((a, b) => a + b.subTotal, 0).toFixed(2);
+}
 
 const initialState = {
     cartItem: [],
     totalPrice: 0,
     itemLiked: [],
-    screenDefault: false
-}
-
-const getTotalPrice = (cartItem) => {
-    return cartItem.reduce((a, b) => a + b.subTotal, 0).toFixed(2);
+    isCheckOutStatus: false
 }
 
 
@@ -52,13 +70,25 @@ const cart = createSlice({
         },
         likedList: (state, action) => {
             state.itemLiked.push(action.payload);
-        },
-        checkOut: (state, action) => {
-            state.screenDefault = action.payload;
         }
+    },
+    extraReducers: {
+        //handle check out
+        [Checkout.pending]: (state) => {
+            state.isCheckOutStatus = true;
+        },
+        [Checkout.fulfilled]: (state) => {
+            state.cartItem = [];
+            state.totalPrice = 0;
+            state.isCheckOutStatus = false;
+        },
+        [Checkout.rejected]: (state) => {
+            state.isCheckOutStatus = false;
+        },
+
     }
 })
 
 const { actions, reducer } = cart;
-export const { addToCart, removeItemInCart, updateCart, likedList, checkOut } = actions;
+export const { addToCart, removeItemInCart, updateCart, likedList } = actions;
 export default reducer;

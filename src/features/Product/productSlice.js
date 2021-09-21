@@ -50,6 +50,7 @@ export const sendFeedBack = createAsyncThunk('pageInfo/sendFeedBack', async (dat
 });
 
 
+
 export const fetchCategory = createAsyncThunk('pageInfo/fetchCategory', async (params, { rejectWithValue }) => {
 
     try {

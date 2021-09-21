@@ -6,6 +6,7 @@ import ProductList from '../Components/ProductList';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCategory, fetchPageInfo } from '../productSlice';
+import Banner from 'components/Banner';
 
 
 const MainPageStyled = styled.div`
