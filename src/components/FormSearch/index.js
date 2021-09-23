@@ -28,9 +28,7 @@ function FormSearch(props) {
 
     const [value, setValue] = React.useState('');
 
-    const location = useLocation()
-
-    console.log(location);
+    const location = useLocation();
 
     const dispatch = useDispatch();
 

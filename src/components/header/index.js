@@ -17,8 +17,9 @@ import CartModal from 'modals/CartModal';
 import LoginModal from 'modals/LoginModal';
 import RegisterModal from 'modals/RegisterModal';
 
-import { switchCartModal, switchLoginModal } from 'app/modalSlice';
+import { switchCartModal, switchLoginModal, switchUserInfoDrawer } from 'app/modalSlice';
 import { history } from 'App';
+import UserInfo from 'components/UserInfo';
 
 
 const HeaderStyled = styled.div`
@@ -110,10 +111,11 @@ function Header(props) {
 
     const { totalPrice, cartItem } = useSelector(state => state.cart);
 
+
     //handle switch (on,off) login modal 
     const handleSwitchLoginModal = () => {
         if (isAuth) {
-            history.push('/cart');
+            dispatch(switchUserInfoDrawer(true));
             return;
         }
 
@@ -261,6 +263,7 @@ function Header(props) {
             </HeaderMainStyled>
             <LoginModal />
             <RegisterModal />
+            {isAuth && <UserInfo />}
         </HeaderStyled>
     );
 }

@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Switch, Route, Router, Redirect } from 'react-router-dom';
+import { Switch, Route, Router, Redirect } from 'react-router-dom';
 import React, { Suspense } from 'react';
 
 import { createBrowserHistory } from 'history'

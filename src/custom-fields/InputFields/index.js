@@ -37,7 +37,6 @@ function InputField(props) {
             name={name}
             control={control}
             render={({ field, formState: { errors } }) => {
-
                 return (<Form.Item
                     validateStatus={errors[field.name] && 'error'}
                     help={errors[field.name]?.message}

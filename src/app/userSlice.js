@@ -8,8 +8,8 @@ export const getMe = createAsyncThunk('user/getMe', async (data) => {
     return currentUser;
 })
 
+//handle login
 export const login = createAsyncThunk('user/login', async (data, { rejectWithValue }) => {
-    //handle login
     try {
         const { token, refreshToken } = await UserApi.user_login(data);
         return { token, refreshToken };
@@ -20,10 +20,22 @@ export const login = createAsyncThunk('user/login', async (data, { rejectWithVal
 
 })
 
+//handle register
 export const register = createAsyncThunk('user/register', async (data, { rejectWithValue }) => {
-    //handle register
     try {
         const { message } = await UserApi.user_register(data);
+        return { message };
+
+    } catch (err) {
+        return rejectWithValue(err.response.data);
+    }
+
+})
+
+//handle update user info
+export const updateUserInfo = createAsyncThunk('user/updateUserInfo', async (data, { rejectWithValue }) => {
+    try {
+        const { message } = await UserApi.user_update(data);
         return { message };
 
     } catch (err) {
@@ -93,6 +105,17 @@ const user = createSlice({
             state.loading = false;
         },
         [register.rejected]: (state, action) => {
+            state.loading = false;
+            state.error = action.error;
+        },
+        //handle update
+        [updateUserInfo.pending]: (state) => {
+            state.loading = true;
+        },
+        [updateUserInfo.fulfilled]: (state) => {
+            state.loading = false;
+        },
+        [updateUserInfo.rejected]: (state, action) => {
             state.loading = false;
             state.error = action.error;
         },

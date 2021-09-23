@@ -56,7 +56,7 @@ function RegisterModal(props) {
 
 
 
-    const { handleSubmit, control, reset } = useForm({ resolver: yupResolver(registerSchema), defaultValues });
+    const { handleSubmit, control } = useForm({ resolver: yupResolver(registerSchema), defaultValues });
 
     const { loading } = useSelector(state => state.user);
 

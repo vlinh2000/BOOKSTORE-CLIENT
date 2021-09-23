@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
+
 import styled from 'styled-components';
 import { Button, Col, message, Row, Tooltip } from 'antd';
 import { DeleteOutlined, DollarOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+
 import { removeItemInCart } from '../cartSlice';
-import { useDispatch } from 'react-redux';
 
 ProductInCartModal.propTypes = {
     product: PropTypes.object

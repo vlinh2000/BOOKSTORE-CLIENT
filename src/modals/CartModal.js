@@ -8,8 +8,6 @@ import { DollarOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { switchCartModal, switchLoginModal } from 'app/modalSlice';
 import { history } from 'App';
-import { checkOut } from 'features/Cart/cartSlice';
-import { useLocation } from 'react-router';
 
 CartModal.propTypes = {
     cartItem: PropTypes.array,
@@ -68,8 +66,6 @@ const WrapperProduct = styled.div`
 function CartModal({ cartItem, totalPrice, isAuth }) {
 
     const dispatch = useDispatch();
-
-    const location = useLocation();
 
     const handleViewCart = () => {
         const action = switchCartModal(false);

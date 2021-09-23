@@ -9,12 +9,14 @@ export const UserApi = {
                 try {
                     const { user } = await axiosClient.get(url);
                     resolve({
+                        id: user._id,
                         name: user.name,
                         key: user.key,
                         address: user.address,
                         phoneNumber: user.phoneNumber,
                         userName: user.userName,
-                        passWord: user.passWord
+                        email: user.email,
+                        avatar: user.avatar
                     });
 
                 } catch (error) {
@@ -58,7 +60,25 @@ export const UserApi = {
                 }
             }, 1000);
         })
-    }
+    },
+    //handle update;
+    user_update: (data) => {
+        return new Promise((resolve, reject) => {
+
+            const url = `/user/${data.get("id")}`;
+            setTimeout(() => {
+                try {
+
+                    const resData = axiosClient.patch(url, data);
+                    resolve(resData);
+
+                } catch (error) {
+                    reject(error)
+                }
+            }, 1000);
+        })
+    },
+
 
 
 

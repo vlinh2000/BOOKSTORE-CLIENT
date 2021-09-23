@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, message, Rate, Spin, Typography } from 'antd';
-import { CheckOutlined, DollarCircleOutlined, HeartOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { addToCart } from 'features/Cart/cartSlice';
 import { useDispatch } from 'react-redux';
+
+import { addToCart } from 'features/Cart/cartSlice';
+
+import styled from 'styled-components';
+import { Button, message, Rate, Spin, Typography } from 'antd';
+import { DollarCircleOutlined, HeartOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+
+import { getVotedHighest } from 'utils/common';
 
 Product.propTypes = {
     product: PropTypes.object
@@ -131,23 +135,13 @@ const RaitingStyled = styled.div`
 
 function Product({ product }) {
 
-    const { _id, name, author, price, oldPrice, image, feedBack, isAddToCart } = product;
+    const { _id, name, author, price, oldPrice, image, feedBack } = product;
 
     const [isAdding, setIsAdding] = React.useState(false);
 
     const dispatch = useDispatch()
 
-    //hanlde get voted star highest 
-    const getVotedHighest = () => {
-        //feedBack : {
-        // _id
-        // bookId
-        // comments:[]  }
-        let cloneFeedBack = [...feedBack?.comments];
-        cloneFeedBack = cloneFeedBack.sort((a, b) => b.voted - a.voted);
-        return cloneFeedBack[0].voted;
 
-    }
 
     //handle add to cart
     const handleAddToCart = () => {
@@ -224,7 +218,7 @@ function Product({ product }) {
                     <Rate
                         disabled
                         defaultValue={2}
-                        value={feedBack ? getVotedHighest() : 0}
+                        value={feedBack ? getVotedHighest(feedBack) : 0}
                         style={{ fontSize: 12 }} />
                     <span
                         style={{ marginLeft: 5 }}>({feedBack?.comments?.length || 0})</span>

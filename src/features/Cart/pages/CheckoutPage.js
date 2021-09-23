@@ -1,22 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Button, Steps, Form, Checkbox, Radio, Space, Input, Divider, Tooltip, message, Row, Col } from 'antd';
-import Banner from 'components/Banner';
-import styled from 'styled-components';
-import InputField from 'custom-fields/InputFields';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { AlertTwoTone, ArrowLeftOutlined, ArrowRightOutlined, CheckOutlined, ClockCircleFilled, CloseCircleFilled, DollarCircleOutlined, DollarOutlined, EditOutlined, LoadingOutlined, RightOutlined, SaveOutlined, SendOutlined, SwapLeftOutlined, SwapRightOutlined } from '@ant-design/icons';
-import registerSchema from 'yup/registerSchema';
-import { yupResolver } from '@hookform/resolvers/yup';
+
+import styled from 'styled-components';
+import { Button, Steps, Form, Radio, Space, Input, Divider, Tooltip, message, Row, Col } from 'antd';
+import {
+    CheckOutlined, CloseCircleFilled, DollarCircleOutlined, DollarOutlined,
+    EditOutlined, SaveOutlined, SwapLeftOutlined, SwapRightOutlined
+} from '@ant-design/icons';
+
 import infoSchema from 'yup/infoSchema';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import InputField from 'custom-fields/InputFields';
+import Banner from 'components/Banner';
 import { mastercardLogo, momoLogo } from 'constants/Global';
-import { Checkout, checkOut } from '../cartSlice';
+import { Checkout } from '../cartSlice';
 import { history } from 'App';
 
-CheckoutPage.propTypes = {
 
-};
+
 
 const StepStyled = styled(Steps)`
     width:50%;
@@ -196,8 +199,6 @@ function CheckoutPage(props) {
 
     const { isCheckOutStatus } = useSelector(state => state.cart);
 
-    console.log(isCheckOutStatus);
-
     const handleNext = () => {
 
         setIsLoading(true);
@@ -211,24 +212,19 @@ function CheckoutPage(props) {
     }
 
     const handlePrevious = () => {
-
         setCurrentStep(prev => prev - 1);
-
     }
 
 
     //handle save personal information
     const onSubmit = values => {
-
         setShipInfo(prev => ({ ...prev, ...values }));
         handleNext();
     }
 
     //handle choose payment method
     const handleChoosePayment = ({ target }) => {
-
         setShipInfo(prev => ({ ...prev, payMethod: { ...prev.payMethod, currentMethod: target.value } }));
-
     }
 
     const handleInputTraddingCode = value => {
@@ -336,7 +332,7 @@ function CheckoutPage(props) {
                                                 <div><span>Price:</span> {item.price}</div>
                                             </div>
                                         </div>
-                                        <span><DollarCircleOutlined />{item.subTotal}</span>
+                                        <span><DollarCircleOutlined /> {item.subTotal}</span>
                                     </ProductStyled>))
                                 }
                             </ListProduct>

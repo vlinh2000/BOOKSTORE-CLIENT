@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 
 import styled from 'styled-components';
 
-import { Breadcrumb, Button, Col, Divider, message, Row, Skeleton, Spin } from 'antd';
-import { BookOutlined, HeartOutlined, HomeOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { BackTop, Breadcrumb, Button, Col, Divider, message, Row, Skeleton, Spin } from 'antd';
+import { BookOutlined, HeartOutlined, HomeOutlined, MinusOutlined, PlusOutlined, UpCircleOutlined } from '@ant-design/icons';
 
 import ProductRelated from '../Components/ProductRelated';
 import ProductComment from '../Components/ProductComment';
@@ -117,6 +117,22 @@ const SkeletonStyled = styled(Skeleton)`
     margin:2rem;
 `;
 
+const ButtonBackTopStyled = styled(Button)`
+
+    height: 40px;
+    width: 40px;
+    lineHeight: 40px;
+    background-color: rgba(0,0,0,0.5);
+    border-radius:50%;
+    color:#FFF;
+    
+    &:hover{    
+        color:#FFF;
+        background:#333;
+        border:none;
+    }
+
+`;
 
 function ProductDetailPage(props) {
     const { bookId } = useParams();
@@ -145,10 +161,14 @@ function ProductDetailPage(props) {
 
     const [currentImageIndex, setCurrenImageIndex] = React.useState(0);
 
+    const secondTime = React.useRef(false);
+
 
     const dispatch = useDispatch();
 
     React.useEffect(() => {
+        //scroll top if user click related products;
+        secondTime.current && window.scroll(0, 0);
         //handle fetch book with book id
         try {
             const fetchBook = async () => {
@@ -160,6 +180,7 @@ function ProductDetailPage(props) {
 
             }
 
+            secondTime.current = true;
             setIsBookLoading(true);
             fetchBook();
         } catch (error) {
@@ -354,11 +375,17 @@ function ProductDetailPage(props) {
                             <InfoStyled>
                                 <div>
                                     <span>Category:</span>
-                                    <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>{category.categoryName}</span>
+                                    <span
+                                        style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>
+                                        {category.categoryName}
+                                    </span>
                                 </div>
                                 <div>
                                     <span>Author:</span>
-                                    <span style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>{book.author}</span>
+                                    <span
+                                        style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>
+                                        {book.author}
+                                    </span>
                                 </div>
                             </InfoStyled>
                         </Col>
@@ -375,7 +402,9 @@ function ProductDetailPage(props) {
             </SkeletonStyled>
             <ProductEvaluateForm bookId={bookId} />
             {isRelatedLoading ? <Spin /> : <ProductRelated products={relatedBook} />}
-
+            <BackTop >
+                <ButtonBackTopStyled icon={<UpCircleOutlined />} />
+            </BackTop>
         </Wrapper>
     );
 }

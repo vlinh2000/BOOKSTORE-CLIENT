@@ -1,15 +1,18 @@
 import React from 'react';
-import { Avatar, Button, Col, message, Row, Form, Alert, Tooltip } from 'antd';
-import InputField from 'custom-fields/InputFields';
-import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux'
+
+import styled from 'styled-components';
+import { Avatar, Button, Col, message, Row, Form, Alert, Tooltip } from 'antd';
+import { InfoCircleTwoTone, LoginOutlined } from '@ant-design/icons';
 
 import { yupResolver } from "@hookform/resolvers/yup"
 import evaluateSchema from 'yup/evaluateSchema';
+
 import VotedField from 'custom-fields/VotedField';
-import { useDispatch, useSelector } from 'react-redux'
+import InputField from 'custom-fields/InputFields';
+
 import { hasNewFeedBack, sendFeedBack } from 'features/Product/productSlice';
-import { InfoCircleTwoTone, LoginOutlined, SendOutlined, SoundOutlined, WarningOutlined, WarningTwoTone } from '@ant-design/icons';
 import { switchLoginModal } from 'app/modalSlice';
 
 const Wrapper = styled.div`
@@ -30,7 +33,6 @@ function ProductEvaluateForm({ bookId }) {
     const { isLoadingFeedBack } = useSelector(state => state.pageInfo);
 
     const { isAuth, user: { avatar, name } } = useSelector(state => state.user.currentUser);
-
 
     const { control, handleSubmit, reset } = useForm({ resolver: yupResolver(evaluateSchema) });
 
@@ -67,7 +69,7 @@ function ProductEvaluateForm({ bookId }) {
                 <Row gutter={20}>
                     <Avatar
                         style={{ backgroundColor: '#f56a00' }}
-                        src={avatar && ''}>{!avatar && name?.charAt(0)?.toUpperCase()}  </Avatar>
+                        src={avatar ? avatar : ''}>{!avatar && name?.charAt(0)?.toUpperCase()}  </Avatar>
                     <Col span={10}>
                         <InputField
                             name="message"

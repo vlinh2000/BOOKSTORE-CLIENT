@@ -1,12 +1,15 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import styled from 'styled-components';
 import { Col, Row, Spin } from 'antd';
+
 import SideBar from '../Components/SideBar';
 import TopControl from '../Components/TopControl';
 import ProductList from '../Components/ProductList';
-import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
+
 import { fetchCategory, fetchPageInfo } from '../productSlice';
-import Banner from 'components/Banner';
+import { handleSort } from 'utils/common';
 
 
 const MainPageStyled = styled.div`
@@ -59,15 +62,7 @@ function MainPage(props) {
 
     }, [filterPattern, products, rangeStep]);
 
-    //handle sort 
-    const handleSort = (products, values) => {
-        switch (values) {
-            case 'min-to-max': return products.sort((book1, book2) => book1.price - book2.price);
-            case 'max-to-min': return products.sort((book1, book2) => book2.price - book1.price);
-            default: return products;
-        }
 
-    }
 
     return (
         <MainPageStyled>
@@ -76,7 +71,8 @@ function MainPage(props) {
                     <SideBar />
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 19 }}>
-                    <TopControl totalProduct={books?.length} handleSort={handleSort} />
+                    <TopControl
+                        totalProduct={books?.length} />
                     {loading
                         ? <Spin />
                         : <ProductList products={books} />

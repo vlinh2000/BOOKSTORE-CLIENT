@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Product from '../Product';
+
 import { Col, Row } from 'antd';
-import { useSelector } from 'react-redux';
+
+import Product from '../Product';
 
 
 ProductList.propTypes = {
@@ -14,8 +15,6 @@ ProductList.defaultProps = {
 };
 
 function ProductList({ products }) {
-
-
     return (
         <div>
             <Row gutter={[48, 48]}>
