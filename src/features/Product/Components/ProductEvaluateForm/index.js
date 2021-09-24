@@ -15,6 +15,9 @@ import InputField from 'custom-fields/InputFields';
 import { hasNewFeedBack, sendFeedBack } from 'features/Product/productSlice';
 import { switchLoginModal } from 'app/modalSlice';
 
+import InputEmoji from "react-input-emoji";
+import InputFieldWithEmoji from 'custom-fields/InputFieldWithEmoji';
+
 const Wrapper = styled.div`
     padding:0 9rem;
 `;
@@ -48,15 +51,17 @@ function ProductEvaluateForm({ bookId }) {
                 const { payload } = await dispatch(sendFeedBack(data))
                 dispatch(hasNewFeedBack());
                 message.success(payload);
+                reset({ voted: 0 })
+                form.setFieldsValue({ message: '' });
             }
             sendFB();
-            reset({ voted: 0 })
-            form.setFieldsValue({ message: '' });
         } catch (error) {
             message.error(error);
         }
 
     }
+
+
 
     return (<Wrapper>
         {isAuth ?
@@ -66,12 +71,20 @@ function ProductEvaluateForm({ bookId }) {
                     name="voted"
                     label="Your rating"
                 />
-                <Row gutter={20}>
-                    <Avatar
-                        style={{ backgroundColor: '#f56a00' }}
-                        src={avatar ? avatar : ''}>{!avatar && name?.charAt(0)?.toUpperCase()}  </Avatar>
+                <Row >
+                    <Col span={1}>
+                        <Avatar
+                            size="large"
+                            style={{ backgroundColor: '#f56a00', marginTop: 3 }}
+                            src={avatar ? avatar : ''}>{!avatar && name?.charAt(0)?.toUpperCase()}  </Avatar>
+                    </Col>
                     <Col span={10}>
-                        <InputField
+                        {/* <InputField
+                            name="message"
+                            placeholder="Your Reviews"
+                            control={control}
+                        /> */}
+                        <InputFieldWithEmoji
                             name="message"
                             placeholder="Your Reviews"
                             control={control}
