@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Avatar, Button, Drawer, Form, message, Upload } from 'antd';
+import { Avatar, Button, Drawer, Form, message, Tooltip, Upload } from 'antd';
 import InputField from 'custom-fields/InputFields';
-import { CameraOutlined, HomeOutlined, KeyOutlined, MailOutlined, PhoneOutlined, SmileOutlined, UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, CameraOutlined, CaretLeftOutlined, EnterOutlined, HomeOutlined, KeyOutlined, LeftCircleOutlined, LeftSquareOutlined, LogoutOutlined, MailOutlined, PhoneOutlined, SelectOutlined, SmileOutlined, SwapLeftOutlined, UploadOutlined, UserOutlined } from '@ant-design/icons';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,7 +10,9 @@ import { switchUserInfoDrawer } from 'app/modalSlice';
 import AvatarSelectField from 'custom-fields/AvatarSelectField';
 import userInfoSchema from 'yup/userInfoSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getMe, updateUserInfo } from 'app/userSlice';
+import { getMe, logout, updateUserInfo } from 'app/userSlice';
+import { toast } from 'react-toastify';
+import { toastSuccess } from 'utils/common';
 
 UserInfo.propTypes = {
 
@@ -38,6 +40,16 @@ const FormStyled = styled(Form)`
 
 `;
 
+const ButtonLogoutStyled = styled(Button)`
+
+    border-width:2px;
+
+    &:hover{
+        color:#FFF ;
+        border-color:#9387d9 ;
+        background:#9387d9;
+    }
+`;
 function UserInfo() {
 
     const { user } = useSelector(state => state.user.currentUser);
@@ -94,6 +106,13 @@ function UserInfo() {
         dispatch(switchUserInfoDrawer(false))
     }
 
+    //handle user logout 
+    const handleLogout = () => {
+        dispatch(logout());
+        handleClose();
+        toastSuccess("See you later !", "BYE");
+    }
+
     return (
         <div>
             <DrawerStyled
@@ -101,7 +120,15 @@ function UserInfo() {
                 title="User infomation"
                 width="600px"
                 drawerStyle={{ padding: "0 2rem" }}
-                visible={isVisibleUserInfo}>
+                visible={isVisibleUserInfo}
+                footer={<Tooltip
+                    title="Log out">
+                    <ButtonLogoutStyled
+                        onClick={handleLogout}
+                        size="large"
+                        shape="circle"
+                        icon={<LogoutOutlined />} />
+                </Tooltip>}>
                 <FormStyled onFinish={handleSubmit(onSubmit)}>
                     <AvatarSelectField
                         name="avatar"

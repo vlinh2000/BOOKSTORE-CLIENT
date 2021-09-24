@@ -11,7 +11,7 @@ import registerSchema, { defaultValues } from 'yup/registerSchema';
 import { useDispatch, useSelector } from 'react-redux';
 import { switchLoginModal, switchRegisterModal } from 'app/modalSlice';
 import { register } from 'app/userSlice';
-import { toast } from 'react-toastify';
+import { toastError, toastSuccess } from 'utils/common';
 
 
 const FormStyled = styled.form`
@@ -69,12 +69,12 @@ function RegisterModal(props) {
         const { error, payload: { message } } = await dispatch(register(values));
 
         if (error) {
-            toast.error(message);
+            toastError(message);
             return;
         }
 
         //when success register
-        toast.success(message);
+        toastSuccess(message);
     }
 
     //Open login modal

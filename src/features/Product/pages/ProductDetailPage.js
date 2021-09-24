@@ -208,7 +208,7 @@ function ProductDetailPage(props) {
             quantity,
             subTotal: (quantity * price)
         };
-        //handle dispatch
+        //handle dispatch checkout
         setIsAddingCheckOut(true);
         const intervalId = setInterval(async () => {
             await dispatch(addToCart(product));

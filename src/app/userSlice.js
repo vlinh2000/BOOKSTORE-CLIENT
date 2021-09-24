@@ -67,7 +67,16 @@ const user = createSlice({
             state.currentUser.auth = action.payload.auth;
             state.currentUser.user = action.payload.user;
             state.currentUser.isAuth = true;
+        },
+        logout: (state, action) => {
+            state.currentUser.auth = {
+                token: null,
+                refreshToken: null
+            };
+            state.currentUser.user = {};
+            state.currentUser.isAuth = false;
         }
+
     },
     extraReducers: {
         //handle get my info
@@ -125,6 +134,6 @@ const user = createSlice({
 
 const { reducer, actions } = user;
 
-export const { setCurrentUser } = actions
+export const { setCurrentUser, logout } = actions
 
 export default reducer;

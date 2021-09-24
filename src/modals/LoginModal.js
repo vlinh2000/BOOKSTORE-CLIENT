@@ -12,9 +12,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { switchLoginModal, switchRegisterModal } from 'app/modalSlice';
 import { getMe, login, setCurrentUser } from 'app/userSlice';
 
-import { toast } from 'react-toastify';
 import firebase, { auth } from 'firebase/config';
 import { GoogleCircleFilled } from '@ant-design/icons';
+import { toastError, toastSuccess } from 'utils/common';
 
 
 
@@ -112,15 +112,14 @@ function LoginModal(props) {
         const { error, payload: { message } } = await dispatch(login(values));
 
         if (error) {
-            toast.error(message);
+            toastError(message);
             return;
         }
 
         await dispatch(getMe());
         //close modal
         dispatch(switchLoginModal(false));
-        toast.success("Welcome back!")
-
+        toastSuccess("Welcome back!", "HI")
     }
 
 
@@ -166,7 +165,7 @@ function LoginModal(props) {
             }
         }));
         dispatch(switchLoginModal(false));
-        toast.success("Welcome back!")
+        toastSuccess("Welcome back!", "HI")
     }
 
 
