@@ -18,7 +18,6 @@ import LoginModal from 'modals/LoginModal';
 import RegisterModal from 'modals/RegisterModal';
 
 import { switchCartModal, switchLoginModal, switchUserInfoDrawer } from 'app/modalSlice';
-import { history } from 'App';
 import UserInfo from 'components/UserInfo';
 
 

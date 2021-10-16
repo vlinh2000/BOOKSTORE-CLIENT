@@ -1,8 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Avatar, Button, Drawer, Form, message, Tooltip, Upload } from 'antd';
+import { Avatar, Button, Drawer, Form, message, Tooltip } from 'antd';
 import InputField from 'custom-fields/InputFields';
-import { ArrowLeftOutlined, CameraOutlined, CaretLeftOutlined, EnterOutlined, HomeOutlined, KeyOutlined, LeftCircleOutlined, LeftSquareOutlined, LogoutOutlined, MailOutlined, PhoneOutlined, SelectOutlined, SmileOutlined, SwapLeftOutlined, UploadOutlined, UserOutlined } from '@ant-design/icons';
+import { HomeOutlined, LogoutOutlined, MailOutlined, PhoneOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -11,7 +10,6 @@ import AvatarSelectField from 'custom-fields/AvatarSelectField';
 import userInfoSchema from 'yup/userInfoSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { getMe, logout, updateUserInfo } from 'app/userSlice';
-import { toast } from 'react-toastify';
 import { toastSuccess } from 'utils/common';
 
 UserInfo.propTypes = {

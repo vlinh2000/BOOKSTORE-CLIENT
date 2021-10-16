@@ -47,7 +47,7 @@ function MainPage(props) {
             //check if category fiter = []
             if (categoryFilter.length < 1) return book;
             //find book in list category filter 
-            return categoryFilter.find(con => con === book.categoryId) && book;
+            return categoryFilter.find(con => con === book.category._id) && book;
         })
 
         // handle range price

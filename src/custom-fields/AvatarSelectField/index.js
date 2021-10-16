@@ -1,7 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Avatar, Button, message, Upload, Form, Typography } from 'antd';
-import { CameraOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, message, Upload } from 'antd';
+import { CameraOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Controller } from 'react-hook-form';
 

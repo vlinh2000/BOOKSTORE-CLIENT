@@ -139,8 +139,6 @@ function ProductDetailPage(props) {
 
     const [book, setBook] = React.useState({});
 
-    const [category, setCategory] = React.useState({});
-
     const [comments, setComments] = React.useState([]);
 
     const [relatedBook, setRelatedBook] = React.useState([]);
@@ -173,9 +171,8 @@ function ProductDetailPage(props) {
         try {
             const fetchBook = async () => {
 
-                const data = await productApi.get(bookId);
-                setBook(data.book);
-                setCategory(data.category);
+                const { book } = await productApi.get(bookId);
+                setBook(book);
                 setIsBookLoading(false);
 
             }
@@ -268,7 +265,7 @@ function ProductDetailPage(props) {
             const params = {
                 _limit: 4,
                 bookId,
-                categoryId: book.categoryId
+                categoryId: book.category?._id
             }
             const { books } = await productApi.getAll(params);
             //handle get feedback 
@@ -285,7 +282,7 @@ function ProductDetailPage(props) {
         setIsRelatedLoading(true);
         fetchRelatedProduct();
 
-    }, [bookId, book.categoryId])
+    }, [bookId, book.category])
 
 
 
@@ -377,7 +374,7 @@ function ProductDetailPage(props) {
                                     <span>Category:</span>
                                     <span
                                         style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>
-                                        {category.categoryName}
+                                        {book.category?.name}
                                     </span>
                                 </div>
                                 <div>

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Form, Input } from 'antd'
+import { Form } from 'antd'
 import { Controller } from 'react-hook-form';
 import InputEmojiWithRef from 'react-input-emoji';
 
@@ -12,7 +11,8 @@ InputFieldWithEmoji.propTypes = {
     placeholder: PropTypes.string,
     type: PropTypes.string,
     disabled: PropTypes.bool,
-    value: PropTypes.string
+    value: PropTypes.string,
+    label: PropTypes.string
 };
 
 InputFieldWithEmoji.defaultProps = {
@@ -21,16 +21,14 @@ InputFieldWithEmoji.defaultProps = {
     placeholder: '',
     type: 'text',
     disabled: false,
-    value: ''
+    value: '',
+    label: ''
 };
 
 
 function InputFieldWithEmoji(props) {
 
-    const { name, prefix, placeholder, type, disabled, control, label } = props;
-    const handleOnEnter = text => {
-        alert(text);
-    }
+    const { name, placeholder, disabled, control, label } = props;
 
     return (
         <Controller

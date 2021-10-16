@@ -10,7 +10,6 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import evaluateSchema from 'yup/evaluateSchema';
 
 import VotedField from 'custom-fields/VotedField';
-import InputField from 'custom-fields/InputFields';
 
 import { hasNewFeedBack, sendFeedBack } from 'features/Product/productSlice';
 import { switchLoginModal } from 'app/modalSlice';

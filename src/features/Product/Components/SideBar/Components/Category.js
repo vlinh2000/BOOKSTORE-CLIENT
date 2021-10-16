@@ -66,7 +66,7 @@ function Category({ categories }) {
             <ListCategoryStyled key={category._id}>
                 <CheckboxStyled
                     onChange={handleChange}
-                    name={category._id}>{category.categoryName}</CheckboxStyled>
+                    name={category._id}>{category.name}</CheckboxStyled>
                 {/* <li className="item">
                     <span>{category.categoryName}</span>
                 </li> */}
