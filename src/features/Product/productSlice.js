@@ -22,12 +22,7 @@ export const fetchPageInfo = createAsyncThunk('pageInfo/fetchPageInfo', async (p
         //handle range 
         dispatch(getRangePrice(getRange(products)))
 
-        return {
-            products: products,
-            // _page: pageInfo._page,
-            // _limit: pageInfo._limit,
-            // _totalPage: pageInfo._totalPage
-        };
+        return { products: products };
 
     } catch (error) {
         return rejectWithValue(error);

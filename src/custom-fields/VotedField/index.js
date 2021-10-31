@@ -27,8 +27,6 @@ const RaitingStyled = styled.div`
     color:#969696;
     font-size:15px;
     font-weight:bold;
-    margin-bottom:1rem;
-
 `;
 
 function VotedField(props) {

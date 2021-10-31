@@ -3,10 +3,10 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 
 import styled from 'styled-components';
-import { Button, Steps, Form, Radio, Space, Input, Divider, Tooltip, message, Row, Col } from 'antd';
+import { Button, Steps, Form, Radio, Space, Input, Divider, Select, message, Row, Col } from 'antd';
 import {
     CheckOutlined, CloseCircleFilled, DollarCircleOutlined, DollarOutlined,
-    EditOutlined, SaveOutlined, SwapLeftOutlined, SwapRightOutlined
+    EditOutlined, InfoCircleOutlined, InfoOutlined, SaveOutlined, SwapLeftOutlined, SwapRightOutlined
 } from '@ant-design/icons';
 
 import infoSchema from 'yup/infoSchema';
@@ -17,18 +17,25 @@ import Banner from 'components/Banner';
 import { mastercardLogo, momoLogo } from 'constants/Global';
 import { Checkout } from '../cartSlice';
 import { history } from 'App';
+import SelectField from 'custom-fields/SelectFields';
+import axios from 'axios';
+import { BlueButton, DolarStyled, DolartextStyled, NavyButton, PinkButton, PurpleButton, StatusPaid, TextGreenStyled, TextRedStyled, TextYellowStyled, WarningButton, YellowButton } from 'assets/styles/globalStyle'
 
 
 
 
 const StepStyled = styled(Steps)`
-    width:50%;
+    padding:0 8rem;
     margin:0 auto;
     margin-bottom:2rem;
+    .ant-steps-item-title{
+        font-size:15px;
+        font-weight:500;
+        font-style:italic;
+    }
     `;
 
 const MainStyled = styled.div`
-
     margin-bottom:2rem;
     `;
 
@@ -49,28 +56,24 @@ const ButtonStyled = styled(Button)`
     
     `;
 const ButtonPreviousNextStyled = styled(Button)`
-    
     font-size:12px;
     font-weight:500;
-    background:#000;
+    height:40px;
+    background:#666;
     color:#FFF;
     &:hover,&:focus{
-        border:none;
+        border-color:#9387d9;
         color:#EEE;
         background:#9387d9 ;
-        
     }
-    
     `;
 
 const MainScreenStyled = styled.div`
-    
-    width:50%;
-    margin:0 auto;
-    padding:2rem 10rem;
+    margin: 2rem 8rem;
+    padding:3rem 3rem;
     min-height:300px;
     position:relative;
-    box-shadow: 1px 1px 2px 1px #9387d9;
+    box-shadow: 1px 1px 25px -12px #9387d9;
     `;
 
 const TitleStyled = styled.p`
@@ -101,13 +104,19 @@ const CardStyled = styled.div`
 
 const CardItemStyled = styled.div`
     display:flex;
-    justify-content:space-around;
     align-items:center;
     padding:0.75rem 0;
+    margin-left:2rem;
     border-bottom:1px solid #eee;
+
+    & div{
+        margin-left:1rem;
+    }
     `;
 
 const AccountInfoStyled = styled.span`
+    display:inline-block;
+    width:100px;
     color:#969696;
     font-size:12px;
     font-weight:500;
@@ -123,23 +132,24 @@ const ControlButton = styled.div`
 
 const ProductStyled = styled.div`
     display:flex;
-    justify-content:space-between;
     font-size:12px;
     margin-bottom:0.5rem;
     `;
 
 
 const ListProduct = styled.div`
-    max-height:200px;
-    overflow-y:auto;
-    padding:0 1rem;
+    padding:0 2rem;
+    border-right:1px solid #DDD;
     `;
 
 const DivStyled = styled.div`
     display:flex;
-    justify-content:space-between;
     color:#969696;
     font-weight:500;
+    
+    & span{
+        min-width:200px;
+    }
     
     & div{
         color:#000;
@@ -148,56 +158,122 @@ const DivStyled = styled.div`
     `;
 
 
-const MainVerify = styled.div`
-    display:flex;
-    border-bottom:1px solid #eee;
-    border-top:1px solid #eee;
-    padding:3rem 0;
-    
-    `;
 
 const PayMethodDetail = styled.div``;
 
-const InfoVerify = styled.span`
-    
-    font-weight:bold;
+const InfoVerify = styled.div`
     font-size:14px;
-    color:#9387d9;
-    
-    
+    word-wrap: break-word;
+    width: 80%;
 `;
+const PersonInfoStyled = styled.span`
+    width:18%;
+    color:#969696;
+    font-size:14px;
+    font-weight:500;
+    margin-right:1rem;
+    `;
 
-const InfoRowStyled = styled(Row)`
+const InfoRowStyled = styled.div`
     border-bottom:1px solid #eee;
     padding:0.5rem 0;
+    display:flex;
 `;
 
+const NoteStyled = styled.p`
+    text-align:center;
+    margin-bottom:3rem;
+    font-size:16px;
+    font-style:italic;    
+`;
+
+const InfoProduct = styled.div`
+    margin:0 3rem 0.5rem 1rem;
+    min-width:130px;
+    font-size:12px;
+    font-style:italic;    
+    `;
+
+const NameProductStyled = styled.div`
+    font-weight:bold;
+    min-width:130px;
+    `;
 function CheckoutPage(props) {
 
-    const { user: { name, address, phoneNumber } } = useSelector(state => state.user.currentUser);
+    const { user: { name, phoneNumber, address } } = useSelector(state => state.user.currentUser);
 
-    const { control, handleSubmit } = useForm({
-        resolver: yupResolver(infoSchema), defaultValues: {
-            name,
-            phoneNumber,
-            address
-        }
+    const defaultValues = {
+        name,
+        phoneNumber,
+        addressDetail: '',
+        province: null,
+        district: null,
+        ward: null
+    }
+
+    const { control, handleSubmit, setValue } = useForm({
+        resolver: yupResolver(infoSchema), defaultValues: React.useMemo(() => defaultValues, [name, phoneNumber])
     });
 
 
     const { cartItem, totalPrice } = useSelector(state => state.cart);
 
+    const [shipInfo, setShipInfo] = React.useState({ name, address, phoneNumber, payMethod: { currentMethod: 0, traddingCode: '' } });
+
     const [currentStep, setCurrentStep] = React.useState(0);
 
     const [isLoading, setIsLoading] = React.useState(false);
 
-    const [shipInfo, setShipInfo] = React.useState({ name, address, phoneNumber, payMethod: { currentMethod: 0, traddingCode: '' } });
 
     const [isEdit, setIsEdit] = React.useState(false);
 
     const dispatch = useDispatch()
 
     const { isCheckOutStatus } = useSelector(state => state.cart);
+
+    const [provinces, setProvinces] = React.useState([]);
+    const [districts, setDistricts] = React.useState([]);
+    const [wards, setWards] = React.useState([]);
+
+    const [form] = Form.useForm();
+
+    React.useEffect(() => {
+        try {
+            const fetchProvinces = async () => {
+                const url = `${process.env.REACT_APP_API_PROVINCES}/p`;
+                let { data } = await axios.get(url);
+                data = data.map(province => ({ label: province.name, value: province.code }))
+                setProvinces(data);
+            }
+
+            fetchProvinces();
+        } catch (error) {
+            console.log(error)
+        }
+
+    }, []);
+
+    const fetchDistrict = async provinceCode => {
+        try {
+            setDistricts([]);
+            setWards([]);
+            const url = `${process.env.REACT_APP_API_PROVINCES}/p/${provinceCode}?depth=2`
+            const { data } = await axios.get(url);
+            setDistricts(data.districts.map(district => ({ label: district.name, value: district.code })));
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const fetchWards = async districtCode => {
+        try {
+            const url = `${process.env.REACT_APP_API_PROVINCES}/d/${districtCode}?depth=2`
+            const { data } = await axios.get(url);
+            setWards(data.wards.map(wards => ({ label: wards.name, value: wards.code })));
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const handleNext = () => {
 
@@ -218,7 +294,13 @@ function CheckoutPage(props) {
 
     //handle save personal information
     const onSubmit = values => {
-        setShipInfo(prev => ({ ...prev, ...values }));
+        const address = `${values.addressDetail} , ${values.ward.label} , ${values.district.label} , ${values.province.label}`
+        const newInfo = {
+            name: values.name,
+            phoneNumber: values.phoneNumber,
+            address
+        }
+        setShipInfo(prev => ({ ...prev, ...newInfo }));
         handleNext();
     }
 
@@ -272,43 +354,70 @@ function CheckoutPage(props) {
                 //STEP 1
                 currentStep === 0
                     ? <MainScreenStyled>
-                        <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
-                            <InputField
-                                name="name"
-                                placeholder="Name"
-                                label='Name'
-                                disabled={!isEdit}
-                                control={control} />
+                        <NoteStyled><InfoCircleOutlined />  This is your infomation to get goods</NoteStyled>
+                        <Form initialValues={defaultValues} autoComplete={false} form={form} layout="vertical" onFinish={handleSubmit(onSubmit)}>
+                            <Row justify="center" gutter={[40, 0]}>
+                                <Col span={8} >
+                                    <InputField
+                                        name="name"
+                                        placeholder="Name"
+                                        label='Name'
+                                        control={control} />
 
-                            <InputField
-                                name="phoneNumber"
-                                placeholder="Phone number"
-                                label='Phone number'
-                                disabled={!isEdit}
-                                control={control} />
+                                    <InputField
+                                        name="phoneNumber"
+                                        placeholder="Phone"
+                                        label='Phone'
+                                        control={control} />
+                                    <SelectField
+                                        name="province"
+                                        placeholder="Province"
+                                        label='Province'
+                                        options={provinces}
+                                        onSetValue={setValue}
+                                        onChosen={fetchDistrict}
+                                        control={control} />
 
-                            <InputField
-                                name="address"
-                                placeholder="Address"
-                                label="Address"
-                                disabled={!isEdit}
-                                control={control} />
+                                </Col>
+                                <Col span={8}>
+                                    <SelectField
+                                        name="district"
+                                        placeholder="District"
+                                        label='District'
+                                        onChosen={fetchWards}
+                                        onSetValue={setValue}
+                                        options={districts}
+                                        control={control} />
+                                    <SelectField
+                                        name="ward"
+                                        placeholder="Ward"
+                                        label='Ward'
+                                        options={wards}
+                                        control={control} />
+
+                                    <InputField
+                                        name="addressDetail"
+                                        placeholder="Address detail"
+                                        label="Address detail"
+                                        control={control} />
+                                </Col>
+                            </Row>
 
 
                             <ControlButton>
-                                <Button
-                                    danger={!isEdit}
+                                <BlueButton
+                                    style={{ height: 40 }}
                                     type="primary"
-                                    onClick={() => setIsEdit(prev => !prev)}
-                                    icon={isEdit ? <SaveOutlined /> : <EditOutlined />}>{isEdit ? 'Save' : "Edit"}</Button>
-                                <Tooltip title="Next step">
-                                    <ButtonPreviousNextStyled
-                                        disabled={isEdit}
-                                        htmlType="submit"
-                                        loading={isLoading}
-                                        icon={<SwapRightOutlined />
-                                        } />
-                                </Tooltip>
+                                    onClick={() => setIsEdit(prev => !prev)} >
+                                    Back to cart
+                                </BlueButton>
+                                <YellowButton
+                                    disabled={isEdit}
+                                    htmlType="submit"
+                                    loading={isLoading}
+                                >
+                                    Next step
+                                </YellowButton>
                             </ControlButton>
 
                         </Form>
@@ -316,199 +425,175 @@ function CheckoutPage(props) {
                     //STEP 2
                     : currentStep === 1
                         ? <MainScreenStyled>
-                            <TitleStyled>Products</TitleStyled>
-                            <ListProduct>
-                                {
-                                    cartItem.map(item => (<ProductStyled key={item._id}>
-                                        <div style={{ display: 'flex' }}>
-                                            <img
-                                                width="50px"
-                                                height="60px"
-                                                src={item.image}
-                                                alt="bookImage" />
-                                            <div style={{ marginLeft: '1rem' }}>
-                                                <div>{item.name}</div>
-                                                <span>Qty:</span> <span>{item.quantity}</span>
-                                                <div><span>Price:</span> {item.price}</div>
-                                            </div>
-                                        </div>
-                                        <span><DollarCircleOutlined /> {item.subTotal}</span>
-                                    </ProductStyled>))
-                                }
-                            </ListProduct>
-                            <Divider />
-                            <DivStyled>
-                                <span>Subtotal</span>
-                                <div><DollarOutlined /> {totalPrice}</div>
-                            </DivStyled>
-                            <Divider />
-                            <DivStyled>
-                                <span>Shipping</span>
-                                <div>Free shipping</div>
-                            </DivStyled>
-                            <Divider />
-                            <DivStyled>
-                                <span>Total</span>
-                                <span style={{ fontSize: 25, fontWeight: 'bold', color: "#000" }}><DollarOutlined /> {totalPrice}</span>
-                            </DivStyled>
+                            <NoteStyled><InfoCircleOutlined /> All your product, please check after order</NoteStyled>
+                            <Row justify="center" gutter={[40, 0]}>
+                                <Col span={9}>
+                                    <ListProduct>
+                                        {
+                                            cartItem.map(item => (<ProductStyled key={item._id}>
+                                                <img
+                                                    width="50px"
+                                                    height="70px"
+                                                    src={item.image}
+                                                    alt="bookImage" />
+
+                                                <InfoProduct>
+                                                    <NameProductStyled>{item.name}</NameProductStyled>
+                                                    <span>Qty:</span> <span>{item.quantity}</span>
+                                                    <div><span>Price:</span> {item.price}</div>
+                                                </InfoProduct>
+                                                <span>Sub: {item.subTotal}</span>
+                                            </ProductStyled>))
+                                        }
+                                    </ListProduct>
+
+                                </Col>
+                                <Col span={7}>
+                                    <DivStyled>
+                                        <span>Subtotal</span>
+                                        <div>{totalPrice}</div>
+                                    </DivStyled>
+                                    <Divider />
+                                    <DivStyled>
+                                        <span>Shipping</span>
+                                        <div>Free shipping</div>
+                                    </DivStyled>
+                                    <Divider />
+                                    <DivStyled>
+                                        <span>Total</span>
+                                        <span style={{ fontSize: 25, fontWeight: 'bold', color: "#ea5455" }}>{totalPrice} <DolartextStyled>dolars</DolartextStyled></span>
+                                    </DivStyled>
+                                </Col>
+                            </Row>
                             <ControlButton>
-                                <Tooltip title="Previous step">
-                                    <ButtonPreviousNextStyled onClick={handlePrevious} icon={<SwapLeftOutlined />} />
-                                </Tooltip>
-                                <Tooltip title="Next step">
-                                    <ButtonPreviousNextStyled loading={isLoading} onClick={handleNext} icon={<SwapRightOutlined />} />
-                                </Tooltip>
+                                <BlueButton onClick={handlePrevious}  >Previous step</BlueButton>
+                                <YellowButton loading={isLoading} onClick={handleNext}>Next step</YellowButton>
                             </ControlButton>
 
 
                         </MainScreenStyled>
                         //StEP 3
                         : currentStep === 2 ? <MainScreenStyled>
-                            <TitleStyled>  Please choose one payment method </TitleStyled>
+                            <TitleStyled> Please choose one payment method </TitleStyled>
 
-                            <Radio.Group defaultValue={shipInfo.payMethod.currentMethod} onChange={handleChoosePayment}>
-                                <Space align="start" direction="vertical">
-                                    <Radio value={0} >Payment on delivery</Radio>
-                                    <Radio value={1} >Payment right now by master card Or electronic wallet</Radio>
-                                </Space>
-                            </Radio.Group>
-                            {shipInfo.payMethod.currentMethod === 1 && (<PayMethodDetail>
-                                <TitleSubStyled> Quý khách vui lòng chuyển khoản qua số tài khoản bên dưới và nhập mã giao dịch để được xác nhận hóa đơn [<span className="pay-message">Cú pháp: {`<VLINH> <Your name>`}</span>]</TitleSubStyled>
-                                <CardStyled>
-                                    <CardItemStyled>
-                                        <img width="100px" height="70px" src={mastercardLogo} alt="mastercard" />
-                                        <div>
-                                            <div> <AccountInfoStyled>Account number:</AccountInfoStyled> <span>837104719132</span></div>
-                                            <div> <AccountInfoStyled>Account holder:</AccountInfoStyled> <span>TRUONG VIET LINH</span></div>
-                                        </div>
-                                    </CardItemStyled>
-                                    <CardItemStyled>
-                                        <img width="100px" height="70px" src={momoLogo} alt="mastercard" />
-                                        <div>
-                                            <div> <AccountInfoStyled>Account number:</AccountInfoStyled> <span>0387746666</span></div>
-                                            <div> <AccountInfoStyled>Account holder:</AccountInfoStyled> <span>TRUONG VIET LINH</span></div>
-                                        </div>
-                                    </CardItemStyled>
-                                </CardStyled>
-                                <Form
-                                    layout="inline"
-                                    onFinish={handleInputTraddingCode}  >
-                                    <Form.Item
-                                        initialValue={shipInfo.payMethod.traddingCode}
-                                        name="traddingCode"
-                                        rules={[{ required: true, message: "Vui lòng nhập mã giao dịch!" }]} >
-                                        <Input placeholder="Nhập mã giao dịch tại đây" />
-                                    </Form.Item>
-                                    <Button htmlType="submit"> Apply</Button>
-                                </Form>
-                            </PayMethodDetail>)}
+                            <div style={{ marginLeft: '2rem' }}>
+                                <Radio.Group defaultValue={shipInfo.payMethod.currentMethod} onChange={handleChoosePayment}>
+                                    <Space align="start" direction="vertical">
+                                        <Radio value={0} >Payment on delivery</Radio>
+                                        <Radio value={1} >Payment right now by master card Or electronic wallet</Radio>
+                                    </Space>
+                                </Radio.Group>
+                                {shipInfo.payMethod.currentMethod === 1 && (<PayMethodDetail>
+                                    <TitleSubStyled> Quý khách vui lòng chuyển khoản qua số tài khoản bên dưới và nhập mã giao dịch để được xác nhận hóa đơn [<span className="pay-message">Cú pháp: {`<VLINH> <Your name>`}</span>]</TitleSubStyled>
+                                    <CardStyled>
+                                        <CardItemStyled>
+                                            <img width="100px" height="70px" src={mastercardLogo} alt="mastercard" />
+                                            <div>
+                                                <div> <AccountInfoStyled>Account number:</AccountInfoStyled> <span>837104719132</span></div>
+                                                <div> <AccountInfoStyled>Account holder:</AccountInfoStyled> <span>TRUONG VIET LINH</span></div>
+                                            </div>
+                                        </CardItemStyled>
+                                        <CardItemStyled>
+                                            <img width="100px" height="70px" src={momoLogo} alt="mastercard" />
+                                            <div>
+                                                <div> <AccountInfoStyled>Account number:</AccountInfoStyled> <span>0387746666</span></div>
+                                                <div> <AccountInfoStyled>Account holder:</AccountInfoStyled> <span>TRUONG VIET LINH</span></div>
+                                            </div>
+                                        </CardItemStyled>
+                                    </CardStyled>
+                                    <Form
+                                        layout="inline"
+                                        onFinish={handleInputTraddingCode}  >
+                                        <Form.Item
+                                            initialValue={shipInfo.payMethod.traddingCode}
+                                            name="traddingCode"
+                                            rules={[{ required: true, message: "Vui lòng nhập mã giao dịch!" }]} >
+                                            <Input placeholder="Nhập mã giao dịch tại đây" />
+                                        </Form.Item>
+                                        <PurpleButton htmlType="submit"> Apply</PurpleButton>
+                                    </Form>
+                                </PayMethodDetail>)}
 
-
+                            </div>
 
                             <ControlButton>
-                                <Tooltip title="Previous step">
-                                    <ButtonPreviousNextStyled onClick={handlePrevious} icon={<SwapLeftOutlined />} />
-                                </Tooltip>
-                                <Tooltip title="Next step">
-                                    <ButtonPreviousNextStyled
-                                        disabled={shipInfo.payMethod.currentMethod === 1 && shipInfo.payMethod.traddingCode === ''}
-                                        loading={isLoading}
-                                        onClick={handleNext}
-                                        icon={<SwapRightOutlined />} />
-                                </Tooltip>
+                                <BlueButton onClick={handlePrevious}>Previous step</BlueButton>
+                                <YellowButton
+                                    disabled={shipInfo.payMethod.currentMethod === 1 && shipInfo.payMethod.traddingCode === ''}
+                                    loading={isLoading}
+                                    onClick={handleNext}>Next step</YellowButton>
                             </ControlButton>
 
                         </MainScreenStyled> :
                             //STEP 4
                             <MainScreenStyled>
-                                <TitleStyled style={{ textAlign: 'center' }}> Bill Information </TitleStyled>
-                                <MainVerify>
-                                    <div style={{ flexGrow: 1 }}>
-                                        <InfoRowStyled>
-                                            <Col span={8}>
-                                                <AccountInfoStyled>Name:</AccountInfoStyled>
-                                            </Col>
-                                            <Col span={16}>
-                                                <InfoVerify>{shipInfo.name.toUpperCase()}</InfoVerify>
-                                            </Col>
-                                        </InfoRowStyled>
-                                        <InfoRowStyled>
-                                            <Col span={8}>
-                                                <AccountInfoStyled>Phone:</AccountInfoStyled>
-                                            </Col>
-                                            <Col span={16}>
-                                                <InfoVerify>{shipInfo.phoneNumber}</InfoVerify>
-                                            </Col>
-                                        </InfoRowStyled>
-                                        <InfoRowStyled>
-                                            <Col span={8}>
-                                                <AccountInfoStyled>Address:</AccountInfoStyled>
-                                            </Col>
-                                            <Col span={16}>
-                                                <InfoVerify>{shipInfo.address}</InfoVerify>
-                                            </Col>
-                                        </InfoRowStyled>
-                                        <InfoRowStyled>
-                                            <Col span={8}>
-                                                <AccountInfoStyled>Pay status:</AccountInfoStyled>
-                                            </Col>
-                                            <Col span={16}>
-                                                <InfoVerify>{shipInfo.payMethod.currentMethod === 1 ? <CheckOutlined /> : <CloseCircleFilled />}</InfoVerify>
-                                            </Col>
-                                        </InfoRowStyled>
-                                        {shipInfo.payMethod.currentMethod === 1
-                                            &&
+                                <NoteStyled> Bill Information </NoteStyled>
+                                <Row justify="center" gutter={[40, 0]}>
+                                    <Col span={12} style={{ flexFlow: "none" }}>
+                                        <div>
                                             <InfoRowStyled>
-                                                <Col span={8}>
-                                                    <AccountInfoStyled>Tradding code:</AccountInfoStyled>
-                                                </Col>
-                                                <Col span={16}>
-                                                    <InfoVerify>{shipInfo.payMethod.traddingCode}</InfoVerify>
-                                                </Col>
-                                            </InfoRowStyled>}
-                                        <InfoRowStyled>
-                                            <Col span={8}>
-                                                <AccountInfoStyled>Total :</AccountInfoStyled>
-                                            </Col>
-                                            <Col span={16}>
-                                                <InfoVerify><DollarOutlined /> {totalPrice}</InfoVerify>
-                                            </Col>
-                                        </InfoRowStyled>
+                                                <PersonInfoStyled>Name:</PersonInfoStyled>
+                                                <InfoVerify>{shipInfo.name}</InfoVerify>
+                                            </InfoRowStyled>
+                                            <InfoRowStyled>
+                                                <PersonInfoStyled>Phone:</PersonInfoStyled>
+                                                <InfoVerify>{shipInfo.phoneNumber}</InfoVerify>
+                                            </InfoRowStyled>
+                                            <InfoRowStyled>
+                                                <PersonInfoStyled>Address:</PersonInfoStyled>
+                                                <InfoVerify>{shipInfo.address}</InfoVerify>
+                                            </InfoRowStyled>
+                                            <InfoRowStyled>
+                                                <PersonInfoStyled>Pay status:</PersonInfoStyled>
+                                                <InfoVerify>{shipInfo.payMethod.currentMethod === 1 ? <TextGreenStyled>paid</TextGreenStyled> : <TextRedStyled>unpaid</TextRedStyled>}</InfoVerify>
+                                            </InfoRowStyled>
+                                            {shipInfo.payMethod.currentMethod === 1
+                                                &&
+                                                <InfoRowStyled>
+                                                    <PersonInfoStyled>Trading code:</PersonInfoStyled>
+                                                    <InfoVerify><TextYellowStyled>{shipInfo.payMethod.traddingCode}</TextYellowStyled></InfoVerify>
+                                                </InfoRowStyled>}
+                                            <InfoRowStyled>
+                                                <PersonInfoStyled>Total :</PersonInfoStyled>
+                                                <InfoVerify style={{ fontSize: 25, fontWeight: 'bold', color: "#ea5455" }}>{totalPrice} <DolartextStyled>dolars</DolartextStyled></InfoVerify>
+                                            </InfoRowStyled>
 
-                                    </div>
-                                    <ListProduct>
-                                        {
-                                            cartItem.map(item => (<ProductStyled key={item._id}>
-                                                <div style={{ display: 'flex' }}>
-                                                    <img
-                                                        width="50px"
-                                                        height="60px"
-                                                        src={item.image}
-                                                        alt="bookImage" />
-                                                    <div style={{ marginLeft: '0.5rem' }}>
-                                                        <div>{item.name}</div>
-                                                        <div><span>Price:</span> {item.price}</div>
+                                        </div>
+                                    </Col>
+                                    <Col span={9}>
+                                        <div style={{ paddingLeft: "3rem", borderLeft: "1px solid #DDD" }}>
+                                            {
+                                                cartItem.map(item => (<ProductStyled key={item._id}>
+                                                    <div style={{ display: 'flex' }}>
+                                                        <img
+                                                            width="50px"
+                                                            height="60px"
+                                                            src={item.image}
+                                                            alt="bookImage" />
+                                                        <div style={{ marginLeft: '1rem', marginRight: '6rem', flexGrow: 1 }}>
+                                                            <NameProductStyled>{item.name}</NameProductStyled>
+                                                            <div><span>Price:</span> {item.price}</div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <span style={{ color: "#9387d9", marginLeft: '0.5rem' }}>x{item.quantity}</span>
-                                            </ProductStyled>))
-                                        }
-                                    </ListProduct>
-                                </MainVerify>
+                                                    {/* <span style={{ color: "#9387d9", marginLeft: '0.5rem' }}>x{item.quantity}</span> */}
+                                                </ProductStyled>))
+                                            }
+                                        </div>
+                                    </Col>
+                                </Row>
                                 <ControlButton>
-                                    <Tooltip title="Previous step">
-                                        <ButtonPreviousNextStyled onClick={handlePrevious} icon={<SwapLeftOutlined />} />
-                                    </Tooltip>
-                                    <ButtonStyled
+                                    <BlueButton onClick={handlePrevious} >Previous step</BlueButton>
+                                    <NavyButton
+                                        style={{ width: 450 }}
                                         loading={isCheckOutStatus}
                                         onClick={handleOrder}
-                                        block={true}>ORDER</ButtonStyled>
+                                        block={true}>ORDER</NavyButton>
                                 </ControlButton>
                             </MainScreenStyled>
 
             }
         </MainStyled>
-    </div>
+    </div >
 }
 
 export default CheckoutPage;

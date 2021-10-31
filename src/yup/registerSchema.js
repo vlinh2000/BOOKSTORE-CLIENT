@@ -15,19 +15,14 @@ const registerSchema = yup.object().shape({
         .required('This field is requried'),
     tryPassWord: yup.string().oneOf([yup.ref('passWord'), null], "Passwords don't match ")
         .required('This field is requried'),
-    address: yup.string()
-        .required('This field is requried'),
+    province: yup.object()
+        .required('This field is requried').typeError('This field is requried'),
+    district: yup.object()
+        .required('This field is requried').typeError('This field is requried'),
+    ward: yup.object()
+        .required('This field is requried').typeError('This field is requried'),
 });
 
 
-export const defaultValues = {
-    name: '',
-    phoneNumber: '',
-    email: '',
-    userName: '',
-    passWord: '',
-    tryPassWord: '',
-    address: ''
-}
 
 export default registerSchema;

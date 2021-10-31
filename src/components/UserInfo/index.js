@@ -190,7 +190,11 @@ function UserInfo() {
                             Save
                         </ButtonStyled>}
                     </Form.Item>
+
                 </FormStyled>
+                <ButtonStyled onClick={handleLogout}>
+                    Log out
+                </ButtonStyled>
             </DrawerStyled>
         </div>
     );

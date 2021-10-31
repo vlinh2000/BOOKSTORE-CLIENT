@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Form, Input } from 'antd'
 import { Controller } from 'react-hook-form';
+import { FormItemStyled } from 'assets/styles/globalStyle'
 
 InputField.propTypes = {
     //form  , field if using formik
@@ -25,7 +26,6 @@ InputField.defaultProps = {
 
 const InputStyled = styled(Input)`
     min-height:55px;
-    font-weight:500;
     `;
 
 function InputField(props) {
@@ -37,11 +37,11 @@ function InputField(props) {
             name={name}
             control={control}
             render={({ field, formState: { errors } }) => {
-                return (<Form.Item
+                console.log({ [name]: field.value })
+                return (<FormItemStyled
                     validateStatus={errors[field.name] && 'error'}
                     help={errors[field.name]?.message}
                     name={field.name}
-                    initialValue={field.value}
                     label={label} >
                     <InputStyled
                         {...field}
@@ -50,7 +50,7 @@ function InputField(props) {
                         placeholder={placeholder}
                         disabled={disabled}
                     />
-                </Form.Item>)
+                </FormItemStyled>)
             }} />
 
     );

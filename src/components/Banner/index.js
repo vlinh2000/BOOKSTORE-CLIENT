@@ -12,14 +12,13 @@ Banner.propTypes = {
 
 const BannerStyled = styled.div`
     text-align:center;
-     padding: 30px 0;
-     margin-bottom:3rem;
+     margin:2rem;
      `;
 
 const TitleStyled = styled.span`
-     font-size:30px;
+     font-size:40px;
      font-weight:bold;
-     border-bottom: 2px solid #9387d9;
+     font-style:italic
 `
 
 function Banner({ title }) {

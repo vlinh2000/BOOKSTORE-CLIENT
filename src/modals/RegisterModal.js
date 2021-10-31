@@ -7,14 +7,16 @@ import InputField from 'custom-fields/InputFields';
 import { useForm } from 'react-hook-form';
 
 import { yupResolver } from "@hookform/resolvers/yup"
-import registerSchema, { defaultValues } from 'yup/registerSchema';
+import registerSchema from 'yup/registerSchema';
 import { useDispatch, useSelector } from 'react-redux';
 import { switchLoginModal, switchRegisterModal } from 'app/modalSlice';
 import { register } from 'app/userSlice';
 import { toastError, toastSuccess } from 'utils/common';
+import SelectField from 'custom-fields/SelectFields';
+import axios from 'axios';
 
 
-const FormStyled = styled.form`
+const FormStyled = styled(Form)`
     padding: 0.5rem 2rem;
     border:1px solid #eee;
     margin-top:2rem;
@@ -37,7 +39,6 @@ const ButtonStyled = styled(Button)`
     display:block;
     width:100%;
     min-height:50px;
-    margin-bottom:0.5rem;
     font-size:13px;
     font-weight:500;
     color:#fff;
@@ -54,19 +55,43 @@ const ButtonStyled = styled(Button)`
 
 function RegisterModal(props) {
 
+    const defaultValues = {
+        name: '',
+        phoneNumber: '',
+        email: '',
+        userName: '',
+        passWord: '',
+        tryPassWord: '',
+        province: null,
+        district: null,
+        ward: null
+    }
 
-
-    const { handleSubmit, control } = useForm({ resolver: yupResolver(registerSchema), defaultValues });
+    const { handleSubmit, control, setValue, reset } = useForm({ resolver: yupResolver(registerSchema), defaultValues });
 
     const { loading } = useSelector(state => state.user);
 
     const registerModalStatus = useSelector(({ modals }) => modals.registerModal);
+
+    const [provinces, setProvinces] = React.useState([]);
+    const [districts, setDistricts] = React.useState([]);
+    const [wards, setWards] = React.useState([]);
+
+    const [form] = Form.useForm();
+
     const dispatch = useDispatch();
 
     //handle register
     const onSubmit = async (values) => {
-
-        const { error, payload: { message } } = await dispatch(register(values));
+        const userInfo = {
+            name: values.name,
+            phoneNumber: values.phoneNumber,
+            email: values.email,
+            userName: values.userName,
+            passWord: values.passWord,
+            address: `${values.ward.label}, ${values.district.label}, ${values.province.label}`
+        }
+        const { error, payload: { message } } = await dispatch(register(userInfo));
 
         if (error) {
             toastError(message);
@@ -74,6 +99,8 @@ function RegisterModal(props) {
         }
 
         //when success register
+        reset(defaultValues);
+        form.resetFields();
         toastSuccess(message);
     }
 
@@ -89,86 +116,133 @@ function RegisterModal(props) {
         dispatch(action);
     }
 
+    React.useEffect(() => {
+        try {
+            const fetchProvinces = async () => {
+                const url = `${process.env.REACT_APP_API_PROVINCES}/p`;
+                let { data } = await axios.get(url);
+                data = data.map(province => ({ label: province.name, value: province.code }))
+                setProvinces(data);
+            }
+
+            fetchProvinces();
+        } catch (error) {
+            console.log(error)
+        }
+
+    }, []);
+
+    const fetchDistrict = async provinceCode => {
+        try {
+            setDistricts([]);
+            setWards([]);
+            const url = `${process.env.REACT_APP_API_PROVINCES}/p/${provinceCode}?depth=2`
+            const { data } = await axios.get(url);
+            setDistricts(data.districts.map(district => ({ label: district.name, value: district.code })));
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const fetchWards = async districtCode => {
+        try {
+            const url = `${process.env.REACT_APP_API_PROVINCES}/d/${districtCode}?depth=2`
+            const { data } = await axios.get(url);
+            setWards(data.wards.map(wards => ({ label: wards.name, value: wards.code })));
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <div>
             <Modal
                 visible={registerModalStatus}
-                width={800}
+                width={1000}
                 footer={false}
                 onCancel={handleClose}>
 
-                <FormStyled onSubmit={handleSubmit(onSubmit)}>
+                <FormStyled
+                    form={form}
+                    initialValues={defaultValues}
+                    layout="vertical"
+                    onFinish={handleSubmit(onSubmit)}>
                     <WrapperStyled>
                         <TitleStyled>REGISTER</TitleStyled>
                     </WrapperStyled>
                     <Row
-                        gutter={[20, 10]}
-                        justify='space-around'
-                        align="middle"
-                        style={{ marginTop: '2rem' }} >
+                        gutter={[30, 0]}
+                        style={{ marginTop: '0.5rem' }} >
                         <Col span={8}>
                             <InputField
                                 name="name"
-                                placeholder="Họ tên"
-                                prefix={<SmileOutlined />}
+                                placeholder="Your name"
+                                label="Name"
                                 control={control} />
-                        </Col>
-                        <Col span={8}>
                             <InputField
                                 name="phoneNumber"
-                                prefix={<PhoneOutlined />}
-                                placeholder="Số điện thoại"
+                                placeholder="Your phone"
+                                label="Phone"
                                 control={control}
                             />
-                        </Col>
-                        <Col span={8}>
                             <InputField
                                 name="email"
-                                prefix={<MailOutlined />}
                                 type="email"
-                                placeholder="Email"
+                                placeholder="Your email"
+                                label="Email"
                                 control={control}
                             />
                         </Col>
                         <Col span={8}>
                             <InputField
                                 name="userName"
-                                prefix={<UserOutlined />}
-                                placeholder="User Name"
+                                placeholder="Your username"
+                                label="User name"
                                 control={control}
                             />
-                        </Col>
-                        <Col span={8}>
                             <InputField
                                 name="passWord"
                                 type='password'
-                                prefix={<KeyOutlined />}
-                                placeholder="Pass word"
+                                placeholder="Your password"
+                                label="Pass word"
+                                control={control}
+                            />
+                            <InputField
+                                name="tryPassWord"
+                                type="password"
+                                placeholder="Re password"
+                                label="Re password"
                                 control={control}
                             />
                         </Col>
                         <Col span={8}>
-                            <InputField
-                                name="tryPassWord"
-                                type="password"
-                                prefix={<KeyOutlined />}
-                                placeholder="Try pass word"
-                                control={control}
-                            />
-                        </Col>
-                        <Col span={24}>
-                            <InputField
-                                name="address"
-                                prefix={<HomeOutlined />}
-                                placeholder="Địa chỉ"
-                                control={control}
-                            />
+                            <SelectField
+                                name="province"
+                                placeholder="Province"
+                                label='Province'
+                                options={provinces}
+                                onSetValue={setValue}
+                                onChosen={fetchDistrict}
+                                control={control} />
+                            <SelectField
+                                name="district"
+                                placeholder="District"
+                                label='District'
+                                onChosen={fetchWards}
+                                onSetValue={setValue}
+                                options={districts}
+                                control={control} />
+                            <SelectField
+                                name="ward"
+                                placeholder="Ward"
+                                label='Ward'
+                                options={wards}
+                                control={control} />
+
                         </Col>
                     </Row>
-                    <Form.Item>
-                        <ButtonStyled loading={loading} bgcolor="#000" htmlType="submit">REGISTER</ButtonStyled>
-                        <ButtonStyled onClick={handleToLoginModal} bgcolor="#b9b9b9">ALREADY HAS AN ACCOUNT</ButtonStyled>
-                    </Form.Item>
+                    <ButtonStyled loading={loading} bgcolor="#000" htmlType="submit">REGISTER</ButtonStyled>
+                    <ButtonStyled onClick={handleToLoginModal} bgcolor="#b9b9b9">ALREADY HAS AN ACCOUNT</ButtonStyled>
                 </FormStyled>
             </Modal>
         </div>

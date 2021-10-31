@@ -4,9 +4,10 @@ import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
 
-import { Avatar, Comment, Empty, Rate, Tabs, Tooltip, } from 'antd';
+import { Avatar, Comment, Empty, Pagination, Rate, Tabs, Tooltip, } from 'antd';
 
 import moment from 'moment';
+import { TitleStyled } from 'assets/styles/globalStyle';
 
 const { TabPane } = Tabs;
 
@@ -18,78 +19,63 @@ ProductComment.defaultProps = {
     feedBack: []
 };
 
-const Wrapper = styled.div`
-    padding:0 7rem;
-    margin:2rem;
+const ProductCommentStyled = styled.div`
     line-height:20px;
 `;
 
-const TitleStyled = styled.div`
-
-    font-size:20px;
-    font-weight:500;
-    text-transform:uppercase;
-    text-align:center;
-    
-    &:after{
-        content: ' ';
-        display:block;
-        height:10px;
-        border-bottom:3px solid #9387d9;
-        width:50px;
-        margin:0 auto;
-    }
-
+const CommentStyled = styled(Comment)`
+    border-bottom:1px solid #eee;
 `;
 
-const ConmentStyled = styled(Comment)`
-    border-bottom:1px solid #eee;
-
+const CommentWrapper = styled.div`
+    min-height:300px;
 `;
 
 function ProductComment({ feedBack }) {
 
-    const voted5 = feedBack?.filter(eva => eva.voted === 5);
-    const voted4 = feedBack?.filter(eva => eva.voted === 4);
-    const voted3 = feedBack?.filter(eva => eva.voted === 3);
-    const voted2 = feedBack?.filter(eva => eva.voted === 2);
-    const voted1 = feedBack?.filter(eva => eva.voted === 1);
+    const listFeedBack = React.useMemo(() => {
+        const list = [[], [], [], [], []];
 
-    const listFeedBack = [voted5, voted4, voted3, voted2, voted1];
+        feedBack.forEach(fb => {
+            list[5 - fb.voted].push(fb);
+        });
+        return list;
+    }, [feedBack])
+
     const { starVoted } = useSelector(state => state.pageInfo);
 
     return (
-        <Wrapper>
+        <div>
             <TitleStyled>Reviews</TitleStyled>
-            <div>
+            <CommentWrapper>
                 <Tabs defaultActiveKey={`${starVoted}`} >
                     {
-                        listFeedBack?.map((feedBack, index) => (<TabPane tab={` ${5 - index} Sao (${feedBack?.length || 0})`} key={`${5 - index}`}>
+                        listFeedBack?.map((feedBack, index) => (<TabPane tab={<Rate />} tab={` ${5 - index} Sao (${feedBack?.length || 0})`} key={`${5 - index}`}>
                             {
 
-                                feedBack?.map(eva => (<ConmentStyled
+                                feedBack?.map(eva => (<CommentStyled
                                     key={eva.uid}
                                     author={<span>{eva.name}</span>}
                                     avatar={
                                         <Avatar
-                                            style={{ backgroundColor: '#f56a00' }}
-                                            alt={eva.name} src={eva?.avatar || ''}>
-                                            {eva.avatar ? '' : eva.name?.charAt(0)?.toUpperCase() || ''}
+                                            style={!eva.user[0].avatar && { backgroundColor: '#f56a00' }}
+                                            alt={eva.user[0].name}
+                                            src={eva.user[0].avatar || ''}>
+                                            {eva.user[0].avatar ? '' : eva.user[0].avatar?.charAt(0)?.toUpperCase() || ''}
                                         </Avatar>
                                     }
                                     content={
                                         <div>
-                                            <p>{eva.feedBackMessage}</p>
+                                            <p>{eva.message}</p>
                                             <Rate style={{ fontSize: 12 }} disabled defaultValue={5 - index} value={5 - index} />
                                         </div>}
                                     datetime={
-                                        <Tooltip title={moment(eva.createAt).calendar()}>
+                                        <Tooltip title={moment(eva.createAt).format("DD/MM/YYYY")}>
                                             <span>{moment(eva.createAt).calendar()}</span>
                                         </Tooltip>
                                     }
                                 >
-
-                                </ConmentStyled>))
+                                </CommentStyled>))
                             }
                             {feedBack.length < 1 && <Empty />}
                         </TabPane>))
@@ -97,8 +83,8 @@ function ProductComment({ feedBack }) {
                     }
 
                 </Tabs>
-            </div>
-        </Wrapper>
+            </CommentWrapper>
+        </div>
     );
 }
 

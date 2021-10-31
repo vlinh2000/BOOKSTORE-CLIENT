@@ -37,3 +37,7 @@ export const toastSuccess = (message, action) => {
 export const toastError = message => {
     toast.error(message, { ...TOAST_CONFIG, icon: () => <img width="25px" height="25px" alt="error" src={ICON_ERR} /> });
 }
+
+
+
+

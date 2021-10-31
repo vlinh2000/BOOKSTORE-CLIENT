@@ -9,16 +9,28 @@ import { BookOutlined, HeartOutlined, HomeOutlined, MinusOutlined, PlusOutlined,
 
 import ProductRelated from '../Components/ProductRelated';
 import ProductComment from '../Components/ProductComment';
-import ProductEvaluateForm from '../Components/ProductEvaluateForm';
+import SendFeedBack from '../Components/SendFeedBack';
 
 import { productApi } from 'api/ProductApi';
 import { feedBackApi } from 'api/feedBackApi';
 import { useDispatch } from 'react-redux';
 import { addToCart } from 'features/Cart/cartSlice';
 import { history } from 'App';
+import { WrapperShadowStyled } from 'assets/styles/globalStyle';
+
+const HeaderProductDetailStyled = styled.div`
+    line-height:55px;
+`;
+
+const BodyProductDetailStyled = styled.div`
+  padding: 0 9.5rem;
+`;
+
+const ReviewStyled = styled.div`
+   
+`;
 
 const Wrapper = styled.div`
-    line-height:55px;
     padding:2rem 2rem
 `;
 
@@ -255,8 +267,6 @@ function ProductDetailPage(props) {
             setIsFeedBackLoading(false);
         }
         fetchFeedBack();
-
-
     }, [bookId, isNewFeed])
 
     //handle get related book
@@ -288,117 +298,112 @@ function ProductDetailPage(props) {
 
     return (
         <Wrapper>
-            {isBookLoading ? <Spin />
-                : (
+            <WrapperShadowStyled>
 
-                    <Row justify="center" >
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }}>
-                            <img
-                                height="550px"
-                                width="450px"
-                                src={book.image && book.image[currentImageIndex]}
-                                alt="mainPhoto" />
-                            <GroupImage>
-                                {book.image?.map((img, index) => (<img
-                                    className={index === currentImageIndex && "active"}
-                                    key={index}
-                                    onClick={() => setCurrenImageIndex(index)}
-                                    width="100px"
-                                    height="120px"
-                                    src={img}
-                                    alt={index} />))}
-                            </GroupImage>
-                        </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 9 }}>
-                            <Breadcrumb separator=">">
-                                <Breadcrumb.Item href="/product">
-                                    <HomeOutlined />
-                                </Breadcrumb.Item>
-                                <Breadcrumb.Item >
-                                    <BookOutlined />
-                                    <span>{book.name}</span>
-                                </Breadcrumb.Item>
-                            </Breadcrumb>
-                            <TitleStyled>{book.name}</TitleStyled>
-                            <PriceStyled>${book.price}</PriceStyled>
-                            <Divider />
-                            <DecriptionStyled>{book.decription}</DecriptionStyled>
-                            <NumberInStockStyled>{book.stockQuantity} in stock</NumberInStockStyled>
-                            <Row
-                                justify="center"
-                                gutter={10}
-                                align="middle">
-                                <Col span={5}>
-                                    <ButtonGroupStyled>
-                                        <ButtonSmallStyled
-                                            onClick={handleDecrease}
-                                            disabled={quantity === 1}
-                                            color="#9387d9"
-                                            type='text'
-                                            size='small'
-                                            icon={<MinusOutlined />} />
-                                        <span>{quantity}</span>
-                                        <ButtonSmallStyled
-                                            onClick={handleIncrease}
-                                            disabled={quantity === book.stockQuantity}
-                                            color="#9387d9"
-                                            type='text'
-                                            size='small'
-                                            icon={<PlusOutlined />} />
-                                    </ButtonGroupStyled>
-                                </Col>
-                                <Col span={16}>
-                                    <ButtonStyled
-                                        onClick={handleAddToCart}
-                                        loading={isAdding}>ADD TO CART</ButtonStyled>
-                                </Col>
-                                <Col span={3}>
-                                    <ButtonSmallStyled
-                                        size="large"
-                                        borderColor="#9387d9"
-                                        bgcolor="#9387d9"
-                                        shape="circle"
-                                        icon={<HeartOutlined />}>
-                                    </ButtonSmallStyled>
-                                </Col>
-                            </Row>
-                            <ButtonStyled
-                                loading={isAddingCheckOut}
-                                onClick={handleBuyNow}
-                                bgcolor="#9387d9">
-                                BUY NOW
-                            </ButtonStyled>
-                            <Divider />
-                            <InfoStyled>
-                                <div>
-                                    <span>Category:</span>
-                                    <span
-                                        style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>
-                                        {book.category?.name}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span>Author:</span>
-                                    <span
-                                        style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>
-                                        {book.author}
-                                    </span>
-                                </div>
-                            </InfoStyled>
-                        </Col>
-                    </Row>
-                )}
+                {isBookLoading ? <Spin />
+                    : (
 
-            <Divider />
-            <SkeletonStyled
-                loading={isFeedBackLoading}
-                active={true}
-                avatar={true} >
-                <ProductComment
-                    feedBack={comments} />
-            </SkeletonStyled>
-            <ProductEvaluateForm bookId={bookId} />
-            {isRelatedLoading ? <Spin /> : <ProductRelated products={relatedBook} />}
+                        <Row justify="space-around" >
+                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 11 }} >
+                                <img
+                                    height="550px"
+                                    width="450px"
+                                    src={book.image && book.image[currentImageIndex]}
+                                    alt="mainPhoto" />
+                                <GroupImage>
+                                    {book.image?.map((img, index) => (<img
+                                        className={index === currentImageIndex && "active"}
+                                        key={index}
+                                        onClick={() => setCurrenImageIndex(index)}
+                                        width="100px"
+                                        height="120px"
+                                        src={img}
+                                        alt={index} />))}
+                                </GroupImage>
+                            </Col>
+                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 13 }}>
+                                <TitleStyled>{book.name}</TitleStyled>
+                                <PriceStyled>${book.price}</PriceStyled>
+                                <Divider />
+                                <DecriptionStyled>{book.decription}</DecriptionStyled>
+                                <NumberInStockStyled>{book.stockQuantity} in stock</NumberInStockStyled>
+                                <Row
+                                    justify="center"
+                                    gutter={10}
+                                    align="middle">
+                                    <Col span={5} style={{ margin: "1rem 0" }}>
+                                        <ButtonGroupStyled>
+                                            <ButtonSmallStyled
+                                                onClick={handleDecrease}
+                                                disabled={quantity === 1}
+                                                color="#9387d9"
+                                                type='text'
+                                                size='small'
+                                                icon={<MinusOutlined />} />
+                                            <span>{quantity}</span>
+                                            <ButtonSmallStyled
+                                                onClick={handleIncrease}
+                                                disabled={quantity === book.stockQuantity}
+                                                color="#9387d9"
+                                                type='text'
+                                                size='small'
+                                                icon={<PlusOutlined />} />
+                                        </ButtonGroupStyled>
+                                    </Col>
+                                    <Col span={16}>
+                                        <ButtonStyled
+                                            onClick={handleAddToCart}
+                                            loading={isAdding}>ADD TO CART</ButtonStyled>
+                                    </Col>
+                                    <Col span={3}>
+                                        <ButtonSmallStyled
+                                            size="large"
+                                            borderColor="#9387d9"
+                                            bgcolor="#9387d9"
+                                            shape="circle"
+                                            icon={<HeartOutlined />}>
+                                        </ButtonSmallStyled>
+                                    </Col>
+                                </Row>
+                                <ButtonStyled
+                                    loading={isAddingCheckOut}
+                                    onClick={handleBuyNow}
+                                    bgcolor="#9387d9">
+                                    BUY NOW
+                                </ButtonStyled>
+                                <Divider />
+                                <InfoStyled>
+                                    <div>
+                                        <span>Category:</span>
+                                        <span
+                                            style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>
+                                            {book.category?.name}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span>Author:</span>
+                                        <span
+                                            style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>
+                                            {book.author}
+                                        </span>
+                                    </div>
+                                </InfoStyled>
+                            </Col>
+                        </Row>
+                    )}
+                <ReviewStyled>
+                    <SkeletonStyled
+                        loading={isFeedBackLoading}
+                        active={true}
+                        avatar={true} >
+                        <ProductComment
+                            feedBack={comments} />
+                    </SkeletonStyled>
+                    <SendFeedBack bookId={bookId} />
+                </ReviewStyled>
+                <Divider />
+                {isRelatedLoading ? <Spin /> : <ProductRelated products={relatedBook} />}
+            </WrapperShadowStyled>
             <BackTop >
                 <ButtonBackTopStyled icon={<UpCircleOutlined />} />
             </BackTop>

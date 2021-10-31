@@ -79,7 +79,6 @@ function Checkout(props) {
         console.log(values)
     }
 
-    console.log({ name, address, phoneNumber })
 
     return (
         <div>
@@ -94,54 +93,54 @@ function Checkout(props) {
             </Steps>
             <Wrapper>
                 <Row justify="space-around" >
-                <Col span={12}>
-                   
-                </Col>
-                <Col span={12}>
-                    <PlaceOrderStyled>
-                        <p>PRODUCT</p>
-                        <ListProduct>
-                            {
-                                cartItem.map(item => (<ProductStyled key={item._id}>
-                                    <div style={{ display: 'flex' }}>
-                                        <img
-                                            width="50px"
-                                            height="60px"
-                                            src={item.image}
-                                            alt="bookImage" />
-                                        <div style={{ marginLeft: '1rem' }}>
-                                            <div>{item.name}</div>
-                                            <span>Qty:</span> <span>{item.quantity}</span>
-                                            <div><span>Price:</span> {item.price}</div>
+                    <Col span={12}>
+
+                    </Col>
+                    <Col span={12}>
+                        <PlaceOrderStyled>
+                            <p>PRODUCT</p>
+                            <ListProduct>
+                                {
+                                    cartItem.map(item => (<ProductStyled key={item._id}>
+                                        <div style={{ display: 'flex' }}>
+                                            <img
+                                                width="50px"
+                                                height="60px"
+                                                src={item.image}
+                                                alt="bookImage" />
+                                            <div style={{ marginLeft: '1rem' }}>
+                                                <div>{item.name}</div>
+                                                <span>Qty:</span> <span>{item.quantity}</span>
+                                                <div><span>Price:</span> {item.price}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <span><DollarCircleOutlined />{item.subTotal}</span>
-                                </ProductStyled>))
+                                        <span><DollarCircleOutlined />{item.subTotal}</span>
+                                    </ProductStyled>))
 
-                            }
+                                }
 
-                        </ListProduct>
+                            </ListProduct>
 
-                        <Divider />
-                        <DivStyled>
-                            <span>Subtotal</span>
-                            <div><DollarOutlined /> {totalPrice}</div>
-                        </DivStyled>
-                        <Divider />
-                        <DivStyled>
-                            <span>Shipping</span>
-                            <div>Free shipping</div>
-                        </DivStyled>
-                        <Divider />
-                        <DivStyled>
-                            <span>Total</span>
-                            <span style={{ fontSize: 25, fontWeight: 'bold', color: "#000" }}><DollarOutlined /> {totalPrice}</span>
-                        </DivStyled>
-                        <div><ButtonStyled block={true}>PLACE ORDER</ButtonStyled></div>
-                    </PlaceOrderStyled>
+                            <Divider />
+                            <DivStyled>
+                                <span>Subtotal</span>
+                                <div><DollarOutlined /> {totalPrice}</div>
+                            </DivStyled>
+                            <Divider />
+                            <DivStyled>
+                                <span>Shipping</span>
+                                <div>Free shipping</div>
+                            </DivStyled>
+                            <Divider />
+                            <DivStyled>
+                                <span>Total</span>
+                                <span style={{ fontSize: 25, fontWeight: 'bold', color: "#000" }}><DollarOutlined /> {totalPrice}</span>
+                            </DivStyled>
+                            <div><ButtonStyled block={true}>PLACE ORDER</ButtonStyled></div>
+                        </PlaceOrderStyled>
 
-                </Col>
-            </Row>
+                    </Col>
+                </Row>
             </Wrapper>
         </div>
     );

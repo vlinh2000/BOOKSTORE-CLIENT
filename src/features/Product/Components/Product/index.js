@@ -29,7 +29,6 @@ Product.defaultProps = {
 };
 
 const HoverImageStyled = styled.div`
-
     background-image:url(${props => props.bgImage});
     background-position:center;
     background-repeat:none;
@@ -66,11 +65,9 @@ const TitleStyled = styled(Link)`
     }
 `;
 const ProductStyled = styled.div`
-
-
     .book-image{
         position:relative;
-
+        cursor:pointer;
         &:hover{
             ${HoverImageStyled} {
                 display:block;

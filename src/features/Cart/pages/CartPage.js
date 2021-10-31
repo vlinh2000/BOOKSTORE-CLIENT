@@ -6,7 +6,7 @@ import { Col, Row, Table, Radio, Button, Typography, Tooltip, Popconfirm, Empty 
 import { useDispatch, useSelector } from 'react-redux';
 import { DeleteOutlined, DollarOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { removeItemInCart, updateCart } from '../cartSlice';
-import Column from 'rc-table/lib/sugar/Column';
+
 import { switchLoginModal } from 'app/modalSlice';
 import { history } from 'App';
 import Banner from 'components/Banner';
@@ -18,13 +18,13 @@ const WrapperMain = styled.div`
     padding:3rem 2rem;
     width:90%;
     margin:0 auto;
-    box-shadow:1px 1px 2px 0.5px #9387d9;    
-`;
+    box-shadow:1px 1px 25px -8px #9387d9;    
+    `;
 
 const CartTotalStyled = styled.div`
     padding-bottom:2rem;
     background: #f6f6f6; 
-    box-shadow:1px 1px 1px 1px #000;
+    box-shadow:1px 1px 25px -15px #000;
 `;
 
 const TitleStyled = styled.div`
@@ -74,12 +74,11 @@ const RowTitleStyled = styled(Typography)`
 const ProductInCartStyled = styled.div`
     display:flex;
     align-items:center;
-    max-width:70%;
 `;
 
 const ButtonRemoveStyled = styled(Button)`
     margin:0 8px;
-    &:hover{
+    &:hover,&:focus{
         color:#9387d9;
         border-color: #9387d9;
     }
@@ -87,7 +86,7 @@ const ButtonRemoveStyled = styled(Button)`
 `;
 
 const TableWrapper = styled.div`
-    box-shadow:1px 1px 1px 1px #000;
+    box-shadow:1px 1px 25px -15px #000;
 `;
 
 
@@ -147,12 +146,10 @@ function CartPage(props) {
             <Banner title="Cart" />
             {cartItem.length < 1 ? <Empty /> :
                 <WrapperMain>
-                    <Row justify='space-around'  >
+                    <Row justify='space-around'>
                         <Col span={14}>
                             <TableWrapper>
-
                                 <Table
-                                    // columns={columnShoppingCartTab}
                                     dataSource={cartItemSource}
                                     pagination={false} >
                                     <Column
@@ -162,8 +159,8 @@ function CartPage(props) {
                                         render={book =>
                                             <ProductInCartStyled>
                                                 <img
-                                                    width="70px"
-                                                    height="90px"
+                                                    width="50px"
+                                                    height="70px"
                                                     src={book.bookImage}
                                                     alt="bookImage" />
                                                 <span
@@ -186,10 +183,12 @@ function CartPage(props) {
                                                 onClick={() => handleDecrease(key)}
                                                 disabled={num === 1}
                                                 size="small"
+                                                shape="circle"
                                                 icon={<MinusOutlined />} />
                                             {num}
                                             <ButtonRemoveStyled
                                                 onClick={() => handleIncrease(key)}
+                                                shape="circle"
                                                 size="small"
                                                 icon={<PlusOutlined />} />
                                         </div>
@@ -228,7 +227,7 @@ function CartPage(props) {
                                 <div>
                                     <RowStyled>
                                         <Col span={12}>
-                                            <div>subtotal</div>
+                                            <div>Subtotal</div>
                                         </Col>
                                         <Col span={12}>
                                             <div
