@@ -43,7 +43,6 @@ function ProductComment({ feedBack }) {
     }, [feedBack])
 
     const { starVoted } = useSelector(state => state.pageInfo);
-
     return (
         <div>
             <TitleStyled>Reviews</TitleStyled>
@@ -55,7 +54,7 @@ function ProductComment({ feedBack }) {
 
                                 feedBack?.map(eva => (<CommentStyled
                                     key={eva.uid}
-                                    author={<span>{eva.name}</span>}
+                                    author={<span>{eva.user[0].name}</span>}
                                     avatar={
                                         <Avatar
                                             style={!eva.user[0].avatar && { backgroundColor: '#f56a00' }}

@@ -19,7 +19,7 @@ import { Checkout } from '../cartSlice';
 import { history } from 'App';
 import SelectField from 'custom-fields/SelectFields';
 import axios from 'axios';
-import { BlueButton, DolarStyled, DolartextStyled, NavyButton, PinkButton, PurpleButton, StatusPaid, TextGreenStyled, TextRedStyled, TextYellowStyled, WarningButton, YellowButton } from 'assets/styles/globalStyle'
+import { BlueButton, DolarStyled, DolartextStyled, YellowButton, PinkButton, PurpleButton, StatusPaid, TextGreenStyled, TextRedStyled, TextYellowStyled, WarningButton, OrgangeButton } from 'assets/styles/globalStyle'
 
 
 
@@ -411,13 +411,13 @@ function CheckoutPage(props) {
                                     onClick={() => setIsEdit(prev => !prev)} >
                                     Back to cart
                                 </BlueButton>
-                                <YellowButton
+                                <OrgangeButton
                                     disabled={isEdit}
                                     htmlType="submit"
                                     loading={isLoading}
                                 >
                                     Next step
-                                </YellowButton>
+                                </OrgangeButton>
                             </ControlButton>
 
                         </Form>
@@ -467,7 +467,7 @@ function CheckoutPage(props) {
                             </Row>
                             <ControlButton>
                                 <BlueButton onClick={handlePrevious}  >Previous step</BlueButton>
-                                <YellowButton loading={isLoading} onClick={handleNext}>Next step</YellowButton>
+                                <OrgangeButton loading={isLoading} onClick={handleNext}>Next step</OrgangeButton>
                             </ControlButton>
 
 
@@ -518,10 +518,10 @@ function CheckoutPage(props) {
 
                             <ControlButton>
                                 <BlueButton onClick={handlePrevious}>Previous step</BlueButton>
-                                <YellowButton
+                                <OrgangeButton
                                     disabled={shipInfo.payMethod.currentMethod === 1 && shipInfo.payMethod.traddingCode === ''}
                                     loading={isLoading}
-                                    onClick={handleNext}>Next step</YellowButton>
+                                    onClick={handleNext}>Next step</OrgangeButton>
                             </ControlButton>
 
                         </MainScreenStyled> :
@@ -583,11 +583,11 @@ function CheckoutPage(props) {
                                 </Row>
                                 <ControlButton>
                                     <BlueButton onClick={handlePrevious} >Previous step</BlueButton>
-                                    <NavyButton
+                                    <YellowButton
                                         style={{ width: 450 }}
                                         loading={isCheckOutStatus}
                                         onClick={handleOrder}
-                                        block={true}>ORDER</NavyButton>
+                                        block={true}>ORDER</YellowButton>
                                 </ControlButton>
                             </MainScreenStyled>
 

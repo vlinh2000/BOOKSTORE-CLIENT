@@ -8,13 +8,7 @@ import ICON_BYE from 'assets/images/bye.png'
 import ICON_HI from 'assets/images/hi.png'
 
 const TOAST_CONFIG = {
-    position: "top-right",
-    autoClose: 5000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
+    hideProgressBar: true,
     theme: "dark"
 }
 

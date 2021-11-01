@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Button, Drawer, Form, message, Tooltip } from 'antd';
+import { Avatar, Button, Drawer, Form, message, Tooltip, Tabs, Divider, Row, Col } from 'antd';
 import InputField from 'custom-fields/InputFields';
 import { HomeOutlined, LogoutOutlined, MailOutlined, PhoneOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
 import { useForm } from 'react-hook-form';
@@ -11,12 +11,29 @@ import userInfoSchema from 'yup/userInfoSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { getMe, logout, updateUserInfo } from 'app/userSlice';
 import { toastSuccess } from 'utils/common';
+import Banner from 'components/Banner';
+import { OrgangeButton, TextYellowStyled, YellowButton } from 'assets/styles/globalStyle';
+import { history } from 'App';
 
 UserInfo.propTypes = {
 
 };
 
-const DrawerStyled = styled(Drawer)``;
+const WrapperUserInfo = styled.div`
+
+   width:80%;
+   margin:2rem auto; 
+   min-height:500px;
+`;
+
+const WrapperMain = styled.div`
+   box-shadow:1px 1px 25px -8px #BBB;
+   padding:0 2rem;
+   `;
+
+const TabStyled = styled(Tabs)`
+   padding:3rem 0;
+   `;
 
 const ButtonStyled = styled(Button)`
     min-height:50px;
@@ -33,32 +50,78 @@ const ButtonStyled = styled(Button)`
 
 `;
 
-const FormStyled = styled(Form)`
-    font-size:90%;
+const FormStyled = styled(Form)``;
+
+const ContentStyled = styled.div`
+   max-width:800px;
+   margin:0 auto;
+`;
+const NameProductStyled = styled.div`
+    font-weight:bold;
+    min-width:130px;
+    `;
+const ProductStyled = styled.div`
+    display:flex;
+    font-size:12px;
+    margin-bottom:0.5rem;
+    `;
+
+
+const InfoProduct = styled.div`
+    margin:0 3rem 0.5rem 1rem;
+    min-width:130px;
+    font-size:12px;
+    font-style:italic;    
+`;
+const BillStyled = styled.div`
+    box-shadow:1px 1px 25px -8px #BBB;
+    padding:1rem 2rem;
 
 `;
+const TopStyled = styled.div`
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:0.5rem;
+`;
 
-const ButtonLogoutStyled = styled(Button)`
+const InfoStyled = styled.span`
+    display:inline-block;
+    color:#969696;
+    font-weight:500;
+    font-size:13px;
+    min-width:70px;
+`;
 
-    border-width:2px;
-
-    &:hover{
-        color:#FFF ;
-        border-color:#9387d9 ;
-        background:#9387d9;
-    }
+const InfoRowStyled = styled.div`
+    border-bottom:1px solid #eee;
+    padding:0.5rem 0;
+    display:flex;
+`;
+const PersonInfoStyled = styled.span`
+    width:18%;
+    color:#969696;
+    font-size:14px;
+    font-weight:500;
+    margin-right:1rem;
+    `;
+const InfoVerify = styled.div`
+    font-size:14px;
+    word-wrap: break-word;
+    width: 70%;
+`;
+const CreateAtStyled = styled.span`
+    font-size:10px;
+    margin-right:0.5rem;
 `;
 function UserInfo() {
 
-    const { user } = useSelector(state => state.user.currentUser);
+    const { user, isAuth } = useSelector(state => state.user.currentUser);
 
     const { isVisibleUserInfo } = useSelector(state => state.modals);
 
     const { loading } = useSelector(state => state.user);
 
     const dispatch = useDispatch();
-
-    const [isEdit, setIsEdit] = React.useState(true);
 
     const defaultValues = React.useMemo(() => {
         return {
@@ -67,7 +130,8 @@ function UserInfo() {
             userName: user.userName,
             address: user.address,
             phoneNumber: user.phoneNumber,
-            avatar: ''
+            avatar: '',
+            passWord: user.passWord || ''
         }
     }, [user])
 
@@ -76,28 +140,33 @@ function UserInfo() {
         resolver: yupResolver(userInfoSchema)
     })
 
-
     const onSubmit = async values => {
+        console.log(values);
+        const fieldUpdate = [];
+
+        console.log(touchedFields);
+        for (let key in touchedFields) {
+            fieldUpdate.push(key);
+        }
         const formData = new FormData();
 
-        values.avatar.file && formData.append("avatar", values.avatar.file);
+        formData.append("id", user._id);
 
-        formData.append("id", user.id);
-        formData.append("name", values.name);
-        formData.append("phoneNumber", values.phoneNumber);
-        formData.append("email", values.email);
-        formData.append("address", values.address);
+        fieldUpdate.forEach(key => {
+            formData.append(key, values[key]);
+        })
 
-        const { errors, payload } = await dispatch(updateUserInfo(formData));
-
-        if (errors) {
+        const { error, payload } = await dispatch(updateUserInfo(formData));
+        if (error) {
             message.error(payload.message);
             return;
         }
-        await dispatch(getMe());
-        await dispatch(switchUserInfoDrawer(false));
-        setIsEdit(true);
-        message.success(payload.message);
+
+        dispatch(getMe()).then(() => {
+            message.success(`Your ${fieldUpdate.join(", ")} have been changed`);
+        }).catch((err) => {
+            message.error(err);
+        });
     }
 
     const handleClose = () => {
@@ -111,92 +180,130 @@ function UserInfo() {
         toastSuccess("See you later !", "BYE");
     }
 
+
+
     return (
-        <div>
-            <DrawerStyled
-                onClose={handleClose}
-                title="User infomation"
-                width="600px"
-                drawerStyle={{ padding: "0 2rem" }}
-                visible={isVisibleUserInfo}
-                footer={<Tooltip
-                    title="Log out">
-                    <ButtonLogoutStyled
-                        onClick={handleLogout}
-                        size="large"
-                        shape="circle"
-                        icon={<LogoutOutlined />} />
-                </Tooltip>}>
-                <FormStyled onFinish={handleSubmit(onSubmit)}>
-                    <AvatarSelectField
-                        name="avatar"
-                        control={control}
-                        disabled={isEdit}
-                        value={user.avatar} />
+        <WrapperUserInfo>
+            <Banner title="Profile" />
+            <WrapperMain>
+                <TabStyled
+                    tabBarGutter={5}
+                    tabPosition="left"
+                    hideAdd={true}>
+                    <Tabs.TabPane tab="My infomation" key={1}>
+                        <ContentStyled>
 
-                    <InputField
-                        name="userName"
-                        prefix={<UserOutlined />}
-                        placeholder="User Name"
-                        control={control}
-                        disabled={true} />
-                    <InputField
-                        name="name"
-                        placeholder="Họ tên"
-                        prefix={<SmileOutlined />}
-                        control={control}
-                        disabled={isEdit} />
-                    <InputField
-                        name="phoneNumber"
-                        prefix={<PhoneOutlined />}
-                        placeholder="Số điện thoại"
-                        control={control}
-                        disabled={isEdit} />
+                            <FormStyled
+                                layout="vertical"
+                                initialValues={defaultValues}
+                                onFinish={handleSubmit(onSubmit)}>
+                                <AvatarSelectField
+                                    name="avatar"
+                                    control={control}
+                                    value={user.avatar} />
+                                <Row gutter={[40, 0]} style={{ marginBottom: "2rem" }}>
+                                    <Col span={12}>
+                                        <InputField
+                                            name="userName"
+                                            placeholder="User Name"
+                                            label="Username"
+                                            disabled={true}
+                                            control={control} />
+                                        <InputField
+                                            name="name"
+                                            placeholder="Your name"
+                                            label="Name"
+                                            control={control}
+                                        />
+                                        <InputField
+                                            name="phoneNumber"
+                                            placeholder="Your phone"
+                                            label="Phone"
+                                            control={control}
+                                        />
+                                    </Col>
+                                    <Col span={12}>
 
-                    <InputField
-                        name="email"
-                        prefix={<MailOutlined />}
-                        type="email"
-                        placeholder="Email"
-                        control={control}
-                        disabled={isEdit} />
-                    {/* <InputField
-                        name="passWord"
-                        type='password'
-                        prefix={<KeyOutlined />}
-                        placeholder="Pass word"
-                        control={control}
-                        disabled={isEdit} /> */}
-                    <InputField
-                        name="address"
-                        prefix={<HomeOutlined />}
-                        placeholder="Địa chỉ"
-                        control={control}
-                        disabled={isEdit} />
-                    <Form.Item>
-
-                        {isEdit ? <ButtonStyled
-                            block
-                            bgcolor="#000"
-                            type="text"
-                            onClick={() => setIsEdit(prev => !prev)}>
-                            Edit
-                        </ButtonStyled> : <ButtonStyled
-                            block
-                            loading={loading}
-                            disabled={Object.keys(touchedFields).length < 1}
-                            bgcolor="#000"
-                            htmlType="submit">
-                            Save
-                        </ButtonStyled>}
-                    </Form.Item>
-
-                </FormStyled>
-                <ButtonStyled onClick={handleLogout}>
-                    Log out
-                </ButtonStyled>
-            </DrawerStyled>
-        </div>
+                                        <InputField
+                                            name="email"
+                                            type="email"
+                                            label="Email"
+                                            placeholder="your email"
+                                            control={control} />
+                                        <InputField
+                                            name="passWord"
+                                            type='password'
+                                            label="Password (hashed)"
+                                            placeholder="Your password"
+                                            control={control} />
+                                        <InputField
+                                            name="address"
+                                            label="Address"
+                                            placeholder="Your address"
+                                            control={control}
+                                        />
+                                    </Col>
+                                </Row>
+                                <OrgangeButton
+                                    loading={loading}
+                                    htmlType="submit">
+                                    Update
+                                </OrgangeButton>
+                            </FormStyled>
+                        </ContentStyled>
+                    </Tabs.TabPane>
+                    <Tabs.TabPane tab="My bills" key={2}>
+                        <ContentStyled>
+                            <BillStyled>
+                                <TopStyled>
+                                    <div style={{ fontStyle: 'italic', borderBottom: '1px solid #0074D9' }}>
+                                        <CreateAtStyled>Create at:</CreateAtStyled>
+                                        <span>11/1/2021</span>
+                                    </div>
+                                    <div><TextYellowStyled >pending</TextYellowStyled></div>
+                                </TopStyled>
+                                <Divider />
+                                <Row justify="center" gutter={[40, 0]}>
+                                    <Col span={12}>
+                                        <div>
+                                            <InfoRowStyled>
+                                                <PersonInfoStyled>Name:</PersonInfoStyled>
+                                                <InfoVerify>aaaaa</InfoVerify>
+                                            </InfoRowStyled>
+                                            <InfoRowStyled>
+                                                <PersonInfoStyled>Phone:</PersonInfoStyled>
+                                                <InfoVerify>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</InfoVerify>
+                                            </InfoRowStyled>
+                                            <InfoRowStyled>
+                                                <PersonInfoStyled>Address:</PersonInfoStyled>
+                                                <InfoVerify>aaaaa</InfoVerify>
+                                            </InfoRowStyled>
+                                        </div>
+                                    </Col>
+                                    <Col span={12}>
+                                        <div style={{ paddingLeft: "3rem", borderLeft: "1px solid #DDD" }}>
+                                            <ProductStyled>
+                                                <div style={{ display: 'flex' }}>
+                                                    <img
+                                                        width="50px"
+                                                        height="60px"
+                                                        src='http://localhost:8000/api/images/image23268518.png'
+                                                        alt="bookImage" />
+                                                    <NameProductStyled>aaaaaaa</NameProductStyled>
+                                                    <div>Qty: <span>1 </span>4</div>
+                                                    <div><span>Price: </span> csadsadsada</div>
+                                                </div>
+                                                {/* <span style={{ color: "#9387d9", marginLeft: '0.5rem' }}>x{item.quantity}</span> */}
+                                            </ProductStyled>
+                                        </div>
+                                    </Col>
+                                </Row>
+                            </BillStyled>
+                        </ContentStyled>
+                    </Tabs.TabPane>
+                </TabStyled>
+            </WrapperMain >
+        </WrapperUserInfo >
     );
 }
 

@@ -8,17 +8,7 @@ export const UserApi = {
                 const url = '/user'
                 try {
                     const { user } = await axiosClient.get(url);
-                    resolve({
-                        id: user._id,
-                        name: user.name,
-                        key: user.key,
-                        address: user.address,
-                        phoneNumber: user.phoneNumber,
-                        userName: user.userName,
-                        email: user.email,
-                        avatar: user.avatar
-                    });
-
+                    resolve(user);
                 } catch (error) {
                     reject(error);
                 }

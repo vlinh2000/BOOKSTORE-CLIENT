@@ -61,7 +61,7 @@ function VotedField(props) {
                     </RaitingStyled>
                     {errors[field.name]?.message
                         && <Alert
-                            style={{ width: '50%' }}
+                            style={{ maxWidth: '500px', fontSize: 12, margin: "0.5rem 0" }}
                             message={errors[field.name]?.message}
                             type="warning"
                             showIcon />}

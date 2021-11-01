@@ -1,13 +1,13 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
     DollarCircleOutlined,
-    FacebookOutlined, InstagramOutlined, ShoppingCartOutlined,
+    FacebookOutlined, InstagramOutlined, LogoutOutlined, ShoppingCartOutlined,
     TwitterOutlined, UserOutlined, YoutubeOutlined
 } from '@ant-design/icons'
-import { Button, Col, Popover, Row } from 'antd';
+import { Button, Col, Divider, Popover, Row } from 'antd';
 
 import styled from 'styled-components';
 import FormSearch from 'components/FormSearch';
@@ -19,6 +19,9 @@ import RegisterModal from 'modals/RegisterModal';
 
 import { switchCartModal, switchLoginModal, switchUserInfoDrawer } from 'app/modalSlice';
 import UserInfo from 'components/UserInfo';
+import { history } from 'App';
+import { logout } from 'app/userSlice';
+import { toastSuccess } from 'utils/common';
 
 
 const HeaderStyled = styled.div`
@@ -93,20 +96,35 @@ const ButtonStyled = styled(Button)`
 
     border-width:2px;
 
-    &:hover{
+    &:hover,&:focus{
         color:#FFF ;
         border-color:#9387d9 ;
         background:#9387d9;
     }
 `;
 
+const PophoverStyled = styled.div`
+    min-width:100px;
+    `;
+
+const LinkStyled = styled(Button)`
+    color:#888;
+    font-weight:500;
+    border:none;
+    
+    &:hover,&:focus{
+        color:#9387d9;
+    }
+    `;
+
+const WrapperLink = styled.div`
+    margin:0.5rem 0.5rem;
+`;
 
 function Header(props) {
 
     const dispatch = useDispatch();
     const { isAuth, user: { name } } = useSelector((state) => state.user.currentUser);
-
-    const { isVisibleCartModal } = useSelector(state => state.modals);
 
     const { totalPrice, cartItem } = useSelector(state => state.cart);
 
@@ -122,15 +140,10 @@ function Header(props) {
         dispatch(action);
     }
 
-
-    //handle switch (on,off) cart modal 
-    const handleSwitchCartModal = () => {
-        const action = switchCartModal(!isVisibleCartModal);
-        dispatch(action);
+    const handleLogout = () => {
+        dispatch(logout())
+        toastSuccess("See you soon !", "BYE")
     }
-
-
-
     return (
         <HeaderStyled>
             <TopnavStyled>
@@ -222,11 +235,39 @@ function Header(props) {
                         <Row justify="space-around">
                             <Col span={10} >
                                 <InfoCartStyled>
-                                    <ButtonStyled
-                                        onClick={handleSwitchLoginModal}
-                                        shape='circle' size='large'
-                                        icon={<UserOutlined />}>
-                                    </ButtonStyled>
+
+                                    {
+                                        isAuth ?
+                                            <Popover
+                                                placement="bottom"
+                                                trigger='click'
+                                                content={<PophoverStyled>
+                                                    <WrapperLink>
+                                                        <LinkStyled onClick={() => history.push("/me")} >
+                                                            <UserOutlined />   My profile
+                                                        </LinkStyled>
+                                                    </WrapperLink>
+                                                    <WrapperLink>
+                                                        <LinkStyled onClick={handleLogout}>
+                                                            <LogoutOutlined />  Log out
+                                                        </LinkStyled>
+                                                    </WrapperLink>
+                                                </PophoverStyled>}>
+                                                <ButtonStyled
+                                                    shape='circle'
+                                                    size='large'
+                                                    icon={<UserOutlined />}>
+                                                </ButtonStyled>
+                                            </Popover> :
+                                            <ButtonStyled
+                                                onClick={() => handleSwitchLoginModal(true)}
+                                                shape='circle'
+                                                size='large'
+                                                icon={<UserOutlined />}>
+                                            </ButtonStyled>
+
+                                    }
+
                                     <div className='info'>
                                         <div> {isAuth ? <span style={{ color: '#9387d9', fontWeight: 500, fontSize: 10 }} >{name.toUpperCase()}</span> : 'Sign in'} </div>
                                         <div> My account </div>
@@ -237,7 +278,6 @@ function Header(props) {
                                 <InfoCartStyled>
                                     <Popover
                                         trigger='click'
-                                        visible={isVisibleCartModal}
                                         content={<CartModal isAuth={isAuth} cartItem={cartItem} totalPrice={totalPrice} />} >
 
 
@@ -245,8 +285,6 @@ function Header(props) {
                                             shape='circle'
                                             size='large'
                                             icon={<ShoppingCartOutlined />}
-                                            onClick={handleSwitchCartModal}
-
                                         />
                                     </Popover>
                                     <div className='info'>
@@ -262,7 +300,6 @@ function Header(props) {
             </HeaderMainStyled>
             <LoginModal />
             <RegisterModal />
-            {isAuth && <UserInfo />}
         </HeaderStyled>
     );
 }

@@ -4,10 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components';
 import { Avatar, Button, Col, message, Row, Form, Alert, Tooltip } from 'antd';
-import { InfoCircleTwoTone, LoginOutlined } from '@ant-design/icons';
+import { InfoCircleTwoTone, LoginOutlined, SendOutlined } from '@ant-design/icons';
 
 import { yupResolver } from "@hookform/resolvers/yup"
-import evaluateSchema from 'yup/evaluateSchema';
 
 import VotedField from 'custom-fields/VotedField';
 
@@ -16,6 +15,8 @@ import { switchLoginModal } from 'app/modalSlice';
 
 import InputEmoji from "react-input-emoji";
 import InputFieldWithEmoji from 'custom-fields/InputFieldWithEmoji';
+import { BlueButton, YellowButton, PurpleButton, OrgangeButton } from 'assets/styles/globalStyle';
+import feedBackSchema from 'yup/feedBackSchema';
 
 const Wrapper = styled.div`
 
@@ -25,10 +26,9 @@ const Wrapper = styled.div`
 `;
 
 const AlertStyled = styled(Alert)`
-    font-size:12px;
+    font-size:13.5px;
     font-weight:500;
     display:inline-flex;
-
 `;
 
 const TextStyled = styled.h3`
@@ -43,7 +43,12 @@ function SendFeedBack({ bookId }) {
 
     const { isAuth, user: { avatar, name } } = useSelector(state => state.user.currentUser);
 
-    const { control, handleSubmit, reset } = useForm({ resolver: yupResolver(evaluateSchema) });
+    const defaultValues = {
+        message: '',
+        voted: null
+    }
+
+    const { control, handleSubmit, reset } = useForm({ resolver: yupResolver(feedBackSchema), defaultValues });
 
     const dispatch = useDispatch()
 
@@ -57,7 +62,7 @@ function SendFeedBack({ bookId }) {
                 const { payload } = await dispatch(sendFeedBack(data))
                 dispatch(hasNewFeedBack());
                 message.success(payload);
-                reset({ voted: 0 })
+                reset(defaultValues)
                 form.setFieldsValue({ message: '' });
             }
             sendFB();
@@ -72,7 +77,10 @@ function SendFeedBack({ bookId }) {
     return (<Wrapper>
         {isAuth ? <>
             <TextStyled>Please give us your feeling</TextStyled>
-            <Form form={form} onFinish={handleSubmit(onSubmit)} >
+            <Form
+                form={form}
+                initialValues={defaultValues}
+                onFinish={handleSubmit(onSubmit)} >
                 <VotedField
                     control={control}
                     name="voted"
@@ -93,28 +101,33 @@ function SendFeedBack({ bookId }) {
                         />
                     </Col>
                 </Row>
-                <Button type="primary" htmlType="submit" loading={isLoadingFeedBack}>
+                <BlueButton
+                    icon={<SendOutlined />}
+                    htmlType="submit"
+                    loading={isLoadingFeedBack}>
                     Send feed back
-                </Button>
+                </BlueButton>
             </Form>
         </>
-            : <AlertStyled
-                icon={<InfoCircleTwoTone />}
-                showIcon
-                type="info"
-                message="Please login to send your feed back"
-                action={
-                    <Tooltip title="Login now">
-                        <Button
-                            onClick={() => dispatch(switchLoginModal(true))}
-                            icon={<LoginOutlined />}
-                            size="small"
-                            type="primary" />
-                    </Tooltip>
-                } />}
+            :
+            <><TextStyled>Hmm... you have not login yet !</TextStyled>
+                <AlertStyled
+                    icon={<InfoCircleTwoTone />}
+                    showIcon
+                    type="info"
+                    message="Please login to give us your feed back"
+                    action={
+                        <>
+                            <BlueButton
+                                onClick={() => dispatch(switchLoginModal(true))}
+                                size="small">
+                                Login now
+                            </BlueButton>
+                        </>
+                    } /> </>}
 
 
-    </Wrapper>
+    </Wrapper >
 
     );
 }

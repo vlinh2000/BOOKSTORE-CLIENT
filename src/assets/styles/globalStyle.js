@@ -38,7 +38,7 @@ const DolartextStyled = styled.span`
     font-style:italic;
 `;
 
-const YellowButton = styled(Button)`
+const OrgangeButton = styled(Button)`
    background:#ff9f43!important;
    box-shadow:1px 1px 10px 0px #BBB;
    border-color:#ff9f43;
@@ -67,7 +67,7 @@ const BlueButton = styled(Button)`
   }
 `;
 
-const NavyButton = styled(Button)`
+const YellowButton = styled(Button)`
    background:#FFCC00!important;
    box-shadow:1px 1px 25px -8px #BBB;
    border-color:#FFCC00;
@@ -83,6 +83,20 @@ const NavyButton = styled(Button)`
 `;
 
 const PurpleButton = styled(Button)`
+   background:#B565A7!important;
+   box-shadow:1px 1px 25px -5px #BBB;
+   border-color:#B565A7;
+   color:#222;
+   font-size:12px;
+   font-weight:500;
+   
+   &:hover,&:focus{
+       color:#FFF;
+       border-color:#7367f0;
+  }
+`;
+
+const PinkButton = styled(Button)`
    background:pink!important;
    box-shadow:1px 1px 25px -5px #BBB;
    border-color:pink;
@@ -139,6 +153,6 @@ const FormItemStyled = styled(Form.Item)`
 
 export {
     TitleStyled, WrapperShadowStyled, DolarStyled,
-    DolartextStyled, YellowButton, TextGreenStyled, TextYellowStyled,
-    TextRedStyled, PurpleButton, BlueButton, NavyButton, FormItemStyled
+    DolartextStyled, OrgangeButton, TextGreenStyled, TextYellowStyled,
+    TextRedStyled, PurpleButton, BlueButton, YellowButton, FormItemStyled, PinkButton
 }

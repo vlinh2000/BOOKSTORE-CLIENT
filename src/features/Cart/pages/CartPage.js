@@ -152,7 +152,7 @@ function CartPage(props) {
                                 <Table
                                     dataSource={cartItemSource}
                                     pagination={false} >
-                                    <Column
+                                    <Table.Column
                                         title={() => <RowTitleStyled>Product</RowTitleStyled>}
                                         dataIndex="product"
                                         key="product"
@@ -169,12 +169,12 @@ function CartPage(props) {
                                                 </span>
                                             </ProductInCartStyled>} />
 
-                                    <Column
+                                    <Table.Column
                                         title={() => <RowTitleStyled>price</RowTitleStyled>}
                                         dataIndex="price"
                                         key="price" />
 
-                                    <Column
+                                    <Table.Column
                                         title={() => <RowTitleStyled>quantity</RowTitleStyled>}
                                         dataIndex="quantity"
                                         key="quantity"
@@ -195,12 +195,12 @@ function CartPage(props) {
 
                                         } />
 
-                                    <Column
+                                    <Table.Column
                                         title={() => <RowTitleStyled>subtotal</RowTitleStyled>}
                                         dataIndex="subtotal"
                                         key="subtotal" />
 
-                                    <Column
+                                    <Table.Column
                                         title=''
                                         dataIndex="action"
                                         key="action"
