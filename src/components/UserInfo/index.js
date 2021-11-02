@@ -1,7 +1,7 @@
 import React from 'react';
-import { Avatar, Button, Drawer, Form, message, Tooltip, Tabs, Divider, Row, Col } from 'antd';
+import { Avatar, Button, Drawer, Form, message, Tooltip, Tabs, Divider, Row, Col, Steps, Badge, Popconfirm } from 'antd';
 import InputField from 'custom-fields/InputFields';
-import { HomeOutlined, LogoutOutlined, MailOutlined, PhoneOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
+import { AccountBookOutlined, CarOutlined, HistoryOutlined, HomeOutlined, HourglassOutlined, LogoutOutlined, MailOutlined, PhoneOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
@@ -12,8 +12,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { getMe, logout, updateUserInfo } from 'app/userSlice';
 import { toastSuccess } from 'utils/common';
 import Banner from 'components/Banner';
-import { OrgangeButton, TextYellowStyled, YellowButton } from 'assets/styles/globalStyle';
+import { BlueButton, DolartextStyled, OrgangeButton, RedButton, TextGreenStyled, TextOrgangeStyled, TextRedStyled, TextYellowStyled, YellowButton } from 'assets/styles/globalStyle';
 import { history } from 'App';
+import { billApi } from 'api/BillApi';
+import moment from 'moment';
+import { date } from 'yup/lib/locale';
 
 UserInfo.propTypes = {
 
@@ -29,6 +32,11 @@ const WrapperUserInfo = styled.div`
 const WrapperMain = styled.div`
    box-shadow:1px 1px 25px -8px #BBB;
    padding:0 2rem;
+
+   .ant-tabs-tab{
+       font-weight:bold;
+       color:#969696;
+   }
    `;
 
 const TabStyled = styled(Tabs)`
@@ -50,20 +58,25 @@ const ButtonStyled = styled(Button)`
 
 `;
 
-const FormStyled = styled(Form)``;
+const FormStyled = styled(Form)`
+    box-shadow:1px 1px 25px -8px #BBB;
+    padding:2rem 3rem;
+    `;
 
 const ContentStyled = styled.div`
    max-width:800px;
    margin:0 auto;
 `;
 const NameProductStyled = styled.div`
-    font-weight:bold;
+    font-weight:500;
     min-width:130px;
+    max-width:90%;
+    word-wrap:break-word;
     `;
 const ProductStyled = styled.div`
-    display:flex;
     font-size:12px;
     margin-bottom:0.5rem;
+    width:50%;
     `;
 
 
@@ -75,21 +88,20 @@ const InfoProduct = styled.div`
 `;
 const BillStyled = styled.div`
     box-shadow:1px 1px 25px -8px #BBB;
-    padding:1rem 2rem;
-
+    padding:1rem 2rem 2rem 2rem;
+    margin-bottom:1rem;
 `;
 const TopStyled = styled.div`
     display:flex;
     justify-content:space-between;
     margin-bottom:0.5rem;
-`;
+    `;
 
-const InfoStyled = styled.span`
-    display:inline-block;
-    color:#969696;
-    font-weight:500;
-    font-size:13px;
-    min-width:70px;
+const TitleStyled = styled.div`
+    color:#888;
+    font-weight:bold;
+    font-size:17px;
+    margin-bottom:1rem;
 `;
 
 const InfoRowStyled = styled.div`
@@ -113,6 +125,13 @@ const CreateAtStyled = styled.span`
     font-size:10px;
     margin-right:0.5rem;
 `;
+
+const StepStyled = styled(Steps)`
+    margin-bottom:1rem;
+    .ant-steps-item{
+        padding:1rem 0;
+    }
+`;
 function UserInfo() {
 
     const { user, isAuth } = useSelector(state => state.user.currentUser);
@@ -120,6 +139,14 @@ function UserInfo() {
     const { isVisibleUserInfo } = useSelector(state => state.modals);
 
     const { loading } = useSelector(state => state.user);
+
+    const [billStatus, setBillStatus] = React.useState({});
+
+    const [bills, setBills] = React.useState([]);
+
+    const [isLoading, setIsLoading] = React.useState(false);
+
+    const [isChange, setIsChange] = React.useState(false);
 
     const dispatch = useDispatch();
 
@@ -139,6 +166,32 @@ function UserInfo() {
         defaultValues,
         resolver: yupResolver(userInfoSchema)
     })
+
+    React.useEffect(() => {
+        const fetchBills = async () => {
+            try {
+                const response = await billApi.getAll();
+                let billStatus = {
+                    Pending: 0,
+                    Shipping: 0,
+                    Delivered: 0
+                };
+
+
+                response.bills?.forEach(bill => {
+                    billStatus[bill.status]++;
+                })
+                setBillStatus(billStatus);
+                const sortBill = response.bills.sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
+                console.log(sortBill);
+                setBills(sortBill);
+            } catch (error) {
+                message.error(error);
+            }
+        }
+        fetchBills();
+    }, [isChange])
+
 
     const onSubmit = async values => {
         console.log(values);
@@ -169,30 +222,44 @@ function UserInfo() {
         });
     }
 
-    const handleClose = () => {
-        dispatch(switchUserInfoDrawer(false))
+    const onUpdate = async (billId, status) => {
+        try {
+            const response = await billApi.update(billId, { status });
+            setIsLoading(false)
+            setIsChange(prev => !prev);
+        } catch (error) {
+            // const errMessage = error.response.data;
+            message.error(error)
+            setIsLoading(false)
+        }
     }
 
-    //handle user logout 
-    const handleLogout = () => {
-        dispatch(logout());
-        handleClose();
-        toastSuccess("See you later !", "BYE");
+
+    const handleDelivered = (billId) => {
+        console.log(billId);
+        setIsLoading(true);
+        onUpdate(billId, "Delivered");
+    }
+
+    //handle cancel order when wait comfirm
+    const handleCancelOrder = (billId) => {
+        console.log(billId);
+        setIsLoading(true);
+        onUpdate(billId, "Canceled");
     }
 
 
 
     return (
         <WrapperUserInfo>
-            <Banner title="Profile" />
+            <Banner title="Profile & Bills" />
             <WrapperMain>
                 <TabStyled
                     tabBarGutter={5}
                     tabPosition="left"
                     hideAdd={true}>
-                    <Tabs.TabPane tab="My infomation" key={1}>
+                    <Tabs.TabPane tab="My profile" key={1}>
                         <ContentStyled>
-
                             <FormStyled
                                 layout="vertical"
                                 initialValues={defaultValues}
@@ -254,51 +321,134 @@ function UserInfo() {
                     </Tabs.TabPane>
                     <Tabs.TabPane tab="My bills" key={2}>
                         <ContentStyled>
-                            <BillStyled>
-                                <TopStyled>
-                                    <div style={{ fontStyle: 'italic', borderBottom: '1px solid #0074D9' }}>
-                                        <CreateAtStyled>Create at:</CreateAtStyled>
-                                        <span>11/1/2021</span>
-                                    </div>
-                                    <div><TextYellowStyled >pending</TextYellowStyled></div>
-                                </TopStyled>
-                                <Divider />
-                                <Row justify="center" gutter={[40, 0]}>
-                                    <Col span={12}>
+                            <StepStyled style={{ marginTop: 5 }}>
+                                <Steps.Step
+                                    subTitle="Pending"
+                                    icon={
+                                        <Badge
+                                            count={billStatus.Pending || 0}>
+                                            <HourglassOutlined style={{ fontSize: 25 }} />
+                                        </Badge>}>
+
+                                </Steps.Step>
+                                <Steps.Step
+                                    subTitle="Shipping"
+                                    icon={
+                                        <Badge
+                                            count={billStatus.Shipping || 0}>
+                                            <CarOutlined
+                                                style={{ fontSize: 25 }} />
+                                        </Badge>}>
+
+                                </Steps.Step>
+                                <Steps.Step
+                                    subTitle="Delivered"
+                                    icon={
+                                        <Badge
+                                            count={billStatus.Delivered || 0}>
+                                            <HomeOutlined
+                                                style={{ fontSize: 25 }} />
+                                        </Badge>}>
+
+                                </Steps.Step>
+
+                            </StepStyled>
+                            <TitleStyled>
+                                <HistoryOutlined
+                                    style={{ fontSize: 13, marginRight: 5 }} />
+                                history ({bills.length || 0})
+                            </TitleStyled>
+                            {
+                                bills?.map((bill, index) => <BillStyled>
+                                    <TopStyled key={bill._id}>
+                                        <div style={{ fontStyle: 'italic', borderBottom: '1px solid #0074D9' }}>
+                                            <CreateAtStyled>Create at:</CreateAtStyled>
+                                            <span>{moment(bill.createAt).format("DD/MM/YYYY HH:MM")}</span>
+                                        </div>
                                         <div>
-                                            <InfoRowStyled>
-                                                <PersonInfoStyled>Name:</PersonInfoStyled>
-                                                <InfoVerify>aaaaa</InfoVerify>
-                                            </InfoRowStyled>
-                                            <InfoRowStyled>
-                                                <PersonInfoStyled>Phone:</PersonInfoStyled>
-                                                <InfoVerify>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</InfoVerify>
-                                            </InfoRowStyled>
-                                            <InfoRowStyled>
-                                                <PersonInfoStyled>Address:</PersonInfoStyled>
-                                                <InfoVerify>aaaaa</InfoVerify>
-                                            </InfoRowStyled>
+                                            {bill.status === 'Pending' ? <TextYellowStyled >{bill.status}</TextYellowStyled> :
+                                                bill.status === 'Shipping' ? <TextOrgangeStyled >{bill.status}</TextOrgangeStyled> :
+                                                    bill.status === 'Canceled' ? <TextRedStyled >{bill.status}</TextRedStyled> :
+                                                        <TextGreenStyled >{bill.status}</TextGreenStyled>
+                                            }
                                         </div>
-                                    </Col>
-                                    <Col span={12}>
-                                        <div style={{ paddingLeft: "3rem", borderLeft: "1px solid #DDD" }}>
-                                            <ProductStyled>
-                                                <div style={{ display: 'flex' }}>
-                                                    <img
-                                                        width="50px"
-                                                        height="60px"
-                                                        src='http://localhost:8000/api/images/image23268518.png'
-                                                        alt="bookImage" />
-                                                    <NameProductStyled>aaaaaaa</NameProductStyled>
-                                                    <div>Qty: <span>1 </span>4</div>
-                                                    <div><span>Price: </span> csadsadsada</div>
-                                                </div>
-                                                {/* <span style={{ color: "#9387d9", marginLeft: '0.5rem' }}>x{item.quantity}</span> */}
-                                            </ProductStyled>
-                                        </div>
-                                    </Col>
-                                </Row>
-                            </BillStyled>
+                                    </TopStyled>
+                                    <Divider />
+                                    <Row justify="center" gutter={[10, 0]}>
+                                        <Col span={12}>
+                                            <div>
+                                                <InfoRowStyled>
+                                                    <PersonInfoStyled>Name:</PersonInfoStyled>
+                                                    <InfoVerify>{bill.receiver}</InfoVerify>
+                                                </InfoRowStyled>
+                                                <InfoRowStyled>
+                                                    <PersonInfoStyled>Phone:</PersonInfoStyled>
+                                                    <InfoVerify>{bill.phoneReceiver}</InfoVerify>
+                                                </InfoRowStyled>
+                                                <InfoRowStyled>
+                                                    <PersonInfoStyled>Address:</PersonInfoStyled>
+                                                    <InfoVerify>{bill.address}</InfoVerify>
+                                                </InfoRowStyled>
+                                                <InfoRowStyled>
+                                                    <PersonInfoStyled>{bill.status !== 'Delivered' ? 'Expected delivery:' : 'Received'}</PersonInfoStyled>
+                                                    <InfoVerify>{moment(bill.receivedDate).format("DD/MM/YYYY")}</InfoVerify>
+                                                </InfoRowStyled>
+                                                <InfoRowStyled>
+                                                    <PersonInfoStyled>Total:</PersonInfoStyled>
+                                                    <InfoVerify style={{ fontSize: 25, fontWeight: 'bold', color: "#ea5455" }}>{bill.totalPrice} <DolartextStyled>dolars</DolartextStyled></InfoVerify>
+                                                </InfoRowStyled>
+                                            </div>
+                                        </Col>
+                                        <Col span={12}>
+                                            <div style={{ paddingLeft: "3rem", borderLeft: "1px solid #DDD" }}>
+
+                                                {
+                                                    bill.products?.map(product => <ProductStyled key={product._id}>
+                                                        <div style={{ display: 'flex' }}>
+                                                            <img
+                                                                width="50px"
+                                                                height="60px"
+                                                                src={product.image}
+                                                                alt="bookImage" />
+                                                            <div style={{ marginLeft: "1rem" }}>
+                                                                <NameProductStyled>{product.name}</NameProductStyled>
+                                                                <div>Qty: <span>{product.quantity}</span></div>
+                                                                <div>
+                                                                    Price:<span>{product.price}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {/* <span style={{ color: "#9387d9", marginLeft: '0.5rem' }}>x{item.quantity}</span> */}
+                                                    </ProductStyled>)
+                                                }
+                                            </div>
+                                            <Divider />
+                                        </Col>
+                                    </Row>
+                                    {bill.status === 'Pending' ?
+                                        <Popconfirm
+                                            onConfirm={() => handleCancelOrder(bill._id)}
+                                            title="Are you sure?">
+                                            <RedButton
+                                                loading={isLoading}
+                                                style={{ marginTop: '1rem' }}>
+                                                Cancel order
+                                            </RedButton>
+                                        </Popconfirm> :
+                                        bill.status === 'Shipping' && <Popconfirm
+                                            onConfirm={() => handleDelivered(bill._id)}
+                                            title="Did you received ?"
+                                            okText="Yes" cancelText="No">
+                                            <BlueButton
+                                                loading={isLoading}
+                                                style={{ marginTop: '1rem' }}>
+                                                Delivered?
+                                            </BlueButton>
+                                        </Popconfirm>}
+                                </BillStyled>)
+
+
+                            }
                         </ContentStyled>
                     </Tabs.TabPane>
                 </TabStyled>

@@ -52,6 +52,20 @@ const OrgangeButton = styled(Button)`
        border-color:#7367f0;
   }
 `;
+const RedButton = styled(Button)`
+   background:#ea5455!important;
+   box-shadow:1px 1px 10px 0px #BBB;
+   border-color:#ea5455;
+   color:#FFF;
+   font-size:12px;
+   font-weight:500;
+   height:40px;
+   
+   &:hover,&:focus{
+       color:#FFF;
+       border-color:#7367f0;
+  }
+`;
 const BlueButton = styled(Button)`
    background:#39CCCC!important;
    box-shadow:1px 1px 25px 0px #BBB;
@@ -129,6 +143,16 @@ const TextRedStyled = styled.span`
 `;
 
 const TextYellowStyled = styled.span`
+   background:#FFCC00!important;
+   box-shadow:1px 1px 10px 0px #BBB;
+   border-color:#FFCC00;
+   color:#FFF;
+   font-size:12px;
+   font-weight:500;
+   padding:4px 10px;
+`;
+
+const TextOrgangeStyled = styled.span`
    background:#ff9f43!important;
    box-shadow:1px 1px 10px 0px #BBB;
    border-color:#ff9f43;
@@ -154,5 +178,5 @@ const FormItemStyled = styled(Form.Item)`
 export {
     TitleStyled, WrapperShadowStyled, DolarStyled,
     DolartextStyled, OrgangeButton, TextGreenStyled, TextYellowStyled,
-    TextRedStyled, PurpleButton, BlueButton, YellowButton, FormItemStyled, PinkButton
+    TextRedStyled, PurpleButton, BlueButton, YellowButton, FormItemStyled, PinkButton, RedButton, TextOrgangeStyled
 }
