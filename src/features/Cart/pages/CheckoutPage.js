@@ -335,7 +335,7 @@ function CheckoutPage(props) {
             }
 
             message.success("Add bill successfully ! Please wait a muniute for checking your bill .");
-            history.push('/product');
+            history.push('/me', "bought");
         }
 
         handleCheckout();
@@ -408,7 +408,7 @@ function CheckoutPage(props) {
                                 <BlueButton
                                     style={{ height: 40 }}
                                     type="primary"
-                                    onClick={() => setIsEdit(prev => !prev)} >
+                                    onClick={() => history.push("/cart")} >
                                     Back to cart
                                 </BlueButton>
                                 <OrgangeButton
@@ -573,6 +573,7 @@ function CheckoutPage(props) {
                                                         <div style={{ marginLeft: '1rem', marginRight: '6rem', flexGrow: 1 }}>
                                                             <NameProductStyled>{item.name}</NameProductStyled>
                                                             <div><span>Price:</span> {item.price}</div>
+                                                            <div><span>Qty:</span> {item.quantity}</div>
                                                         </div>
                                                     </div>
                                                     {/* <span style={{ color: "#9387d9", marginLeft: '0.5rem' }}>x{item.quantity}</span> */}
@@ -583,11 +584,11 @@ function CheckoutPage(props) {
                                 </Row>
                                 <ControlButton>
                                     <BlueButton onClick={handlePrevious} >Previous step</BlueButton>
-                                    <YellowButton
+                                    <OrgangeButton
                                         style={{ width: 450 }}
                                         loading={isCheckOutStatus}
                                         onClick={handleOrder}
-                                        block={true}>ORDER</YellowButton>
+                                        block={true}>ORDER</OrgangeButton>
                                 </ControlButton>
                             </MainScreenStyled>
 

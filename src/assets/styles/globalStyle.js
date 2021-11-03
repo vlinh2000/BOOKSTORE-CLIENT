@@ -100,7 +100,7 @@ const PurpleButton = styled(Button)`
    background:#B565A7!important;
    box-shadow:1px 1px 25px -5px #BBB;
    border-color:#B565A7;
-   color:#222;
+   color:#FFF;
    font-size:12px;
    font-weight:500;
    

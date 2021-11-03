@@ -16,8 +16,6 @@ import { BlueButton, DolartextStyled, OrgangeButton, RedButton, TextGreenStyled,
 import { history } from 'App';
 import { billApi } from 'api/BillApi';
 import moment from 'moment';
-import { date } from 'yup/lib/locale';
-
 UserInfo.propTypes = {
 
 };
@@ -148,7 +146,14 @@ function UserInfo() {
 
     const [isChange, setIsChange] = React.useState(false);
 
+    const [defaultKey, setDefaultKey] = React.useState(() => {
+        const { location: { state } } = history;
+        console.log(state);
+        return state === 'bought' ? "2" : "1";
+    });
+
     const dispatch = useDispatch();
+
 
     const defaultValues = React.useMemo(() => {
         return {
@@ -222,11 +227,12 @@ function UserInfo() {
         });
     }
 
-    const onUpdate = async (billId, status) => {
+    const onUpdate = async (billId, status, mess) => {
         try {
             const response = await billApi.update(billId, { status });
             setIsLoading(false)
             setIsChange(prev => !prev);
+            message.success(mess);
         } catch (error) {
             // const errMessage = error.response.data;
             message.error(error)
@@ -238,14 +244,14 @@ function UserInfo() {
     const handleDelivered = (billId) => {
         console.log(billId);
         setIsLoading(true);
-        onUpdate(billId, "Delivered");
+        onUpdate(billId, "Delivered", "Thanks for your confirm");
     }
 
     //handle cancel order when wait comfirm
     const handleCancelOrder = (billId) => {
         console.log(billId);
         setIsLoading(true);
-        onUpdate(billId, "Canceled");
+        onUpdate(billId, "Canceled", "Your order has been canceled");
     }
 
 
@@ -255,10 +261,11 @@ function UserInfo() {
             <Banner title="Profile & Bills" />
             <WrapperMain>
                 <TabStyled
+                    defaultActiveKey={defaultKey}
                     tabBarGutter={5}
                     tabPosition="left"
                     hideAdd={true}>
-                    <Tabs.TabPane tab="My profile" key={1}>
+                    <Tabs.TabPane tab="My profile" key="1">
                         <ContentStyled>
                             <FormStyled
                                 layout="vertical"
@@ -319,7 +326,7 @@ function UserInfo() {
                             </FormStyled>
                         </ContentStyled>
                     </Tabs.TabPane>
-                    <Tabs.TabPane tab="My bills" key={2}>
+                    <Tabs.TabPane tab="My bills" key="2">
                         <ContentStyled>
                             <StepStyled style={{ marginTop: 5 }}>
                                 <Steps.Step
@@ -358,12 +365,17 @@ function UserInfo() {
                                     style={{ fontSize: 13, marginRight: 5 }} />
                                 history ({bills.length || 0})
                             </TitleStyled>
+                            {bills.length < 1 &&
+                                <BlueButton onClick={() => history.push("/")}>
+                                    Go shopping
+                                </BlueButton>
+                            }
                             {
-                                bills?.map((bill, index) => <BillStyled>
+                                bills?.map(bill => <BillStyled>
                                     <TopStyled key={bill._id}>
                                         <div style={{ fontStyle: 'italic', borderBottom: '1px solid #0074D9' }}>
                                             <CreateAtStyled>Create at:</CreateAtStyled>
-                                            <span>{moment(bill.createAt).format("DD/MM/YYYY HH:MM")}</span>
+                                            <span>{moment(bill.createAt).format("DD/MM/YYYY hh:mm")}</span>
                                         </div>
                                         <div>
                                             {bill.status === 'Pending' ? <TextYellowStyled >{bill.status}</TextYellowStyled> :
@@ -389,10 +401,14 @@ function UserInfo() {
                                                     <PersonInfoStyled>Address:</PersonInfoStyled>
                                                     <InfoVerify>{bill.address}</InfoVerify>
                                                 </InfoRowStyled>
-                                                <InfoRowStyled>
-                                                    <PersonInfoStyled>{bill.status !== 'Delivered' ? 'Expected delivery:' : 'Received'}</PersonInfoStyled>
-                                                    <InfoVerify>{moment(bill.receivedDate).format("DD/MM/YYYY")}</InfoVerify>
-                                                </InfoRowStyled>
+                                                {bill.status !== 'Pending' && <InfoRowStyled>
+                                                    <PersonInfoStyled>{bill.status === 'Delivered' ? 'Received' : bill.status === 'Canceled' ? "Canceled" : 'Expected delivery:'}</PersonInfoStyled>
+                                                    <InfoVerify>
+                                                        {bill.status === 'Delivered' ? moment(bill.receivedDate).format("DD/MM/YYYY")
+                                                            : bill.status === 'Canceled' ? moment(bill.canceledDate).format("DD/MM/YYYY hh:mm")
+                                                                : moment(bill.createAt).add(3, 'days').format("DD/MM/YYYY")}
+                                                    </InfoVerify>
+                                                </InfoRowStyled>}
                                                 <InfoRowStyled>
                                                     <PersonInfoStyled>Total:</PersonInfoStyled>
                                                     <InfoVerify style={{ fontSize: 25, fontWeight: 'bold', color: "#ea5455" }}>{bill.totalPrice} <DolartextStyled>dolars</DolartextStyled></InfoVerify>
@@ -418,7 +434,6 @@ function UserInfo() {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        {/* <span style={{ color: "#9387d9", marginLeft: '0.5rem' }}>x{item.quantity}</span> */}
                                                     </ProductStyled>)
                                                 }
                                             </div>

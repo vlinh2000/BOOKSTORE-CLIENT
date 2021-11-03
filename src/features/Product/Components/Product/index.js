@@ -126,6 +126,7 @@ const ByAuthorStyled = styled.div`
 `;
 
 const RaitingStyled = styled.div`
+    width:90%;
     display:flex;
     justify-content:space-between;
 `;
@@ -211,7 +212,7 @@ function Product({ product }) {
                     <Typography.Text
                         style={{ color: "#ff4545", fontWeight: 500, marginLeft: 5 }}><DollarCircleOutlined /> {product.price}</Typography.Text>
                 </div>
-                <span>
+                <div>
                     <Rate
                         disabled
                         defaultValue={2}
@@ -219,7 +220,7 @@ function Product({ product }) {
                         style={{ fontSize: 12 }} />
                     <span
                         style={{ marginLeft: 5 }}>({feedBack?.comments?.length || 0})</span>
-                </span>
+                </div>
             </RaitingStyled>
         </ProductStyled>
     );

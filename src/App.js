@@ -10,6 +10,7 @@ import Notification from 'components/Notification';
 import Footer from 'components/Footer';
 import Loading from 'components/Loading';
 import { useSelector } from 'react-redux';
+import ScrollToTop from 'components/ScrollToTop';
 
 const Product = React.lazy(() => import("features/Product"))
 const Cart = React.lazy(() => import("features/Cart"))
@@ -24,6 +25,7 @@ function App() {
     <div className="book-store">
       <Suspense fallback={<Loading />}>
         <Router history={history} >
+          <ScrollToTop />
           <Header />
           <Notification />
           <Switch>
