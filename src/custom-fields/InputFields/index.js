@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Form, Input } from 'antd'
+import { Input } from 'antd'
 import { Controller } from 'react-hook-form';
 import { FormItemStyled } from 'assets/styles/globalStyle'
 

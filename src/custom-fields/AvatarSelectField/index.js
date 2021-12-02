@@ -77,6 +77,7 @@ function AvatarSelectField(props) {
                 return <WrapperStyled>
                     <ShowAvatarStyled>
                         <img
+                            alt="avatar"
                             width={80}
                             height={80}
                             src={currentAvatar} />

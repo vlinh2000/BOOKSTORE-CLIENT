@@ -1,5 +1,4 @@
 import axiosClient from "./axiosClient";
-import { categoryApi } from "./CategoryApi";
 
 
 export const productApi = {

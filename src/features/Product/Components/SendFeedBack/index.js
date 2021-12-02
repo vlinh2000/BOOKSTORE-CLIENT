@@ -3,8 +3,8 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux'
 
 import styled from 'styled-components';
-import { Avatar, Button, Col, message, Row, Form, Alert, Tooltip } from 'antd';
-import { InfoCircleTwoTone, LoginOutlined, SendOutlined } from '@ant-design/icons';
+import { Avatar, Col, message, Row, Form, Alert } from 'antd';
+import { InfoCircleTwoTone, SendOutlined } from '@ant-design/icons';
 
 import { yupResolver } from "@hookform/resolvers/yup"
 
@@ -13,9 +13,8 @@ import VotedField from 'custom-fields/VotedField';
 import { hasNewFeedBack, sendFeedBack } from 'features/Product/productSlice';
 import { switchLoginModal } from 'app/modalSlice';
 
-import InputEmoji from "react-input-emoji";
 import InputFieldWithEmoji from 'custom-fields/InputFieldWithEmoji';
-import { BlueButton, YellowButton, PurpleButton, OrgangeButton } from 'assets/styles/globalStyle';
+import { BlueButton } from 'assets/styles/globalStyle';
 import feedBackSchema from 'yup/feedBackSchema';
 
 const Wrapper = styled.div`

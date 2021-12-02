@@ -1,18 +1,16 @@
 import React from 'react';
-import { Avatar, Button, Drawer, Form, message, Tooltip, Tabs, Divider, Row, Col, Steps, Badge, Popconfirm } from 'antd';
+import { Form, message, Tabs, Divider, Row, Col, Steps, Badge, Popconfirm } from 'antd';
 import InputField from 'custom-fields/InputFields';
-import { AccountBookOutlined, CarOutlined, HistoryOutlined, HomeOutlined, HourglassOutlined, LogoutOutlined, MailOutlined, PhoneOutlined, SmileOutlined, UserOutlined } from '@ant-design/icons';
+import { CarOutlined, HistoryOutlined, HomeOutlined, HourglassOutlined } from '@ant-design/icons';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
-import { switchUserInfoDrawer } from 'app/modalSlice';
 import AvatarSelectField from 'custom-fields/AvatarSelectField';
 import userInfoSchema from 'yup/userInfoSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { getMe, logout, updateUserInfo } from 'app/userSlice';
-import { toastSuccess } from 'utils/common';
+import { getMe, updateUserInfo } from 'app/userSlice';
 import Banner from 'components/Banner';
-import { BlueButton, DolartextStyled, OrgangeButton, RedButton, TextGreenStyled, TextOrgangeStyled, TextRedStyled, TextYellowStyled, YellowButton } from 'assets/styles/globalStyle';
+import { BlueButton, DolartextStyled, OrgangeButton, RedButton, TextGreenStyled, TextOrgangeStyled, TextRedStyled, TextYellowStyled } from 'assets/styles/globalStyle';
 import { history } from 'App';
 import { billApi } from 'api/BillApi';
 import moment from 'moment';
@@ -41,21 +39,6 @@ const TabStyled = styled(Tabs)`
    padding:3rem 0;
    `;
 
-const ButtonStyled = styled(Button)`
-    min-height:50px;
-    font-size:13px;
-    font-weight:500;
-    color:#fff;
-    background:${(props) => props.bgcolor};
-
-    &:hover, &:focus{
-        background:#9387d9;
-        color:#FFF;
-        border:none;
-    }
-
-`;
-
 const FormStyled = styled(Form)`
     box-shadow:1px 1px 25px -8px #BBB;
     padding:2rem 3rem;
@@ -77,13 +60,6 @@ const ProductStyled = styled.div`
     width:50%;
     `;
 
-
-const InfoProduct = styled.div`
-    margin:0 3rem 0.5rem 1rem;
-    min-width:130px;
-    font-size:12px;
-    font-style:italic;    
-`;
 const BillStyled = styled.div`
     box-shadow:1px 1px 25px -8px #BBB;
     padding:1rem 2rem 2rem 2rem;
@@ -132,9 +108,7 @@ const StepStyled = styled(Steps)`
 `;
 function UserInfo() {
 
-    const { user, isAuth } = useSelector(state => state.user.currentUser);
-
-    const { isVisibleUserInfo } = useSelector(state => state.modals);
+    const { user } = useSelector(state => state.user.currentUser);
 
     const { loading } = useSelector(state => state.user);
 
@@ -229,7 +203,7 @@ function UserInfo() {
 
     const onUpdate = async (billId, status, mess) => {
         try {
-            const response = await billApi.update(billId, { status });
+            await billApi.update(billId, { status });
             setIsLoading(false)
             setIsChange(prev => !prev);
             message.success(mess);

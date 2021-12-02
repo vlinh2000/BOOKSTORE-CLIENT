@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
-import { Col, Divider, Row } from 'antd';
+import { Col, Row } from 'antd';
 
 import Product from '../Product';
 import { TitleStyled } from 'assets/styles/globalStyle'

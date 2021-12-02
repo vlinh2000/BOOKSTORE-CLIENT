@@ -3,11 +3,8 @@ import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 
 import styled from 'styled-components';
-import { Button, Steps, Form, Radio, Space, Input, Divider, Select, message, Row, Col } from 'antd';
-import {
-    CheckOutlined, CloseCircleFilled, DollarCircleOutlined, DollarOutlined,
-    EditOutlined, InfoCircleOutlined, InfoOutlined, SaveOutlined, SwapLeftOutlined, SwapRightOutlined
-} from '@ant-design/icons';
+import { Steps, Form, Radio, Space, Input, Divider, message, Row, Col } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
 
 import infoSchema from 'yup/infoSchema';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -19,7 +16,7 @@ import { Checkout } from '../cartSlice';
 import { history } from 'App';
 import SelectField from 'custom-fields/SelectFields';
 import axios from 'axios';
-import { BlueButton, DolarStyled, DolartextStyled, YellowButton, PinkButton, PurpleButton, StatusPaid, TextGreenStyled, TextRedStyled, TextYellowStyled, WarningButton, OrgangeButton } from 'assets/styles/globalStyle'
+import { BlueButton, DolartextStyled, PurpleButton, TextGreenStyled, TextRedStyled, TextYellowStyled, OrgangeButton } from 'assets/styles/globalStyle'
 
 
 
@@ -37,35 +34,6 @@ const StepStyled = styled(Steps)`
 
 const MainStyled = styled.div`
     margin-bottom:2rem;
-    `;
-
-const ButtonStyled = styled(Button)`
-    
-    font-size:12px;
-    font-weight:500;
-    background:#AAA;
-    color:#FFF;
-    height:40px;
-    width:45%;
-    &:hover,&:focus{
-        border:none;
-        color:#EEE;
-        background:#9387d9 ;
-        
-    }
-    
-    `;
-const ButtonPreviousNextStyled = styled(Button)`
-    font-size:12px;
-    font-weight:500;
-    height:40px;
-    background:#666;
-    color:#FFF;
-    &:hover,&:focus{
-        border-color:#9387d9;
-        color:#EEE;
-        background:#9387d9 ;
-    }
     `;
 
 const MainScreenStyled = styled.div`

@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 
 import styled from 'styled-components';
 
-import { BackTop, Breadcrumb, Button, Col, Divider, message, Row, Skeleton, Spin } from 'antd';
-import { BookOutlined, HeartOutlined, HomeOutlined, MinusOutlined, PlusOutlined, UpCircleOutlined } from '@ant-design/icons';
+import { BackTop, Button, Col, Divider, message, Row, Skeleton, Spin } from 'antd';
+import { HeartOutlined, MinusOutlined, PlusOutlined, UpCircleOutlined } from '@ant-design/icons';
 
 import ProductRelated from '../Components/ProductRelated';
 import ProductComment from '../Components/ProductComment';
@@ -18,13 +18,6 @@ import { addToCart } from 'features/Cart/cartSlice';
 import { history } from 'App';
 import { WrapperShadowStyled } from 'assets/styles/globalStyle';
 
-const HeaderProductDetailStyled = styled.div`
-    line-height:55px;
-`;
-
-const BodyProductDetailStyled = styled.div`
-  padding: 0 9.5rem;
-`;
 
 const ReviewStyled = styled.div`
    

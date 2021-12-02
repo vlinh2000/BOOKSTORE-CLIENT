@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Form, Button, Divider, Input, Select } from 'antd';
+import { Select } from 'antd';
 import styled from 'styled-components';
-import { SearchOutlined } from '@ant-design/icons';
 import { Controller } from 'react-hook-form';
 import { FormItemStyled } from 'assets/styles/globalStyle';
 
@@ -26,7 +25,7 @@ const SelectStyled = styled(Select)`
 `;
 
 function SelectField(props) {
-    const { name, options, control, placeholder, label, disabled, onChosen, onSetValue } = props;
+    const { name, options, control, placeholder, label, onChosen, onSetValue } = props;
 
     const [optionWithCondition, setOptionWithCondition] = React.useState([]);
 

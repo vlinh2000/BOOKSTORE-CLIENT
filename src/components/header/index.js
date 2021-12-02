@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -7,7 +7,7 @@ import {
     FacebookOutlined, InstagramOutlined, LogoutOutlined, ShoppingCartOutlined,
     TwitterOutlined, UserOutlined, YoutubeOutlined
 } from '@ant-design/icons'
-import { Button, Col, Divider, Popover, Row } from 'antd';
+import { Button, Col, Popover, Row } from 'antd';
 
 import styled from 'styled-components';
 import FormSearch from 'components/FormSearch';
@@ -17,8 +17,7 @@ import CartModal from 'modals/CartModal';
 import LoginModal from 'modals/LoginModal';
 import RegisterModal from 'modals/RegisterModal';
 
-import { switchCartModal, switchLoginModal, switchUserInfoDrawer } from 'app/modalSlice';
-import UserInfo from 'components/UserInfo';
+import { switchLoginModal, switchUserInfoDrawer } from 'app/modalSlice';
 import { history } from 'App';
 import { logout } from 'app/userSlice';
 import { toastSuccess } from 'utils/common';

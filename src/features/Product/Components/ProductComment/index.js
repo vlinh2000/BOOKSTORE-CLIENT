@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
 
-import { Avatar, Comment, Empty, Pagination, Rate, Tabs, Tooltip, } from 'antd';
+import { Avatar, Comment, Empty, Rate, Tabs, Tooltip, } from 'antd';
 
 import moment from 'moment';
 import { TitleStyled } from 'assets/styles/globalStyle';
@@ -19,9 +19,6 @@ ProductComment.defaultProps = {
     feedBack: []
 };
 
-const ProductCommentStyled = styled.div`
-    line-height:20px;
-`;
 
 const CommentStyled = styled(Comment)`
     border-bottom:1px solid #eee;
