@@ -26,7 +26,7 @@ function ProductRelated({ products }) {
         products.length > 0 &&
         <Wrapper>
             <TitleStyled>Related Products</TitleStyled>
-            <Row justify="space-around">
+            <Row >
                 {products?.map(product => (<Col span={6} key={product.id} >
                     <Product product={product} />
                 </Col>))}

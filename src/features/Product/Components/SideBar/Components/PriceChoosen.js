@@ -27,21 +27,23 @@ function PriceChoosen() {
     return (
         <PriceChoosenStyled>
             <DeliverTitle title="price" />
-            <Slider
-                tooltipVisible={false}
-                range
-                defaultValue={[1, 100]}
-                min={1}
-                max={100}
-                onChange={handleChange} />
-            <Typography.Text>
-                <span style={{ color: '#969696', fontWeight: 500, marginRight: 15 }}>Range :</span>
-                <span><DollarCircleOutlined /> {`${Math.floor(rangeValue[0] * rangeStep)} `}</span>
-                <Divider type='vertical' />
-                <SwapOutlined />
-                <Divider type='vertical' />
-                <span><DollarCircleOutlined /> {`${Math.ceil(rangeValue[1] * rangeStep)}`}</span>
-            </Typography.Text>
+            <div style={{ marginLeft: '0.75rem' }}>
+                <Slider
+                    tooltipVisible={false}
+                    range
+                    defaultValue={[1, 100]}
+                    min={1}
+                    max={100}
+                    onChange={handleChange} />
+                <Typography.Text>
+                    <span style={{ color: '#969696', fontWeight: 500, marginRight: 15 }}>Range :</span>
+                    <span><DollarCircleOutlined /> {`${Math.floor(rangeValue[0] * rangeStep)} `}</span>
+                    <Divider type='vertical' />
+                    <SwapOutlined />
+                    <Divider type='vertical' />
+                    <span><DollarCircleOutlined /> {`${Math.ceil(rangeValue[1] * rangeStep)}`}</span>
+                </Typography.Text>
+            </div>
         </PriceChoosenStyled>
     );
 }

@@ -43,7 +43,7 @@ const NotProductInCartModal = () => {
 
     const handleShopping = () => {
         dispatch(switchCartModal(false));
-        history.push('/product');
+        history.push('/');
     }
     return (
         <Wrapper>

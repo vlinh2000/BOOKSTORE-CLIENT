@@ -16,6 +16,7 @@ const ListCategoryStyled = styled.ul`
     padding:0;
     list-style:none;
     font-weight:400;
+    margin-left:0.75rem;
 `;
 
 const CheckboxStyled = styled(Checkbox)`

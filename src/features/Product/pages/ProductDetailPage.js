@@ -17,6 +17,7 @@ import { useDispatch } from 'react-redux';
 import { addToCart } from 'features/Cart/cartSlice';
 import { history } from 'App';
 import { WrapperShadowStyled } from 'assets/styles/globalStyle';
+import { toastSuccess } from 'utils/common';
 
 
 const ReviewStyled = styled.div`
@@ -139,12 +140,18 @@ const ButtonBackTopStyled = styled(Button)`
 
 `;
 
+const OutOfStock = styled.div`
+    color:#FF4136;
+    font-size:14px;
+    font-weight:bold;
+`;
+
 function ProductDetailPage(props) {
     const { bookId } = useParams();
 
     const [book, setBook] = React.useState({});
 
-    const [comments, setComments] = React.useState([]);
+    const [feedBack, setFeedBack] = React.useState([]);
 
     const [relatedBook, setRelatedBook] = React.useState([]);
 
@@ -179,7 +186,6 @@ function ProductDetailPage(props) {
                 const { book } = await productApi.get(bookId);
                 setBook(book);
                 setIsBookLoading(false);
-
             }
 
             secondTime.current = true;
@@ -201,6 +207,11 @@ function ProductDetailPage(props) {
     }
     //Handle buy now
     const handleBuyNow = () => {
+        if (book.stockQuantity < 1) {
+            toastSuccess("Out of stock , please comeback later");
+            return;
+        }
+
         const { name, image, price, _id } = book;
         const product = {
             _id,
@@ -224,6 +235,10 @@ function ProductDetailPage(props) {
 
     //Handle add to cart -- dispatch to store
     const handleAddToCart = () => {
+        if (book.stockQuantity < 1) {
+            toastSuccess("Out of stock , please comeback later");
+            return;
+        }
 
         const { name, image, price, _id } = book;
 
@@ -235,7 +250,6 @@ function ProductDetailPage(props) {
             quantity,
             subTotal: (quantity * price)
         };
-
 
         //handle dispatch
         setIsAdding(true);
@@ -249,21 +263,27 @@ function ProductDetailPage(props) {
         }, 1000)
 
     }
-
-
+    //handle fetch feedback
     React.useEffect(() => {
-        //handle get Feedback for this book
         const fetchFeedBack = async () => {
-            setIsFeedBackLoading(true);
-            const data = await feedBackApi.get(bookId);
-            data.feedBack ? setComments(data.feedBack.comments) : setComments([]);
-            setIsFeedBackLoading(false);
+            try {
+                const response = await feedBackApi.get(bookId);
+                console.log(response)
+                setFeedBack(response.feedBack.comments);
+                setIsFeedBackLoading(false);
+            } catch (error) {
+                setIsFeedBackLoading(false);
+            }
         }
+        setIsFeedBackLoading(true);
         fetchFeedBack();
-    }, [bookId, isNewFeed])
+
+    }, [bookId])
 
     //handle get related book
     React.useEffect(() => {
+        if (!book.category) return;
+
         const fetchRelatedProduct = async () => {
             const params = {
                 _limit: 4,
@@ -271,15 +291,7 @@ function ProductDetailPage(props) {
                 categoryId: book.category?._id
             }
             const { books } = await productApi.getAll(params);
-            //handle get feedback 
-            const { feedBack } = await feedBackApi.getAll(); //{ message: {...} , feedBack:{...} }
-            //map into products to easy to render
-            const products = books.map(book => {
-                //find --  does book have feedBack?    
-                const feedBackOfThisBook = feedBack.find(item => item.bookId === book._id);
-                return { ...book, feedBack: feedBackOfThisBook };
-            })
-            setRelatedBook(products);
+            setRelatedBook(books);
             setIsRelatedLoading(false);
         }
         setIsRelatedLoading(true);
@@ -319,7 +331,7 @@ function ProductDetailPage(props) {
                                 <PriceStyled>${book.price}</PriceStyled>
                                 <Divider />
                                 <DecriptionStyled>{book.decription}</DecriptionStyled>
-                                <NumberInStockStyled>{book.stockQuantity} in stock</NumberInStockStyled>
+                                {book.stockQuantity > 0 ? <NumberInStockStyled>{book.stockQuantity} in stock</NumberInStockStyled> : <OutOfStock>Oh no .... Out of stock , please comeback later</OutOfStock>}
                                 <Row
                                     justify="center"
                                     gutter={10}
@@ -328,7 +340,7 @@ function ProductDetailPage(props) {
                                         <ButtonGroupStyled>
                                             <ButtonSmallStyled
                                                 onClick={handleDecrease}
-                                                disabled={quantity === 1}
+                                                disabled={quantity === 1 || book.stockQuantity < 1}
                                                 color="#9387d9"
                                                 type='text'
                                                 size='small'
@@ -336,7 +348,7 @@ function ProductDetailPage(props) {
                                             <span>{quantity}</span>
                                             <ButtonSmallStyled
                                                 onClick={handleIncrease}
-                                                disabled={quantity === book.stockQuantity}
+                                                disabled={quantity === book.stockQuantity || book.stockQuantity < 1}
                                                 color="#9387d9"
                                                 type='text'
                                                 size='small'
@@ -390,7 +402,7 @@ function ProductDetailPage(props) {
                         active={true}
                         avatar={true} >
                         <ProductComment
-                            feedBack={comments} />
+                            feedBack={feedBack} />
                     </SkeletonStyled>
                     <SendFeedBack bookId={bookId} />
                 </ReviewStyled>

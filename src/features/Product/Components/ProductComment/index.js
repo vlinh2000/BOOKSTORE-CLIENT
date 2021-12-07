@@ -39,6 +39,8 @@ function ProductComment({ feedBack }) {
         return list;
     }, [feedBack])
 
+    console.log(feedBack);
+
     const { starVoted } = useSelector(state => state.pageInfo);
     return (
         <div>

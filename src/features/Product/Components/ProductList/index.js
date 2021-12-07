@@ -19,7 +19,7 @@ function ProductList({ products }) {
         <div>
             <Row gutter={[48, 48]}>
                 {products.map(product =>
-                    <Col key={product.id} span={6}>
+                    <Col key={product._id} span={6}>
                         <Product product={product} />
                     </Col>
 

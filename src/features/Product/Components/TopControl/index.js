@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { Select, Alert } from 'antd';
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, SortAscendingOutlined } from '@ant-design/icons';
 
 import { filterBy } from 'features/Product/productSlice';
 
@@ -23,6 +23,12 @@ const TopControlStyled = styled.div`
     justify-content:space-between;
     align-items:center;
     margin-bottom:2rem;
+
+
+    .ant-select-selection-search-input,.ant-select-selection-item{
+        font-size:13px !important;
+        font-weight:500;
+    }
 `;
 
 const ShowResultStyled = styled.span`
@@ -42,6 +48,11 @@ const AlertStyled = styled(Alert)`
     height:30px;
     display:inline-flex;
     margin-left:1rem;
+`;
+
+const OptionStyled = styled(Select.Option)`
+    font-size:13px;
+
 `;
 
 function TopControl({ totalProduct }) {
@@ -69,7 +80,9 @@ function TopControl({ totalProduct }) {
                     closable />}
             </div>
             <div>
-                <SelectStyled defaultValue={0} onSelect={onSelect} >
+                <SelectStyled
+                    defaultValue={0}
+                    onSelect={onSelect} >
                     <Select.Option disabled value={0}>Default Sorting</Select.Option>
                     <Select.Option value="min-to-max">Sort By Price: Low To High</Select.Option>
                     <Select.Option value='max-to-min'>Sort By Price: High To Low</Select.Option>

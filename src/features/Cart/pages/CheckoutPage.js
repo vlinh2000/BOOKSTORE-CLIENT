@@ -192,7 +192,6 @@ function CheckoutPage(props) {
 
     const [isLoading, setIsLoading] = React.useState(false);
 
-
     const [isEdit, setIsEdit] = React.useState(false);
 
     const dispatch = useDispatch()

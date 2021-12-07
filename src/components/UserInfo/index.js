@@ -118,6 +118,8 @@ function UserInfo() {
 
     const [isLoading, setIsLoading] = React.useState(false);
 
+    const [isLoadingCancle, setIsLoadingCancle] = React.useState(false);
+
     const [isChange, setIsChange] = React.useState(false);
 
     const [defaultKey, setDefaultKey] = React.useState(() => {
@@ -204,13 +206,13 @@ function UserInfo() {
     const onUpdate = async (billId, status, mess) => {
         try {
             await billApi.update(billId, { status });
-            setIsLoading(false)
+            status === "Cancled" ? setIsLoadingCancle(false) : setIsLoading(false)
             setIsChange(prev => !prev);
             message.success(mess);
         } catch (error) {
             // const errMessage = error.response.data;
             message.error(error)
-            setIsLoading(false)
+            status === "Cancled" ? setIsLoadingCancle(false) : setIsLoading(false)
         }
     }
 
@@ -224,7 +226,7 @@ function UserInfo() {
     //handle cancel order when wait comfirm
     const handleCancelOrder = (billId) => {
         console.log(billId);
-        setIsLoading(true);
+        setIsLoadingCancle(true);
         onUpdate(billId, "Canceled", "Your order has been canceled");
     }
 
@@ -419,7 +421,7 @@ function UserInfo() {
                                             onConfirm={() => handleCancelOrder(bill._id)}
                                             title="Are you sure?">
                                             <RedButton
-                                                loading={isLoading}
+                                                loading={isLoadingCancle}
                                                 style={{ marginTop: '1rem' }}>
                                                 Cancel order
                                             </RedButton>

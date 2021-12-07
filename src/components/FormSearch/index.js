@@ -17,6 +17,12 @@ const FormSearchStyled = styled(Form)`
     padding: 0.3rem 1rem;
     border-radius:30px;
     background:#f1f1f1;
+    border:1px solid #CCC;
+    
+    input{
+        font-style:italic;
+        font-size:13px;
+    }
 
     .ant-btn-text:hover, .ant-btn-text:focus{
         color:#9387d9;

@@ -8,21 +8,21 @@ import { productApi } from 'api/ProductApi';
 export const fetchPageInfo = createAsyncThunk('pageInfo/fetchPageInfo', async (params, { fulfillWithValue, rejectWithValue, dispatch }) => {
 
     try {
-        const pageInfo = await productApi.getAll(params);
-        //handle get feedback 
-        const { feedBack } = await feedBackApi.getAll(); //{ message: {...} , feedBack:{...} }
-        //map into products to easy to render
-        const products = pageInfo.books.map(book => {
-            //find --  does book have feedBack?    
+        const { books } = await productApi.getAll(params);
+        // //handle get feedback 
+        // const { feedBack } = await feedBackApi.getAll(); //{ message: {...} , feedBack:{...} }
+        // //map into products to easy to render
+        // const products = pageInfo.books.map(book => {
+        //     //find --  does book have feedBack?    
 
-            const feedBackOfThisBook = feedBack.find(item => item.bookId === book._id);
-            return { ...book, feedBack: feedBackOfThisBook };
-        })
+        //     const feedBackOfThisBook = feedBack.find(item => item.bookId === book._id);
+        //     return { ...book, feedBack: feedBackOfThisBook };
+        // })
 
         //handle range 
-        dispatch(getRangePrice(getRange(products)))
+        dispatch(getRangePrice(getRange(books)))
 
-        return { products: products };
+        return { products: books };
 
     } catch (error) {
         return rejectWithValue(error);
@@ -98,7 +98,6 @@ const pageInfo = createSlice({
         },
         getRangePrice: (state, action) => {
             state.rangeStep = action.payload;
-
         }
     },
     extraReducers: {

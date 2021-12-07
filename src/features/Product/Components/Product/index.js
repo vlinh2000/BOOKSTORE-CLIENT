@@ -216,10 +216,10 @@ function Product({ product }) {
                     <Rate
                         disabled
                         defaultValue={2}
-                        value={feedBack ? getVotedHighest(feedBack) : 0}
+                        value={feedBack[0] ? getVotedHighest(feedBack[0]) : 0}
                         style={{ fontSize: 12 }} />
                     <span
-                        style={{ marginLeft: 5 }}>({feedBack?.comments?.length || 0})</span>
+                        style={{ marginLeft: 5 }}>({feedBack[0]?.comments?.length || 0})</span>
                 </div>
             </RaitingStyled>
         </ProductStyled>
