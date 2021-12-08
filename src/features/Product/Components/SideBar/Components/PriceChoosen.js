@@ -11,6 +11,37 @@ const PriceChoosenStyled = styled.div`
     margin-bottom :2.5rem;
 `;
 
+const SliderStyled = styled(Slider)`
+    margin-bottom:1.5rem;
+    vertical-align:middle;
+
+    .ant-slider-track{
+        background-color:#111;
+        height:1px;
+    }
+
+    &:hover .ant-slider-track {
+        background-color:#111;
+    }
+
+    &:hover .ant-slider-handle:not(.ant-tooltip-open) {
+        border-color:#111;
+    }
+
+    .ant-slider-handle{
+        border-color:#001f3f;
+        border-radius:0;
+        margin-top:-6px;
+        height:12px;
+        width:12px;
+        cursor:w-resize;
+        
+        &:focus{
+            box-shadow: 0 0 25px -8px #AAA;
+        }
+    }
+
+`;
 
 function PriceChoosen() {
     const { rangeStep } = useSelector(state => state.pageInfo);
@@ -27,8 +58,8 @@ function PriceChoosen() {
     return (
         <PriceChoosenStyled>
             <DeliverTitle title="price" />
-            <div style={{ marginLeft: '0.75rem' }}>
-                <Slider
+            <div style={{ marginLeft: '0.75rem', marginTop: '1.5rem' }}>
+                <SliderStyled
                     tooltipVisible={false}
                     range
                     defaultValue={[1, 100]}
@@ -36,12 +67,14 @@ function PriceChoosen() {
                     max={100}
                     onChange={handleChange} />
                 <Typography.Text>
-                    <span style={{ color: '#969696', fontWeight: 500, marginRight: 15 }}>Range :</span>
-                    <span><DollarCircleOutlined /> {`${Math.floor(rangeValue[0] * rangeStep)} `}</span>
-                    <Divider type='vertical' />
-                    <SwapOutlined />
-                    <Divider type='vertical' />
-                    <span><DollarCircleOutlined /> {`${Math.ceil(rangeValue[1] * rangeStep)}`}</span>
+                    <span style={{ color: '#0074D9', fontWeight: 'bold', marginRight: 15 }}>Range :</span>
+                    <span style={{ fontSize: 18 }}>
+                        <DollarCircleOutlined style={{ fontSize: 13 }} /> {`${Math.floor(rangeValue[0] * rangeStep)} `}
+                    </span>
+                    <SwapOutlined style={{ margin: "0 0.5rem" }} />
+                    <span style={{ fontSize: 18 }}>
+                        <DollarCircleOutlined style={{ fontSize: 13 }} /> {`${Math.ceil(rangeValue[1] * rangeStep)}`}
+                    </span>
                 </Typography.Text>
             </div>
         </PriceChoosenStyled>

@@ -19,20 +19,15 @@ const FormSearchStyled = styled(Form)`
     background:#f1f1f1;
     border:1px solid #CCC;
     
-    &:focus-within {
-        background:#fffaf2;
-       input ,.ant-btn-text{
-           color:#0395f7;
-        } 
-    }
-
     input{
         font-style:italic;
         font-size:13px;
+        color:#0395f7;
     }
-
+    
     .ant-btn-text:hover, .ant-btn-text:focus{
-        color:#9387d9;
+        color:#0395f7;
+        background:none;
 }
 
 `;
@@ -62,6 +57,7 @@ function FormSearch(props) {
 
     return (
         <FormSearchStyled
+            autoComplete="off"
             onFinish={onSubmit}>
             <Input
                 name="value"

@@ -53,8 +53,8 @@ function SendFeedBack({ bookId }) {
 
     const [form] = Form.useForm();
 
+    //handle post feedback to db
     const onSubmit = values => {
-        //handle post feedback to db
         try {
             const sendFB = async () => {
                 const data = { ...values, bookId };

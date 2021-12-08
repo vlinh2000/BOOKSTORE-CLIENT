@@ -42,6 +42,19 @@ const ShowResultStyled = styled.span`
 
 const SelectStyled = styled(Select)`
     min-width:200px;
+    
+    .ant-select-selector{
+        border:1px solid #111!important;
+        height:40px!important;
+    }
+
+    &:hover .ant-select-selector{
+        border:none;
+    }
+
+    .ant-select-arrow{
+        color:#111;
+    }
 `;
 
 const AlertStyled = styled(Alert)`
