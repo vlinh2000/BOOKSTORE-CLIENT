@@ -1,34 +1,35 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox } from 'antd';
+import { Radio } from 'antd';
 import styled from 'styled-components';
 import DeliverTitle from './DeliverTitle';
 import { useDispatch } from 'react-redux';
 import { filterBy } from 'features/Product/productSlice';
 Category.propTypes = {
-    category: PropTypes.object
+    categories: PropTypes.array
 };
 Category.defaultProps = {
-    category: { name: "Children's books", total: 8 }
+    categories: []
 };
 
-const ListCategoryStyled = styled.ul`
-    padding:0;
+const ListCategoryStyled = styled.div`
     list-style:none;
     font-weight:400;
     margin-left:0.75rem;
 `;
 
-const CheckboxStyled = styled(Checkbox)`
+const RadioStyled = styled(Radio)`
+    display:block;
     color:#969696 ;
     cursor:pointer;
     font-weight:500;
     letter-spacing:1px;
-    margin-bottom:0.3rem;
-    font-size:13px;
+    margin-bottom:0.4rem;
+    font-size:14px;
 
     &:hover,&:focus{
-        color:#000;
+        color:#000!important;
+        
     }
 
 `;
@@ -39,40 +40,25 @@ const CategoryStyled = styled.div`
 
 
 function Category({ categories }) {
-
-    const [cateChecked, setCateChecked] = React.useState({});
-
     const dispatch = useDispatch()
 
-    const handleChange = ({ target: { name, checked } }) => {
-        const newChecked = { ...cateChecked, [name]: checked }
-        setCateChecked(newChecked);
-
-        //handle category checked
-        const conditionArray = [];
-        for (let key in newChecked) {
-            newChecked[key] && conditionArray.push(key);
-        }
-
-        //filter with this contition
-        dispatch(filterBy({ categoryFilter: conditionArray }));
+    const handleChange = ({ target: { value } }) => {
+        dispatch(filterBy({ categoryFilter: value }));
     }
-
-
 
     return <CategoryStyled>
         <DeliverTitle title='Category' />
-
-        {categories?.map(category =>
-            <ListCategoryStyled key={category._id}>
-                <CheckboxStyled
-                    onChange={handleChange}
-                    name={category._id}>{category.name}</CheckboxStyled>
-                {/* <li className="item">
-                    <span>{category.categoryName}</span>
-                </li> */}
-            </ListCategoryStyled>
-        )}
+        <ListCategoryStyled>
+            <Radio.Group onChange={handleChange} defaultValue={-1}>
+                <RadioStyled value={-1}>All</RadioStyled>
+                {categories?.map(category =>
+                    <RadioStyled
+                        key={category._id}
+                        value={category._id}
+                        name={category._id}>{category.name}</RadioStyled>
+                )}
+            </Radio.Group>
+        </ListCategoryStyled>
     </CategoryStyled>
 }
 

@@ -19,6 +19,13 @@ const FormSearchStyled = styled(Form)`
     background:#f1f1f1;
     border:1px solid #CCC;
     
+    &:focus-within {
+        background:#fffaf2;
+       input ,.ant-btn-text{
+           color:#0395f7;
+        } 
+    }
+
     input{
         font-style:italic;
         font-size:13px;

@@ -75,7 +75,7 @@ const initialState = {
     rangeStep: 0,
     filterPattern: {
         searchValue: '',
-        categoryFilter: [],
+        categoryFilter: -1,
         rangePrice: [],
         sort: ''
     },

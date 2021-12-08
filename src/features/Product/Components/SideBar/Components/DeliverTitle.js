@@ -14,7 +14,7 @@ function DeliverTitle({ title }) {
     return (
         <div>
             <Typography style={{ fontWeight: 'bold', letterSpacing: 0.5, fontSize: 16, textTransform: 'uppercase' }}>{title}</Typography>
-            <Divider style={{ marginBottom: '1.5rem', marginTop: "0.75rem", borderWidth: '2px', color: "#bcbcbc" }} />
+            <Divider style={{ marginBottom: '0.75rem', marginTop: "0.5rem", borderWidth: '2px', color: "#bcbcbc" }} />
         </div>
     );
 }

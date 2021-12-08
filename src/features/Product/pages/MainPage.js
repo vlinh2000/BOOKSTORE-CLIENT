@@ -43,12 +43,9 @@ function MainPage(props) {
         let newBooks = products.filter(book => book.name.toLowerCase().includes(searchValue?.toLowerCase()));
 
         //handle category filter 
-        newBooks = newBooks.filter(book => {
-            //check if category fiter = []
-            if (categoryFilter.length < 1) return book;
-            //find book in list category filter 
-            return categoryFilter.find(con => con === book.category._id) && book;
-        })
+        if (categoryFilter !== -1) {
+            newBooks = newBooks.filter(book => book.category[0]._id === categoryFilter)
+        }
 
         // handle range price
         if (rangePrice.length > 0) {

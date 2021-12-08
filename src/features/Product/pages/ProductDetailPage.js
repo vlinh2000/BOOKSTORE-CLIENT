@@ -16,7 +16,7 @@ import { feedBackApi } from 'api/feedBackApi';
 import { useDispatch } from 'react-redux';
 import { addToCart } from 'features/Cart/cartSlice';
 import { history } from 'App';
-import { WrapperShadowStyled } from 'assets/styles/globalStyle';
+import { DolartextStyled, WrapperShadowStyled } from 'assets/styles/globalStyle';
 import { toastSuccess } from 'utils/common';
 
 
@@ -37,7 +37,7 @@ const TitleStyled = styled.div`
 const PriceStyled = styled.div`
 
     font-weight:500;
-    color:#9387d9; 
+    color:#ea5455; 
     font-size:25px;
 
 `;
@@ -48,6 +48,7 @@ const DecriptionStyled = styled.div`
     color:#969696;
     line-height:20px;
     letter-spacing:0.5px;
+    margin-bottom:1rem;
 `;
 
 const NumberInStockStyled = styled.div`
@@ -278,7 +279,7 @@ function ProductDetailPage(props) {
         setIsFeedBackLoading(true);
         fetchFeedBack();
 
-    }, [bookId])
+    }, [bookId, isNewFeed])
 
     //handle get related book
     React.useEffect(() => {
@@ -328,9 +329,9 @@ function ProductDetailPage(props) {
                             </Col>
                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 13 }}>
                                 <TitleStyled>{book.name}</TitleStyled>
-                                <PriceStyled>${book.price}</PriceStyled>
+                                <PriceStyled>{book.price} <DolartextStyled>dolars</DolartextStyled> </PriceStyled>
                                 <Divider />
-                                <DecriptionStyled>{book.decription}</DecriptionStyled>
+                                <DecriptionStyled>{book.description}</DecriptionStyled>
                                 {book.stockQuantity > 0 ? <NumberInStockStyled>{book.stockQuantity} in stock</NumberInStockStyled> : <OutOfStock>Oh no .... Out of stock , please comeback later</OutOfStock>}
                                 <Row
                                     justify="center"
@@ -379,14 +380,14 @@ function ProductDetailPage(props) {
                                 <Divider />
                                 <InfoStyled>
                                     <div>
-                                        <span>Category:</span>
+                                        <span style={{ display: 'inline-block', width: 70 }}>Category:</span>
                                         <span
                                             style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>
                                             {book.category?.name}
                                         </span>
                                     </div>
                                     <div>
-                                        <span>Author:</span>
+                                        <span style={{ display: 'inline-block', width: 70 }}>Author:</span>
                                         <span
                                             style={{ marginLeft: '0.5rem', fontWeight: 'bold', color: "#000" }}>
                                             {book.author}
