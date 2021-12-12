@@ -13,8 +13,7 @@ import { handleSort } from 'utils/common';
 
 
 const MainPageStyled = styled.div`
-    width:90%;
-    margin:3rem auto;
+    padding:3rem 3rem;
 `;
 
 
@@ -63,11 +62,11 @@ function MainPage(props) {
 
     return (
         <MainPageStyled>
-            <Row gutter={[48, 0]} >
-                <Col xs={{ span: 24 }} sm={{ span: 5 }}>
+            <Row gutter={[48, 0]} justify='center'>
+                <Col xs={{ span: 24 }} sm={{ span: 10 }} md={{ span: 10 }} lg={{ span: 5 }}>
                     <SideBar />
                 </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 19 }}>
+                <Col xs={{ span: 24 }} sm={{ span: 14 }} md={{ span: 14 }} lg={{ span: 19 }}>
                     <TopControl
                         totalProduct={books?.length} />
                     {loading

@@ -45,7 +45,6 @@ const SelectStyled = styled(Select)`
     
     .ant-select-selector{
         border:1px solid #111!important;
-        height:40px!important;
     }
 
     &:hover .ant-select-selector{
@@ -63,10 +62,6 @@ const AlertStyled = styled(Alert)`
     margin-left:1rem;
 `;
 
-const OptionStyled = styled(Select.Option)`
-    font-size:13px;
-
-`;
 
 function TopControl({ totalProduct }) {
 

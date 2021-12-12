@@ -17,7 +17,7 @@ import CartModal from 'modals/CartModal';
 import LoginModal from 'modals/LoginModal';
 import RegisterModal from 'modals/RegisterModal';
 
-import { switchLoginModal, switchUserInfoDrawer } from 'app/modalSlice';
+import { switchCartModal, switchLoginModal, switchUserInfoDrawer } from 'app/modalSlice';
 import { history } from 'App';
 import { logout } from 'app/userSlice';
 import { toastSuccess } from 'utils/common';
@@ -84,7 +84,7 @@ const InfoCartStyled = styled.div`
         font-weight: 500;
 
         .price {
-                color: #9387d9;
+                color: #39CCCC;
             }
     }
 
@@ -124,6 +124,7 @@ function Header(props) {
 
     const dispatch = useDispatch();
     const { isAuth, user: { name } } = useSelector((state) => state.user.currentUser);
+    const { isVisibleCartModal, isVisibleUserInfo } = useSelector(state => state.modals)
 
     const { totalPrice, cartItem } = useSelector(state => state.cart);
 
@@ -240,9 +241,14 @@ function Header(props) {
                                             <Popover
                                                 placement="bottom"
                                                 trigger='click'
+                                                visible={isVisibleUserInfo}
+                                                onVisibleChange={() => dispatch(switchUserInfoDrawer(true))}
                                                 content={<PophoverStyled>
                                                     <WrapperLink>
-                                                        <LinkStyled onClick={() => history.push("/me")} >
+                                                        <LinkStyled onClick={() => {
+                                                            dispatch(switchUserInfoDrawer(false))
+                                                            history.push("/me")
+                                                        }} >
                                                             <UserOutlined />   My profile
                                                         </LinkStyled>
                                                     </WrapperLink>
@@ -268,7 +274,7 @@ function Header(props) {
                                     }
 
                                     <div className='info'>
-                                        <div> {isAuth ? <span style={{ color: '#9387d9', fontWeight: 500, fontSize: 10 }} >{name.toUpperCase()}</span> : 'Sign in'} </div>
+                                        <div> {isAuth ? <span style={{ color: '#2ECC40', fontWeight: 500, fontSize: 10 }} >{name.toUpperCase()}</span> : 'Sign in'} </div>
                                         <div> My account </div>
                                     </div>
                                 </InfoCartStyled>
@@ -276,6 +282,8 @@ function Header(props) {
                             <Col span={10} >
                                 <InfoCartStyled>
                                     <Popover
+                                        visible={isVisibleCartModal}
+                                        onVisibleChange={() => dispatch(switchCartModal(true))}
                                         trigger='click'
                                         content={<CartModal isAuth={isAuth} cartItem={cartItem} totalPrice={totalPrice} />} >
 

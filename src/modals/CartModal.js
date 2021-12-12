@@ -32,7 +32,7 @@ const ButtonStyled = styled(Button)`
     color:#FFF;
     margin:1rem 0;
     
-    &:hover{
+    &:hover,&:focus{
         background:#9387d9 ;
         color:#FFF;
         border:none;

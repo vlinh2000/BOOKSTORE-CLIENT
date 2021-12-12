@@ -37,7 +37,7 @@ const SliderStyled = styled(Slider)`
         cursor:w-resize;
         
         &:focus{
-            box-shadow: 0 0 25px -8px #AAA;
+            border-color:#111;
         }
     }
 
@@ -67,12 +67,12 @@ function PriceChoosen() {
                     max={100}
                     onChange={handleChange} />
                 <Typography.Text>
-                    <span style={{ color: '#0074D9', fontWeight: 'bold', marginRight: 15 }}>Range :</span>
-                    <span style={{ fontSize: 18 }}>
+                    <span style={{ color: '#969696', fontWeight: 'bold', marginRight: 15 }}>Range :</span>
+                    <span style={{ fontSize: 18, color: "#111", fontWeight: "bold" }}>
                         <DollarCircleOutlined style={{ fontSize: 13 }} /> {`${Math.floor(rangeValue[0] * rangeStep)} `}
                     </span>
                     <SwapOutlined style={{ margin: "0 0.5rem" }} />
-                    <span style={{ fontSize: 18 }}>
+                    <span style={{ fontSize: 18, color: "#111", fontWeight: "bold" }}>
                         <DollarCircleOutlined style={{ fontSize: 13 }} /> {`${Math.ceil(rangeValue[1] * rangeStep)}`}
                     </span>
                 </Typography.Text>

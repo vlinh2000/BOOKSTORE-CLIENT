@@ -17,12 +17,11 @@ ProductList.defaultProps = {
 function ProductList({ products }) {
     return (
         <div>
-            <Row gutter={[48, 48]}>
+            <Row gutter={[20, 48]}>
                 {products.map(product =>
-                    <Col key={product._id} span={6}>
+                    <Col key={product._id} sm={{ span: 24 }} md={{ span: 12 }} xs={{ span: 24 }} lg={{ span: 6 }}>
                         <Product product={product} />
                     </Col>
-
                 )}
             </Row >
         </div>

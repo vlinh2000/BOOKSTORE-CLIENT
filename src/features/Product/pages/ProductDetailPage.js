@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 
 import styled from 'styled-components';
 
-import { BackTop, Button, Col, Divider, message, Row, Skeleton, Spin } from 'antd';
-import { HeartOutlined, MinusOutlined, PlusOutlined, UpCircleOutlined } from '@ant-design/icons';
+import { BackTop, Button, Col, Divider, message, notification, Row, Skeleton, Spin } from 'antd';
+import { ArrowUpOutlined, HeartOutlined, MinusOutlined, PlusOutlined, UpCircleOutlined, UpOutlined } from '@ant-design/icons';
 
 import ProductRelated from '../Components/ProductRelated';
 import ProductComment from '../Components/ProductComment';
@@ -108,13 +108,13 @@ const ButtonSmallStyled = styled(Button)`
 const GroupImage = styled.div`
     margin:2rem 0;
     
-    & img{
+    img{
         margin-right:1rem;
         cursor:pointer;
     }
 
     & .active{
-        border:5px solid #9387d9;
+        border:3px solid #111;
     }
 
 `;
@@ -172,14 +172,11 @@ function ProductDetailPage(props) {
 
     const [currentImageIndex, setCurrenImageIndex] = React.useState(0);
 
-    const secondTime = React.useRef(false);
 
 
     const dispatch = useDispatch();
 
     React.useEffect(() => {
-        //scroll top if user click related products;
-        secondTime.current && window.scroll(0, 0);
         //handle fetch book with book id
         try {
             const fetchBook = async () => {
@@ -187,9 +184,15 @@ function ProductDetailPage(props) {
                 const { book } = await productApi.get(bookId);
                 setBook(book);
                 setIsBookLoading(false);
+                // notification.success({
+                //     placement: 'topRight',
+                //     bottom: 50,
+                //     duration: 2,
+                //     rtl: true,
+                //     message: "Fetch thanhf coong"
+                // })
             }
 
-            secondTime.current = true;
             setIsBookLoading(true);
             fetchBook();
         } catch (error) {
@@ -411,7 +414,7 @@ function ProductDetailPage(props) {
                 {isRelatedLoading ? <Spin /> : <ProductRelated products={relatedBook} />}
             </WrapperShadowStyled>
             <BackTop >
-                <ButtonBackTopStyled icon={<UpCircleOutlined />} />
+                <ButtonBackTopStyled icon={<ArrowUpOutlined />} />
             </BackTop>
         </Wrapper>
     );

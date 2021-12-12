@@ -119,8 +119,6 @@ function CartPage(props) {
 
     }, [cartItem])
 
-
-
     const handleDecrease = (id) => {
         const action = updateCart({ id, number: -1 })
         dispatch(action);
@@ -236,7 +234,6 @@ function CartPage(props) {
                                             </div>
                                             <Radio.Group defaultValue={1}>
                                                 <Radio value={1} >Free shipping</Radio>
-                                                <Radio value={2}>Flat rate</Radio>
                                             </Radio.Group>
 
                                         </Col>

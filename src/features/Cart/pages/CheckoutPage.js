@@ -17,6 +17,7 @@ import { history } from 'App';
 import SelectField from 'custom-fields/SelectFields';
 import axios from 'axios';
 import { BlueButton, DolartextStyled, PurpleButton, TextGreenStyled, TextRedStyled, TextYellowStyled, OrgangeButton } from 'assets/styles/globalStyle'
+import { PaymentApi } from 'api/PaymentApi';
 
 
 
@@ -194,6 +195,8 @@ function CheckoutPage(props) {
 
     const [isEdit, setIsEdit] = React.useState(false);
 
+    const [payments, setPayments] = React.useState([]);
+
     const dispatch = useDispatch()
 
     const { isCheckOutStatus } = useSelector(state => state.cart);
@@ -219,6 +222,23 @@ function CheckoutPage(props) {
         }
 
     }, []);
+
+    //handle fetch payments
+
+    React.useEffect(() => {
+        const fetchPayments = async () => {
+            try {
+                const response = await PaymentApi.get_All();
+                setPayments(response.payments);
+
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetchPayments();
+
+    }, [])
 
     const fetchDistrict = async provinceCode => {
         try {
@@ -453,20 +473,13 @@ function CheckoutPage(props) {
                                 {shipInfo.payMethod.currentMethod === 1 && (<PayMethodDetail>
                                     <TitleSubStyled> Quý khách vui lòng chuyển khoản qua số tài khoản bên dưới và nhập mã giao dịch để được xác nhận hóa đơn [<span className="pay-message">Cú pháp: {`<VLINH> <Your name>`}</span>]</TitleSubStyled>
                                     <CardStyled>
-                                        <CardItemStyled>
-                                            <img width="100px" height="70px" src={mastercardLogo} alt="mastercard" />
+                                        {payments?.map(payment => <CardItemStyled key={payment._id}>
+                                            <img width="100px" height="70px" src={`${process.env.REACT_APP_API_URL}/${payment.paymentLogo}`} alt="mastercard" />
                                             <div>
-                                                <div> <AccountInfoStyled>Account number:</AccountInfoStyled> <span>837104719132</span></div>
-                                                <div> <AccountInfoStyled>Account holder:</AccountInfoStyled> <span>TRUONG VIET LINH</span></div>
+                                                <div> <AccountInfoStyled>Account number:</AccountInfoStyled> <span>{payment.accountNumber}</span></div>
+                                                <div> <AccountInfoStyled>Account holder:</AccountInfoStyled> <span>{payment.holder.toUpperCase()}</span></div>
                                             </div>
-                                        </CardItemStyled>
-                                        <CardItemStyled>
-                                            <img width="100px" height="70px" src={momoLogo} alt="mastercard" />
-                                            <div>
-                                                <div> <AccountInfoStyled>Account number:</AccountInfoStyled> <span>0387746666</span></div>
-                                                <div> <AccountInfoStyled>Account holder:</AccountInfoStyled> <span>TRUONG VIET LINH</span></div>
-                                            </div>
-                                        </CardItemStyled>
+                                        </CardItemStyled>)}
                                     </CardStyled>
                                     <Form
                                         layout="inline"

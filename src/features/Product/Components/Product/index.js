@@ -28,78 +28,71 @@ Product.defaultProps = {
 
 };
 
-const HoverImageStyled = styled.div`
-    background-image:url(${props => props.bgImage});
-    background-position:center;
-    background-repeat:none;
-    background-size:cover;
-    height:350px;
-    width:250px;
-    position:absolute;
-    top:0;
-    display:none;
-    transition: all 0.45s ease 0s;
-
-    .tip-box{
-        height:100%;
-        display:flex;
-        flex-direction:column;
-        justify-content:flex-end;
-        align-items:flex-end;
-        opacity: 0;
-        transition: all 0.35s ease 0s;
-        transform: translate(-1rem,-1rem);
-    }
-
-`;
-
 const TitleStyled = styled(Link)`
     font-size:16px;
     display: block;
     margin: 10px 0 0 0;
     font-weight: 500;
     color:#000;
-
+    
     &:hover {
         color:#9387d9;
     }
-`;
+    `;
 const ProductStyled = styled.div`
     .book-image{
         position:relative;
-        cursor:pointer;
-        &:hover{
-            ${HoverImageStyled} {
-                display:block;
 
-                .tip-box{
-                    opacity:1;
-                }
-            }
+        .main-image{
+            position:absolute;
+            opacity:1;
+        }
+        .second-image,.main-image{
+            transition:0.5s;
+            width: 100%;
+            height: 400px;
+            object-fit:cover;
         }
 
+        &:hover .tip-box{
+            opacity:1;
+            transform: translate(0,0);
+        } 
+        &:hover .main-image{
+            transform: translate(0,0);
+            opacity:0;
+        } 
+
+
         .discount{
-            font-size:12px;
-            min-width:55px;
+            font-size:11px;
             color:#FFF;
-            line-height:22px;
-            padding:2px 10px;
-            font-weight:500;
-            display:block;
+            padding:3px 7px;
             position:absolute;
             top:10px;
-            background:#ff0404;
+            background:#FF4136;
             text-align:center;
             left:10px;
             z-index:1;
-            border-radius:20px;
+            border-radius:5px;
         }
+    }
+    
+    
+    .tip-box{
+        position:absolute;
+        bottom:20px;
+        right:20px;
+        transition: all .5s ease;
+        opacity: 0;
+        transform: translate(0,10rem);
     }
 }
 `;
 
 const ButtonStyled = styled(Button)`
-    border-width:2px;
+    border:none;
+    display:block;
 
     &:hover{
         color:#FFF ;
@@ -107,8 +100,6 @@ const ButtonStyled = styled(Button)`
         background:#9387d9;
     }
 `;
-
-
 
 const ByAuthorStyled = styled.div`
     margin-bottom:5px;
@@ -163,38 +154,38 @@ function Product({ product }) {
             <div
                 className='book-image'>
                 <img
-                    width="250px"
-                    height='350px'
+                    className='main-image'
                     src={image[0]}
                     alt='book' />
+                <img
+                    className='second-image'
+                    src={image[1]}
+                    alt='book' />
                 {oldPrice && <span className="discount">- {(((oldPrice - price) / oldPrice) * 100).toFixed(0)} %</span>}
+                <div className="tip-box">
 
-                <HoverImageStyled
-                    bgImage={image[1]}>
-                    <div
-                        className="tip-box">
-
-                        {isAdding ?
-                            <ButtonStyled
-                                size='large'
-                                icon={<Spin />} />
-                            :
-                            <ButtonStyled
-                                size='large'
-                                icon={<ShoppingCartOutlined />}
-                                onClick={handleAddToCart} />
-                        }
+                    {isAdding ?
                         <ButtonStyled
-                            style={{ margin: '10px 0' }}
                             size='large'
-                            icon={<HeartOutlined />} />
-                        <Link
-                            to={`/product/${_id}`}>
-                            <ButtonStyled
-                                size='large'
-                                icon={<SearchOutlined />} /></Link>
-                    </div>
-                </HoverImageStyled>
+                            icon={<Spin />} />
+                        :
+                        <ButtonStyled
+                            size='large'
+                            icon={<ShoppingCartOutlined />}
+                            onClick={handleAddToCart} />
+                    }
+
+                    <ButtonStyled
+                        style={{ margin: '10px 0' }}
+                        size='large'
+                        icon={<HeartOutlined />} />
+
+                    <Link
+                        to={`/product/${_id}`}>
+                        <ButtonStyled
+                            size='large'
+                            icon={<SearchOutlined />} /></Link>
+                </div>
 
             </div>
             <TitleStyled
@@ -208,9 +199,25 @@ function Product({ product }) {
             </ByAuthorStyled>
             <RaitingStyled>
                 <div>
-                    {product.oldPrice && <Typography.Text style={{ color: "#969696", fontWeight: 500, textDecoration: "line-through" }}><DollarCircleOutlined /> {product.oldPrice}</Typography.Text>}
+                    {product.oldPrice && <Typography.Text
+                        style={
+                            {
+                                color: "#969696",
+                                fontWeight: 500,
+                                textDecoration: "line-through"
+                            }
+                        }><DollarCircleOutlined />{product.oldPrice}
+                    </Typography.Text>}
                     <Typography.Text
-                        style={{ color: "#ff4545", fontWeight: 500, marginLeft: 5 }}><DollarCircleOutlined /> {product.price}</Typography.Text>
+                        style={
+                            {
+                                color: "#ff4545",
+                                fontWeight: 500,
+                                marginLeft: 5
+                            }
+                        }>
+                        <DollarCircleOutlined /> {product.price}
+                    </Typography.Text>
                 </div>
                 <div>
                     <Rate
@@ -219,7 +226,13 @@ function Product({ product }) {
                         value={feedBack[0] ? getVotedHighest(feedBack[0]) : 0}
                         style={{ fontSize: 12 }} />
                     <span
-                        style={{ marginLeft: 5 }}>({feedBack[0]?.comments?.length || 0})</span>
+                        style={
+                            {
+                                marginLeft: 5
+                            }
+                        }>
+                        ({feedBack[0]?.comments?.length || 0})
+                    </span>
                 </div>
             </RaitingStyled>
         </ProductStyled>
