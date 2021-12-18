@@ -39,6 +39,23 @@ const TitleStyled = styled(Link)`
         color:#9387d9;
     }
     `;
+
+const ButtonStyled = styled(Button)`
+    border:none;
+    display:block;
+
+    &:hover{
+        color:#FFF ;
+        border-color:#9387d9 ;
+        background:#9387d9;
+    }
+`;
+
+const TipBoxItem = styled.div`
+    transition: all .5s ease;
+    margin-bottom:10px;
+`;
+
 const ProductStyled = styled.div`
     .book-image{
         position:relative;
@@ -54,12 +71,11 @@ const ProductStyled = styled.div`
             object-fit:cover;
         }
 
-        &:hover .tip-box{
-            opacity:1;
-            transform: translate(0,0);
+        &:hover .tip-box {
+            opacity: 1;
+            transform: translate(0,-150px);
         } 
         &:hover .main-image{
-            transform: translate(0,0);
             opacity:0;
         } 
 
@@ -79,27 +95,18 @@ const ProductStyled = styled.div`
     }
     
     
-    .tip-box{
+    .tip-box {
         position:absolute;
-        bottom:20px;
         right:20px;
         transition: all .5s ease;
         opacity: 0;
-        transform: translate(0,10rem);
+        transform: translate(0,0);
     }
 }
 `;
 
-const ButtonStyled = styled(Button)`
-    border:none;
-    display:block;
 
-    &:hover{
-        color:#FFF ;
-        border-color:#9387d9 ;
-        background:#9387d9;
-    }
-`;
+
 
 const ByAuthorStyled = styled.div`
     margin-bottom:5px;
@@ -124,7 +131,7 @@ const RaitingStyled = styled.div`
 
 function Product({ product }) {
 
-    const { _id, name, author, price, oldPrice, image, feedBack } = product;
+    const { _id, name, author, price, oldPrice, banner, images, feedBack } = product;
 
     const [isAdding, setIsAdding] = React.useState(false);
 
@@ -138,7 +145,7 @@ function Product({ product }) {
         setIsAdding(true);
         const intervalId = setInterval(async () => {
 
-            const action = addToCart({ _id, name, image: image[0], price, quantity: 1, subTotal: price });
+            const action = addToCart({ _id, name, image: banner, price, quantity: 1, subTotal: price });
 
             await dispatch(action);
             setIsAdding(false);
@@ -155,36 +162,54 @@ function Product({ product }) {
                 className='book-image'>
                 <img
                     className='main-image'
-                    src={image[0]}
+                    src={banner}
                     alt='book' />
                 <img
                     className='second-image'
-                    src={image[1]}
+                    src={images[0]}
                     alt='book' />
                 {oldPrice && <span className="discount">- {(((oldPrice - price) / oldPrice) * 100).toFixed(0)} %</span>}
                 <div className="tip-box">
 
                     {isAdding ?
-                        <ButtonStyled
-                            size='large'
-                            icon={<Spin />} />
+                        <TipBoxItem
+                            bottom="120px"
+                        >
+                            <ButtonStyled
+                                className='tipbox-item'
+                                size='large'
+                                icon={<Spin />} />
+                        </TipBoxItem>
                         :
-                        <ButtonStyled
-                            size='large'
-                            icon={<ShoppingCartOutlined />}
-                            onClick={handleAddToCart} />
+                        <TipBoxItem
+                            bottom="120px"
+                        >
+                            <ButtonStyled
+                                className='tipbox-item'
+                                size='large'
+                                icon={<ShoppingCartOutlined />}
+                                onClick={handleAddToCart} />
+                        </TipBoxItem>
                     }
-
-                    <ButtonStyled
-                        style={{ margin: '10px 0' }}
-                        size='large'
-                        icon={<HeartOutlined />} />
-
-                    <Link
-                        to={`/product/${_id}`}>
+                    <TipBoxItem
+                        bottom="70px"
+                    >
                         <ButtonStyled
+                            className='tipbox-item'
                             size='large'
-                            icon={<SearchOutlined />} /></Link>
+                            icon={<HeartOutlined />} />
+                    </TipBoxItem>
+                    <TipBoxItem
+                        bottom="20px"
+                    >
+
+                        <Link
+                            className='tipbox-item'
+                            to={`/product/${_id}`}>
+                            <ButtonStyled
+                                size='large'
+                                icon={<SearchOutlined />} /></Link>
+                    </TipBoxItem>
                 </div>
 
             </div>

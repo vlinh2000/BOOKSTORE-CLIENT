@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, message, Tabs, Divider, Row, Col, Steps, Badge, Popconfirm } from 'antd';
+import { Form, message, Tabs, Divider, Row, Col, Steps, Badge, Popconfirm, Pagination } from 'antd';
 import InputField from 'custom-fields/InputFields';
 import { CarOutlined, HistoryOutlined, HomeOutlined, HourglassOutlined } from '@ant-design/icons';
 import { useForm } from 'react-hook-form';
@@ -106,6 +106,42 @@ const StepStyled = styled(Steps)`
         padding:1rem 0;
     }
 `;
+
+const PaginationStyled = styled(Pagination)`
+    margin-top:3rem;
+    text-align:center;
+
+    li {
+        border-radius:50%!important;
+        border:none;
+    }
+
+    .ant-pagination-item-link{
+        border-radius:50%!important;
+        border:none;
+        &:not([disabled]):hover{
+            background:#EEE;
+            color:#111;
+        }
+    }
+    .ant-pagination-item:not(.ant-pagination-item-active):hover{
+        background:#EEE;
+        a{
+            color:#111;
+        }
+    }
+
+    .ant-pagination-item-active a{
+        color:#FFF;
+    } 
+    .ant-pagination-item-active{
+        background:#39CCCC;
+        border-color:#39CCCC;
+    }
+
+
+`;
+
 function UserInfo() {
 
     const { user } = useSelector(state => state.user.currentUser);
@@ -121,6 +157,10 @@ function UserInfo() {
     const [isLoadingCancle, setIsLoadingCancle] = React.useState(false);
 
     const [isChange, setIsChange] = React.useState(false);
+
+    const [currentPage, setCurrentPage] = React.useState(1);
+
+    const [currentBills, setCurrentBills] = React.useState([]);
 
     const [defaultKey, setDefaultKey] = React.useState(() => {
         const { location: { state } } = history;
@@ -164,7 +204,6 @@ function UserInfo() {
                 })
                 setBillStatus(billStatus);
                 const sortBill = response.bills.sort((a, b) => new Date(b.createAt) - new Date(a.createAt))
-                console.log(sortBill);
                 setBills(sortBill);
             } catch (error) {
                 message.error(error);
@@ -172,6 +211,12 @@ function UserInfo() {
         }
         fetchBills();
     }, [isChange])
+
+    React.useEffect(() => {
+        const newBills = bills.slice((currentPage - 1) * 5, (currentPage - 1) * 5 + 5);
+        console.log({ newBills });
+        setCurrentBills(newBills);
+    }, [currentPage, bills]);
 
 
     const onSubmit = async values => {
@@ -230,7 +275,10 @@ function UserInfo() {
         onUpdate(billId, "Canceled", "Your order has been canceled");
     }
 
-
+    const handleChangePage = page => {
+        window.scrollTo(0, 0);
+        setCurrentPage(page);
+    }
 
     return (
         <WrapperUserInfo>
@@ -347,7 +395,7 @@ function UserInfo() {
                                 </BlueButton>
                             }
                             {
-                                bills?.map(bill => <BillStyled>
+                                currentBills?.map(bill => <BillStyled>
                                     <TopStyled key={bill._id}>
                                         <div style={{ fontStyle: 'italic', borderBottom: '1px solid #0074D9' }}>
                                             <CreateAtStyled>Create at:</CreateAtStyled>
@@ -440,6 +488,7 @@ function UserInfo() {
 
 
                             }
+                            <PaginationStyled onChange={handleChangePage} defaultCurrent={1} total={Math.ceil(bills?.length / 5)} pageSize={1} />
                         </ContentStyled>
                     </Tabs.TabPane>
                 </TabStyled>

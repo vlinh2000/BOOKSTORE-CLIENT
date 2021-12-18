@@ -90,7 +90,7 @@ function SendFeedBack({ bookId }) {
                         <Avatar
                             size="large"
                             style={{ backgroundColor: '#f56a00', marginTop: 3 }}
-                            src={avatar ? avatar : ''}>{!avatar && name?.charAt(0)?.toUpperCase()}  </Avatar>
+                            src={avatar && avatar}>{!avatar && name?.charAt(0)?.toUpperCase()}  </Avatar>
                     </Col>
                     <Col span={10}>
                         <InputFieldWithEmoji

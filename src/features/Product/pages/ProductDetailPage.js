@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 
 import styled from 'styled-components';
 
-import { BackTop, Button, Col, Divider, message, notification, Row, Skeleton, Spin } from 'antd';
-import { ArrowUpOutlined, HeartOutlined, MinusOutlined, PlusOutlined, UpCircleOutlined, UpOutlined } from '@ant-design/icons';
+import { BackTop, Button, Col, Divider, message, Row, Skeleton, Spin } from 'antd';
+import { ArrowUpOutlined, HeartOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 
 import ProductRelated from '../Components/ProductRelated';
 import ProductComment from '../Components/ProductComment';
@@ -172,6 +172,8 @@ function ProductDetailPage(props) {
 
     const [currentImageIndex, setCurrenImageIndex] = React.useState(0);
 
+    const [listImages, setListImages] = React.useState([]);
+
 
 
     const dispatch = useDispatch();
@@ -182,7 +184,9 @@ function ProductDetailPage(props) {
             const fetchBook = async () => {
 
                 const { book } = await productApi.get(bookId);
+                console.log(book);
                 setBook(book);
+                setListImages([book.banner, ...book.images]);
                 setIsBookLoading(false);
                 // notification.success({
                 //     placement: 'topRight',
@@ -216,11 +220,11 @@ function ProductDetailPage(props) {
             return;
         }
 
-        const { name, image, price, _id } = book;
+        const { name, banner, price, _id } = book;
         const product = {
             _id,
             name,
-            image: image[0],
+            image: banner,
             price,
             quantity,
             subTotal: (quantity * price)
@@ -244,12 +248,12 @@ function ProductDetailPage(props) {
             return;
         }
 
-        const { name, image, price, _id } = book;
+        const { name, banner, price, _id } = book;
 
         const product = {
             _id,
             name,
-            image: image[0],
+            image: banner,
             price,
             quantity,
             subTotal: (quantity * price)
@@ -317,10 +321,10 @@ function ProductDetailPage(props) {
                                 <img
                                     height="550px"
                                     width="450px"
-                                    src={book.image && book.image[currentImageIndex]}
+                                    src={listImages && listImages[currentImageIndex]}
                                     alt="mainPhoto" />
                                 <GroupImage>
-                                    {book.image?.map((img, index) => (<img
+                                    {listImages?.map((img, index) => (<img
                                         className={index === currentImageIndex && "active"}
                                         key={index}
                                         onClick={() => setCurrenImageIndex(index)}

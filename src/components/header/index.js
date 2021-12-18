@@ -242,7 +242,7 @@ function Header(props) {
                                                 placement="bottom"
                                                 trigger='click'
                                                 visible={isVisibleUserInfo}
-                                                onVisibleChange={() => dispatch(switchUserInfoDrawer(true))}
+                                                onVisibleChange={() => dispatch(switchUserInfoDrawer(!isVisibleUserInfo))}
                                                 content={<PophoverStyled>
                                                     <WrapperLink>
                                                         <LinkStyled onClick={() => {
@@ -283,7 +283,7 @@ function Header(props) {
                                 <InfoCartStyled>
                                     <Popover
                                         visible={isVisibleCartModal}
-                                        onVisibleChange={() => dispatch(switchCartModal(true))}
+                                        onVisibleChange={() => dispatch(switchCartModal(!isVisibleCartModal))}
                                         trigger='click'
                                         content={<CartModal isAuth={isAuth} cartItem={cartItem} totalPrice={totalPrice} />} >
 

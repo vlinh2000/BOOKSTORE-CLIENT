@@ -11,7 +11,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import InputField from 'custom-fields/InputFields';
 import Banner from 'components/Banner';
-import { mastercardLogo, momoLogo } from 'constants/Global';
 import { Checkout } from '../cartSlice';
 import { history } from 'App';
 import SelectField from 'custom-fields/SelectFields';
@@ -474,7 +473,7 @@ function CheckoutPage(props) {
                                     <TitleSubStyled> Quý khách vui lòng chuyển khoản qua số tài khoản bên dưới và nhập mã giao dịch để được xác nhận hóa đơn [<span className="pay-message">Cú pháp: {`<VLINH> <Your name>`}</span>]</TitleSubStyled>
                                     <CardStyled>
                                         {payments?.map(payment => <CardItemStyled key={payment._id}>
-                                            <img width="100px" height="70px" src={`${process.env.REACT_APP_API_URL}/${payment.paymentLogo}`} alt="mastercard" />
+                                            <img width="100px" height="70px" src={payment.paymentLogo} alt="mastercard" />
                                             <div>
                                                 <div> <AccountInfoStyled>Account number:</AccountInfoStyled> <span>{payment.accountNumber}</span></div>
                                                 <div> <AccountInfoStyled>Account holder:</AccountInfoStyled> <span>{payment.holder.toUpperCase()}</span></div>

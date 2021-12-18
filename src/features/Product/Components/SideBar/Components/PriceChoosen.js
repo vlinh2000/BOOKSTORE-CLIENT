@@ -1,7 +1,7 @@
 import React from 'react';
 import DeliverTitle from './DeliverTitle';
 import styled from 'styled-components';
-import { Divider, Slider, Typography } from 'antd';
+import { Slider, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { filterBy } from 'features/Product/productSlice';
 import { DollarCircleOutlined, SwapOutlined } from '@ant-design/icons';

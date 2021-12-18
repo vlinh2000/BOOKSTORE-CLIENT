@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { Select, Alert } from 'antd';
-import { SearchOutlined, SortAscendingOutlined } from '@ant-design/icons';
+import { SearchOutlined } from '@ant-design/icons';
 
 import { filterBy } from 'features/Product/productSlice';
 
